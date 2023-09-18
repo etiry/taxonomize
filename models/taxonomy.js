@@ -6,7 +6,7 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
 const TaxonomySchema = new Schema({
-  taxonomyName: String,
+  name: String,
   categories: [{ type: Schema.Types.ObjectId, ref: 'category' }]
 });
 
