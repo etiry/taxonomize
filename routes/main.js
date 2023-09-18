@@ -32,4 +32,28 @@ router.post('/taxonomy', upload.single('file'), async (req, res, next) => {
   res.end();
 });
 
+// POST /data
+// create new dataset via csv upload and save to db
+router.post('/data', upload.single('file'), async (req, res, next) => {
+  const { buffer } = req.file;
+  const rows = [...new Set(buffer.toString().split('\n'))].slice(1);
+
+  console.log(rows);
+
+  const data = new Data();
+  data.observations = [];
+  data.completed = false;
+
+  rows.forEach((row) => {
+    const observation = new Observation();
+    observation.text = row;
+    observation.category = null;
+    observation.save()
+    data.observations.push(observation);
+  })
+
+  data.save();
+  res.end();
+});
+
 module.exports = router;
