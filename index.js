@@ -1,11 +1,13 @@
 const express = require('express');
+const http = require('http');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const routes = require('./routes/main');
+const router = require('./router');
+const keys = require('./config/keys');
 
 // connect to db
-mongoose.connect('mongodb://127.0.0.1/taxonomize', {
+mongoose.connect(keys.MONGODB_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true
 });
@@ -20,10 +22,9 @@ app.use(
   })
 );
 app.use(cors());
-app.use(routes);
+router(app);
 
-const PORT = 8000;
-
-app.listen(PORT, () => {
-  console.log(`Node.js listening on port ${PORT}`);
-});
+const port = process.env.PORT || 8000;
+const server = http.createServer(app);
+server.listen(port);
+console.log('Server listening on:', port);
