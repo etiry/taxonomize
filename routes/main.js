@@ -2,14 +2,15 @@
 /** Create API router */
 
 const router = require('express').Router();
-const multer  = require('multer');
-const storage = multer.memoryStorage();
-const upload = multer({ storage: storage });
+const multer = require('multer');
 const Category = require('../models/category');
 const Taxonomy = require('../models/taxonomy');
 const Observation = require('../models/observation');
 const Data = require('../models/data');
 const User = require('../models/user');
+
+const storage = multer.memoryStorage();
+const upload = multer({ storage });
 
 // POST /taxonomy
 // create new taxonomy via csv upload and save to db
@@ -18,15 +19,15 @@ router.post('/taxonomy', upload.single('file'), (req, res, next) => {
   const rows = buffer.toString().split('\r\n');
 
   const taxonomy = new Taxonomy();
-  taxonomy.name = 'BJS Offenses';
+  taxonomy.name = req.body.name;
   taxonomy.categories = [];
 
   rows.forEach((row) => {
     const category = new Category();
     category.name = row;
-    category.save()
+    category.save();
     taxonomy.categories.push(category);
-  })
+  });
 
   taxonomy.save();
   res.end();
@@ -49,9 +50,9 @@ router.post('/data', upload.single('file'), async (req, res, next) => {
     const observation = new Observation();
     observation.text = row;
     observation.category = null;
-    observation.save()
+    observation.save();
     data.observations.push(observation);
-  })
+  });
 
   data.save();
 
@@ -71,7 +72,7 @@ router.post('/:observationId/category', async (req, res, next) => {
 
     await Observation.findOneAndUpdate(
       { _id: observationId },
-      { 'category': category },
+      { category },
       { new: true }
     );
 
@@ -80,7 +81,7 @@ router.post('/:observationId/category', async (req, res, next) => {
   } catch (error) {
     return res.end(`${error}`);
   }
-})
+});
 
 // DELETE /:observationId/category
 // delete category from observation
@@ -90,7 +91,7 @@ router.delete('/:observationId/category', async (req, res, next) => {
   try {
     await Observation.findOneAndUpdate(
       { _id: observationId },
-      { 'category': null },
+      { category: null },
       { new: true }
     );
 
@@ -99,7 +100,7 @@ router.delete('/:observationId/category', async (req, res, next) => {
   } catch (error) {
     return res.end(`${error}`);
   }
-})
+});
 
 // DELETE /taxonomy/:taxonomyId
 // delete taxonomy
@@ -114,7 +115,7 @@ router.delete('/taxonomy/:taxonomyId', async (req, res, next) => {
   } catch (error) {
     return res.end(`${error}`);
   }
-})
+});
 
 // DELETE /data/:dataId
 // delete dataset
@@ -129,7 +130,7 @@ router.delete('/data/:dataId', async (req, res, next) => {
   } catch (error) {
     return res.end(`${error}`);
   }
-})
+});
 
 // GET /taxonomy/:taxonomyId/categories
 // get all categories for a given taxonomy
@@ -137,15 +138,15 @@ router.get('/taxonomy/:taxonomyId/categories', async (req, res, next) => {
   const { taxonomyId } = req.params;
 
   try {
-    const { categories } = await Taxonomy.findOne({ _id: taxonomyId }).populate({
-      path: 'categories'
-    });
+    const { categories } = await Taxonomy.findOne({ _id: taxonomyId }).populate(
+      'categories'
+    );
     res.writeHead(200);
     return res.end(JSON.stringify(categories));
   } catch (error) {
     return res.end(`${error}`);
   }
-})
+});
 
 // GET /taxonomy/:taxonomyId/data
 // get all datasets for a given taxonomy
@@ -153,13 +154,16 @@ router.get('/taxonomy/:taxonomyId/data', async (req, res, next) => {
   const { taxonomyId } = req.params;
 
   try {
-    const { data } = await Taxonomy.findOne({ _id: taxonomyId }).populate('data', 'name');
+    const { data } = await Taxonomy.findOne({ _id: taxonomyId }).populate(
+      'data',
+      'name'
+    );
     res.writeHead(200);
     return res.end(JSON.stringify(data));
   } catch (error) {
     return res.end(`${error}`);
   }
-})
+});
 
 // GET /data/:dataId/observations
 // get all observations for a given dataset
@@ -167,13 +171,15 @@ router.get('/data/:dataId/observations', async (req, res, next) => {
   const { dataId } = req.params;
 
   try {
-    const { observations } = await Data.findOne({ _id: dataId }).populate('observations');
+    const { observations } = await Data.findOne({ _id: dataId }).populate(
+      'observations'
+    );
     res.writeHead(200);
     return res.end(JSON.stringify(observations));
   } catch (error) {
     return res.end(`${error}`);
   }
-})
+});
 
 // POST /signup
 // sign up

@@ -5,7 +5,7 @@ const cors = require('cors');
 const routes = require('./routes/main');
 
 // connect to db
-mongoose.connect('mongodb://localhost/taxonomize', {
+mongoose.connect('mongodb://127.0.0.1/taxonomize', {
   useNewUrlParser: true,
   useUnifiedTopology: true
 });
