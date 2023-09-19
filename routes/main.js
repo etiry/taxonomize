@@ -34,12 +34,13 @@ router.post('/taxonomy', upload.single('file'), (req, res, next) => {
 
 // POST /data
 // create new dataset via csv upload and save to db
-router.post('/data', upload.single('file'), (req, res, next) => {
+router.post('/data', upload.single('file'), async (req, res, next) => {
   const { buffer } = req.file;
   const rows = [...new Set(buffer.toString().split('\n'))].slice(1);
+  const taxonomy = await Taxonomy.findOne({ _id: req.body.taxonomy });
 
   const data = new Data();
-  data.taxonomy = null;
+  data.taxonomy = taxonomy;
   data.observations = [];
   data.completed = false;
 
