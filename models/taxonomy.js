@@ -7,7 +7,8 @@ const { Schema } = mongoose;
 
 const TaxonomySchema = new Schema({
   name: String,
-  categories: [{ type: Schema.Types.ObjectId, ref: 'category' }]
+  categories: [{ type: Schema.Types.ObjectId, ref: 'category' }],
+  data: [{ type: Schema.Types.ObjectId, ref: 'data' }]
 });
 
 module.exports = mongoose.model('taxonomy', TaxonomySchema);

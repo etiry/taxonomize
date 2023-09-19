@@ -40,6 +40,7 @@ router.post('/data', upload.single('file'), async (req, res, next) => {
   const taxonomy = await Taxonomy.findOne({ _id: req.body.taxonomy });
 
   const data = new Data();
+  data.name = req.body.name;
   data.taxonomy = taxonomy;
   data.observations = [];
   data.completed = false;
@@ -53,6 +54,10 @@ router.post('/data', upload.single('file'), async (req, res, next) => {
   })
 
   data.save();
+
+  taxonomy.data.push(data);
+  taxonomy.save();
+
   res.end();
 });
 
@@ -144,9 +149,34 @@ router.get('/taxonomy/:taxonomyId/categories', async (req, res, next) => {
 
 // GET /taxonomy/:taxonomyId/data
 // get all datasets for a given taxonomy
+router.get('/taxonomy/:taxonomyId/data', async (req, res, next) => {
+  const { taxonomyId } = req.params;
+
+  try {
+    const { data } = await Taxonomy.findOne({ _id: taxonomyId }).populate('data', 'name');
+    res.writeHead(200);
+    return res.end(JSON.stringify(data));
+  } catch (error) {
+    return res.end(`${error}`);
+  }
+})
 
 // GET /data/:dataId/observations
 // get all observations for a given dataset
+router.get('/data/:dataId/observations', async (req, res, next) => {
+  const { dataId } = req.params;
+
+  try {
+    const { observations } = await Data.findOne({ _id: dataId }).populate('observations');
+    res.writeHead(200);
+    return res.end(JSON.stringify(observations));
+  } catch (error) {
+    return res.end(`${error}`);
+  }
+})
+
+// POST /signup
+// sign up
 
 // POST /login
 // log in
