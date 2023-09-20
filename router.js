@@ -7,26 +7,22 @@ const taxonomyController = require('./controllers/taxonomy');
 const dataController = require('./controllers/data');
 const observationController = require('./controllers/observation');
 const authenticationController = require('./controllers/authentication');
+const userController = require('./controllers/user');
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
-const requireAuth = passport.authenticate('jwt', { session: false });
 const requireSignin = passport.authenticate('local', {
   failureRedirect: '/signin'
 });
 
-// POST /signup
-// sign up
-
-// POST /login
-// log in
-
-// GET /user/:userId/data
-// get user's assigned datasets
-
-// POST /user/:userId/data
-// assign dataset to user
+const authenticateRequest = (req, res, next) => {
+  if (!req.isAuthenticated()) {
+    res.send('Not authorized');
+  } else {
+    next();
+  }
+};
 
 module.exports = (app) => {
   // taxonomy routes
@@ -49,4 +45,6 @@ module.exports = (app) => {
   app.post('/signin', requireSignin, authenticationController.signin);
 
   // user routes
+  app.get('/user/:userId/data', userController.getData);
+  app.post('/user/:userId/data', userController.assignData);
 };
