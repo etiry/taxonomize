@@ -1,8 +1,10 @@
 const express = require('express');
 const http = require('http');
 const mongoose = require('mongoose');
+const cookieSession = require('cookie-session');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const passport = require('passport');
 const router = require('./router');
 const keys = require('./config/keys');
 
@@ -14,6 +16,17 @@ mongoose.connect(keys.MONGODB_URI, {
 
 // set up server
 const app = express();
+
+app.use(
+  cookieSession({
+    name: 'session',
+    keys: keys.COOKIE_SECRET,
+    maxAge: 24 * 60 * 60 * 1000 // 24 hours
+  })
+);
+
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.use(bodyParser.json());
 app.use(
