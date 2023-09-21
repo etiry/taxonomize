@@ -17,25 +17,38 @@ const requireAuth = passport.authenticate('jwt', { session: false });
 
 module.exports = (app) => {
   // taxonomy routes
-  app.post('/taxonomy', upload.single('file'), taxonomyController.addTaxonomy);
-  app.delete('/taxonomy/:taxonomyId', taxonomyController.deleteTaxonomy);
-  app.get('/taxonomy/:taxonomyId/categories', taxonomyController.getCategories);
-  app.get('/taxonomy/:taxonomyId/data', taxonomyController.getData);
+  app.post(
+    '/api/taxonomy',
+    upload.single('file'),
+    taxonomyController.addTaxonomy
+  );
+  app.delete('/api//taxonomy/:taxonomyId', taxonomyController.deleteTaxonomy);
+  app.get(
+    '/api/taxonomy/:taxonomyId/categories',
+    taxonomyController.getCategories
+  );
+  app.get('/api/taxonomy/:taxonomyId/data', taxonomyController.getData);
 
   // data routes
-  app.post('/data', upload.single('file'), dataController.addData);
-  app.delete('/data/:dataId', dataController.deleteData);
-  app.get('/data/:dataId/observations', dataController.getObservations);
+  app.post('/api/data', upload.single('file'), dataController.addData);
+  app.delete('/api/data/:dataId', dataController.deleteData);
+  app.get('/api/data/:dataId/observations', dataController.getObservations);
 
   // observation routes
-  app.post('/:observationId/category', observationController.assignCategory);
-  app.delete('/:observationId/category', observationController.deleteCategory);
+  app.post(
+    '/api/:observationId/category',
+    observationController.assignCategory
+  );
+  app.delete(
+    '/api/:observationId/category',
+    observationController.deleteCategory
+  );
 
   // authentication routes
-  app.post('/signup', authenticationController.signup);
-  app.post('/signin', requireSignin, authenticationController.signin);
+  app.post('/auth/signup', authenticationController.signup);
+  app.post('/auth/signin', requireSignin, authenticationController.signin);
 
   // user routes
-  app.get('/user/:userId/data', requireAuth, userController.getData);
-  app.post('/user/:userId/data', requireAuth, userController.assignData);
+  app.get('/api/user/:userId/data', requireAuth, userController.getData);
+  app.post('/api/user/:userId/data', requireAuth, userController.assignData);
 };

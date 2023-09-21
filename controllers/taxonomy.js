@@ -4,6 +4,7 @@ const Taxonomy = require('../models/taxonomy');
 // POST /taxonomy
 // create new taxonomy via csv upload and save to db
 exports.addTaxonomy = (req, res, next) => {
+  console.log(req.file);
   const { buffer } = req.file;
   const rows = buffer.toString().split('\r\n');
 
