@@ -11,4 +11,6 @@ export default Main;
 
 const Container = styled.main`
   grid-column: 2 / end;
+  display: grid;
+  place-items: center;
 `;
