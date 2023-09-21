@@ -1,21 +1,60 @@
 import styled from 'styled-components';
+import { useState } from 'react';
+import { useGetTaxonomiesQuery } from '../slices/apiSlice';
 
-const SideNav = () => (
-  <Nav>
-    <Button>+ New Taxonomy</Button>
-    <LinkList>
-      <LinkItem>
-        <Link>Dashboard</Link>
+const SideNav = () => {
+  const {
+    data: taxonomies,
+    isLoading,
+    isSuccess,
+    isError,
+    error
+  } = useGetTaxonomiesQuery();
+  const [showTaxonomies, setShowTaxonomies] = useState(false);
+
+  const handleClick = () => {
+    setShowTaxonomies(!showTaxonomies);
+  };
+
+  let content;
+
+  if (isLoading) {
+    content = (
+      <div style={{ display: showTaxonomies ? 'block' : 'none' }}>
+        Loading...
+      </div>
+    );
+  } else if (isSuccess) {
+    content = taxonomies.map((taxonomy) => (
+      <LinkItem
+        key={taxonomy._id}
+        style={{ display: showTaxonomies ? 'block' : 'none' }}
+      >
+        <Link>{taxonomy.name}</Link>
       </LinkItem>
-      <LinkItem>
-        <Link>Taxonomies</Link>
-      </LinkItem>
-      <LinkItem>
-        <Link>Data</Link>
-      </LinkItem>
-    </LinkList>
-  </Nav>
-);
+    ));
+  } else if (isError) {
+    content = <div>{error.toString()}</div>;
+  }
+
+  return (
+    <Nav>
+      <Button>+ New Taxonomy</Button>
+      <LinkList>
+        <LinkItem>
+          <Link>Dashboard</Link>
+        </LinkItem>
+        <LinkItem>
+          <Link onClick={handleClick}>Taxonomies</Link>
+        </LinkItem>
+        {content}
+        <LinkItem>
+          <Link>Data</Link>
+        </LinkItem>
+      </LinkList>
+    </Nav>
+  );
+};
 
 export default SideNav;
 

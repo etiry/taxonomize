@@ -69,3 +69,15 @@ exports.getData = async (req, res, next) => {
     return res.end(`${error}`);
   }
 };
+
+// GET /taxonomy
+// get all taxonomies
+exports.getTaxonomies = async (req, res, next) => {
+  try {
+    const taxonomies = await Taxonomy.find({});
+    res.writeHead(200);
+    return res.end(JSON.stringify(taxonomies));
+  } catch (error) {
+    return res.end(`${error}`);
+  }
+};

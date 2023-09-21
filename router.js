@@ -28,6 +28,7 @@ module.exports = (app) => {
     taxonomyController.getCategories
   );
   app.get('/api/taxonomy/:taxonomyId/data', taxonomyController.getData);
+  app.get('/api/taxonomy', taxonomyController.getTaxonomies);
 
   // data routes
   app.post('/api/data', upload.single('file'), dataController.addData);

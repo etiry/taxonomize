@@ -1,11 +1,7 @@
 import styled from 'styled-components';
 import NewTaxonomyForm from './NewTaxonomyForm';
 
-const Main = () => (
-  <Container>
-    <NewTaxonomyForm />
-  </Container>
-);
+const Main = () => <Container />;
 
 export default Main;
 
