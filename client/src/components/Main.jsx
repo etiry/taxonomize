@@ -9,6 +9,6 @@ const Main = () => (
 
 export default Main;
 
-const Container = styled.div`
+const Container = styled.main`
   grid-column: 2 / end;
 `;
