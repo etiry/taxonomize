@@ -1,25 +1,34 @@
+const jwt = require('jwt-simple');
 const User = require('../models/user');
+const keys = require('../config/dev');
+
+const tokenForUser = (user) =>
+  jwt.encode(
+    {
+      sub: user.id,
+      iat: Math.round(Date.now() / 1000),
+      exp: Math.round(Date.now() / 1000 + 5 * 60 * 60)
+    },
+    keys.TOKEN_SECRET
+  );
 
 exports.signin = (req, res, next) => {
-  if (!req.isAuthenticated()) {
-    // Denied, redirect to sign in page
-    res.redirect('/signin');
-  } else {
-    res.send('Logged in');
-  }
+  res.send({
+    token: tokenForUser(req.user)
+  });
 };
 
 exports.currentUser = (req, res) => {
   const user = {
-    email: req.user.email
+    email: req.user.email,
+    token: tokenForUser(req.user)
   };
 
   res.send(user);
 };
 
 exports.signup = async (req, res, next) => {
-  const { email } = req.body;
-  const { password } = req.body;
+  const { email, password } = req.body;
 
   if (!email || !password) {
     return res
@@ -45,7 +54,7 @@ exports.signup = async (req, res, next) => {
     user.save();
 
     // Repond to request indicating the user was created
-    res.send('User created');
+    res.json({ token: tokenForUser(user) });
   } catch (error) {
     return next(error);
   }

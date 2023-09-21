@@ -12,17 +12,8 @@ const userController = require('./controllers/user');
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
-const requireSignin = passport.authenticate('local', {
-  failureRedirect: '/signin'
-});
-
-const authenticateRequest = (req, res, next) => {
-  if (!req.isAuthenticated()) {
-    res.send('Not authorized');
-  } else {
-    next();
-  }
-};
+const requireSignin = passport.authenticate('local', { session: false });
+const requireAuth = passport.authenticate('jwt', { session: false });
 
 module.exports = (app) => {
   // taxonomy routes
@@ -45,6 +36,6 @@ module.exports = (app) => {
   app.post('/signin', requireSignin, authenticationController.signin);
 
   // user routes
-  app.get('/user/:userId/data', userController.getData);
-  app.post('/user/:userId/data', userController.assignData);
+  app.get('/user/:userId/data', requireAuth, userController.getData);
+  app.post('/user/:userId/data', requireAuth, userController.assignData);
 };

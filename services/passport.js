@@ -1,5 +1,8 @@
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
+const JwtStrategy = require('passport-jwt').Strategy;
+const { ExtractJwt } = require('passport-jwt');
+const keys = require('../config/keys');
 const User = require('../models/user');
 
 // Create local strategy
@@ -22,23 +25,39 @@ const localLogin = new LocalStrategy(
         return done(null, false, { message: 'Incorrect password' });
       }
 
-      return done(null, user);
+      return done(null, user._id);
     } catch (error) {
       return done(error);
     }
   }
 );
 
-passport.serializeUser((user, done) => {
-  done(null, user._id);
-});
+// Setup options for JWT Strategy
+const jwtOptions = {
+  jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+  secretOrKey: keys.TOKEN_SECRET
+};
 
-passport.deserializeUser((user, done) => {
-  done(null, user);
+// Create JWT strategy
+const jwtLogin = new JwtStrategy(jwtOptions, async (payload, done) => {
+  // See if the user ID in the payload exists in our database
+  // If it does, call 'done' with that other
+  // otherwise, call done without a user object
+  try {
+    const user = User.findById(payload.sub);
+
+    if (user) {
+      done(null, user);
+    } else {
+      done(null, false);
+    }
+  } catch (error) {
+    return done(error, false);
+  }
 });
 
 // Tell passport to use this strategy
-// passport.use(jwtLogin);
 passport.use('local', localLogin);
+passport.use('jwt', jwtLogin);
 
 module.exports = passport;
