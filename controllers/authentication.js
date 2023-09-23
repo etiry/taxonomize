@@ -14,6 +14,7 @@ const tokenForUser = (user) =>
 
 exports.signin = (req, res, next) => {
   res.send({
+    user: req.user,
     token: tokenForUser(req.user)
   });
 };
@@ -54,7 +55,7 @@ exports.signup = async (req, res, next) => {
     user.save();
 
     // Repond to request indicating the user was created
-    res.json({ token: tokenForUser(user) });
+    res.json({ user, token: tokenForUser(user) });
   } catch (error) {
     return next(error);
   }

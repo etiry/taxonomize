@@ -7,8 +7,23 @@ export const apiSlice = createApi({
   reducerPath: 'api',
   // All of our requests will have URLs starting with '/fakeApi'
   baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:8000/' }),
+  prepareHeaders: (headers, { getState }) => {
+    // By default, if we have a token in the store, let's use that for authenticated requests
+    const { token } = getState().auth;
+    if (token) {
+      headers.set('authorization', `Bearer ${token}`);
+    }
+    return headers;
+  },
   // The "endpoints" represent operations and requests for this server
   endpoints: (builder) => ({
+    signin: builder.mutation({
+      query: (credentials) => ({
+        url: 'auth/signin',
+        method: 'POST',
+        body: credentials
+      })
+    }),
     // The `getPosts` endpoint is a "query" operation that returns data
     getTaxonomies: builder.query({
       // The URL for the request is '/fakeApi/posts'
@@ -18,4 +33,4 @@ export const apiSlice = createApi({
 });
 
 // Export the auto-generated hooks for each endpoint
-export const { useGetTaxonomiesQuery } = apiSlice;
+export const { useSigninMutation, useGetTaxonomiesQuery } = apiSlice;
