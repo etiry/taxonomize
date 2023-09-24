@@ -17,9 +17,14 @@ const Header = () => {
 
   if (authenticated) {
     links = (
-      <LinkItem>
-        <LinkText onClick={handleSignout}>Sign Out</LinkText>
-      </LinkItem>
+      <>
+        <LinkItem>
+          <LinkText>{authenticated}</LinkText>
+        </LinkItem>
+        <LinkItem>
+          <LinkText onClick={handleSignout}>Sign Out</LinkText>
+        </LinkItem>
+      </>
     );
   } else {
     links = (

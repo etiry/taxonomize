@@ -3,11 +3,12 @@ import { apiSlice } from './apiSlice';
 
 const authSlice = createSlice({
   name: 'auth',
-  initialState: { user: null, token: null },
+  initialState: { user: null, token: null, email: null },
   reducers: {
     logout: (state) => {
       state.user = null;
       state.token = null;
+      state.email = null;
     }
   },
   extraReducers: (builder) => {
@@ -16,6 +17,7 @@ const authSlice = createSlice({
       (state, { payload }) => {
         state.token = payload.token;
         state.user = payload.user;
+        state.email = payload.email;
       }
     );
     builder.addMatcher(
@@ -32,4 +34,4 @@ export const { logout } = authSlice.actions;
 
 export default authSlice.reducer;
 
-export const selectCurrentUser = (state) => state.auth.user;
+export const selectCurrentUser = (state) => state.auth.email;

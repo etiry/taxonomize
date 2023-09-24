@@ -12,10 +12,13 @@ const tokenForUser = (user) =>
     keys.TOKEN_SECRET
   );
 
-exports.signin = (req, res, next) => {
+exports.signin = async (req, res, next) => {
+  const { email } = await User.findOne({ _id: req.user });
+
   res.send({
     user: req.user,
-    token: tokenForUser(req.user)
+    token: tokenForUser(req.user),
+    email
   });
 };
 
