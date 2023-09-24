@@ -4,7 +4,12 @@ import { apiSlice } from './apiSlice';
 const authSlice = createSlice({
   name: 'auth',
   initialState: { user: null, token: null },
-  reducers: {},
+  reducers: {
+    logout: (state) => {
+      state.user = null;
+      state.token = null;
+    }
+  },
   extraReducers: (builder) => {
     builder.addMatcher(
       apiSlice.endpoints.signin.matchFulfilled,
@@ -15,6 +20,8 @@ const authSlice = createSlice({
     );
   }
 });
+
+export const { logout } = authSlice.actions;
 
 export default authSlice.reducer;
 
