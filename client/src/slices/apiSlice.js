@@ -24,6 +24,13 @@ export const apiSlice = createApi({
         body: credentials
       })
     }),
+    signup: builder.mutation({
+      query: (credentials) => ({
+        url: 'auth/signup',
+        method: 'POST',
+        body: credentials
+      })
+    }),
     // The `getPosts` endpoint is a "query" operation that returns data
     getTaxonomies: builder.query({
       // The URL for the request is '/fakeApi/posts'
@@ -33,4 +40,5 @@ export const apiSlice = createApi({
 });
 
 // Export the auto-generated hooks for each endpoint
-export const { useSigninMutation, useGetTaxonomiesQuery } = apiSlice;
+export const { useSigninMutation, useSignupMutation, useGetTaxonomiesQuery } =
+  apiSlice;

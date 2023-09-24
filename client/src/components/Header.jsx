@@ -1,7 +1,6 @@
 import styled from 'styled-components';
 import { useSelector, useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
-import { apiSlice } from '../slices/apiSlice';
+import { useNavigate, Link } from 'react-router-dom';
 import { selectCurrentUser, logout } from '../slices/authSlice';
 
 const Header = () => {
@@ -19,17 +18,17 @@ const Header = () => {
   if (authenticated) {
     links = (
       <LinkItem>
-        <Link onClick={handleSignout}>Sign Out</Link>
+        <LinkText onClick={handleSignout}>Sign Out</LinkText>
       </LinkItem>
     );
   } else {
     links = (
       <>
         <LinkItem>
-          <Link>Sign Up</Link>
+          <Link to="/signup">Sign Up</Link>
         </LinkItem>
         <LinkItem>
-          <Link>Sign In</Link>
+          <LinkText>Sign In</LinkText>
         </LinkItem>
       </>
     );
@@ -60,4 +59,4 @@ const LinkList = styled.ul`
 
 const LinkItem = styled.li``;
 
-const Link = styled.a``;
+const LinkText = styled.a``;

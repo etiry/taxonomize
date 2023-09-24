@@ -34,6 +34,7 @@ const SigninForm = () => {
 
   return (
     <Form onSubmit={handleSubmit(onSubmit)}>
+      <Heading>Sign in</Heading>
       <FormGroup>
         <FormLabel>Email:</FormLabel>
         <FormInput type="text" {...register('email', { required: true })} />
@@ -55,6 +56,7 @@ const SigninForm = () => {
 export default SigninForm;
 
 const Form = styled.form``;
+const Heading = styled.h2``;
 const FormGroup = styled.div``;
 const FormLabel = styled.label``;
 const FormInput = styled.input``;
