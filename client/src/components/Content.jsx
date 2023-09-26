@@ -4,9 +4,10 @@ import { selectCurrentData } from '../slices/dataSlice';
 import DataDetail from './DataDetail';
 
 const Content = () => {
+  const { id } = useSelector(selectCurrentData);
   const data = useSelector(selectCurrentData);
 
-  if (data) {
+  if (id) {
     return (
       <ContentContainer>
         <DataDetail data={data} />;

@@ -8,9 +8,12 @@ exports.getData = async (req, res, next) => {
   const { userId } = req.params;
 
   try {
-    const { assignedData } = await User.findOne({ _id: userId }).populate(
-      'assignedData'
-    );
+    const { assignedData } = await User.findOne({ _id: userId }).populate({
+      path: 'assignedData',
+      populate: {
+        path: 'taxonomy'
+      }
+    });
     const sortedData = assignedData.sort((a, b) => (a.name >= b.name ? 1 : -1));
     res.writeHead(200);
     return res.end(JSON.stringify(sortedData));
