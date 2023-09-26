@@ -10,7 +10,8 @@ const UserSchema = new Schema({
   email: { type: String, unique: true, lowercase: true },
   hash: String,
   salt: String,
-  assignedData: [{ type: Schema.Types.ObjectId, ref: 'data' }]
+  assignedData: [{ type: Schema.Types.ObjectId, ref: 'data' }],
+  assignedTaxonomies: [{ type: Schema.Types.ObjectId, ref: 'taxonomy' }]
 });
 
 UserSchema.methods.setPassword = function (password) {
