@@ -1,16 +1,22 @@
 import styled from 'styled-components';
 import { useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { useGetDataQuery } from '../slices/apiSlice';
 import { selectCurrentUser } from '../slices/authSlice';
+import { setCurrentData } from '../slices/dataSlice';
 
 const SideNav = () => {
+  const dispatch = useDispatch();
   const user = useSelector(selectCurrentUser);
   const { data, isLoading, isSuccess, isError, error } = useGetDataQuery(user);
   const [showData, setShowData] = useState(true);
 
   const handleClick = () => {
     setShowData(!showData);
+  };
+
+  const handleSelectData = (selectedData) => {
+    dispatch(setCurrentData(selectedData));
   };
 
   let content;
@@ -21,7 +27,11 @@ const SideNav = () => {
     );
   } else if (isSuccess) {
     content = data.map((d) => (
-      <LinkItem key={d._id} style={{ display: showData ? 'block' : 'none' }}>
+      <LinkItem
+        key={d._id}
+        style={{ display: showData ? 'block' : 'none' }}
+        onClick={() => handleSelectData(d)}
+      >
         <Link>{d.name}</Link>
       </LinkItem>
     ));
