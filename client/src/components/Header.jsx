@@ -1,12 +1,17 @@
 import styled from 'styled-components';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate, Link } from 'react-router-dom';
-import { selectCurrentUser, logout } from '../slices/authSlice';
+import {
+  selectCurrentUser,
+  selectCurrentUserEmail,
+  logout
+} from '../slices/authSlice';
 
 const Header = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const authenticated = useSelector(selectCurrentUser);
+  const email = useSelector(selectCurrentUserEmail);
 
   const handleSignout = () => {
     dispatch(logout());
@@ -19,7 +24,7 @@ const Header = () => {
     links = (
       <>
         <LinkItem>
-          <LinkText>{authenticated}</LinkText>
+          <LinkText>{email}</LinkText>
         </LinkItem>
         <LinkItem>
           <LinkText onClick={handleSignout}>Sign Out</LinkText>
