@@ -13,7 +13,7 @@ const dataSlice = createSlice({
     setCurrentData: (state, action) => {
       state.id = action.payload._id;
       state.name = action.payload.name;
-      state.taxonomy = action.payload.taxonomy;
+      state.taxonomy = action.payload.taxonomy.name;
       state.completed = action.payload.completed;
     }
   }
