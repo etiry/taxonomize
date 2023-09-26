@@ -5,7 +5,7 @@ const keys = require('../config/dev');
 const tokenForUser = (user) =>
   jwt.encode(
     {
-      sub: user.id,
+      sub: user._id,
       iat: Math.round(Date.now() / 1000),
       exp: Math.round(Date.now() / 1000 + 5 * 60 * 60)
     },
@@ -13,10 +13,10 @@ const tokenForUser = (user) =>
   );
 
 exports.signin = async (req, res, next) => {
-  const { email } = await User.findOne({ _id: req.user });
+  const { email } = await User.findOne({ _id: req.user._id });
 
   res.send({
-    user: req.user,
+    id: req.user._id,
     token: tokenForUser(req.user),
     email
   });
@@ -58,7 +58,7 @@ exports.signup = async (req, res, next) => {
     user.save();
 
     // Repond to request indicating the user was created
-    res.json({ user: user._id, token: tokenForUser(user) });
+    res.json({ id: user._id, token: tokenForUser(user) });
   } catch (error) {
     return next(error);
   }

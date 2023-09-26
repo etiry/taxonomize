@@ -25,7 +25,7 @@ const localLogin = new LocalStrategy(
         return done(null, false, { message: 'Incorrect password' });
       }
 
-      return done(null, user._id);
+      return done(null, user);
     } catch (error) {
       return done(error);
     }
@@ -45,6 +45,8 @@ const jwtLogin = new JwtStrategy(jwtOptions, async (payload, done) => {
   // otherwise, call done without a user object
   try {
     const user = User.findById(payload.sub);
+
+    console.log(payload.sub);
 
     if (user) {
       done(null, user);
