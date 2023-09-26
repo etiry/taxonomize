@@ -50,6 +50,8 @@ module.exports = (app) => {
   app.post('/auth/signin', requireSignin, authenticationController.signin);
 
   // user routes
-  app.get('/api/user/:userId/data', requireAuth, userController.getData);
-  app.post('/api/user/:userId/data', requireAuth, userController.assignData);
+  app.get('/api/user/:userId/data', userController.getData);
+  app.post('/api/user/:userId/data', userController.assignData);
+  app.get('/api/user/:userId/taxonomy', userController.getTaxonomies);
+  app.post('/api/user/:userId/taxonomy', userController.assignTaxonomy);
 };
