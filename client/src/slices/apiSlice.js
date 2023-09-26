@@ -11,7 +11,7 @@ export const apiSlice = createApi({
     // By default, if we have a token in the store, let's use that for authenticated requests
     const { token } = getState().auth;
     if (token) {
-      headers.set('authorization', `Bearer ${token}`);
+      headers.set('Authorization', `Bearer ${token}`);
     }
     return headers;
   },
@@ -31,14 +31,12 @@ export const apiSlice = createApi({
         body: credentials
       })
     }),
-    // The `getPosts` endpoint is a "query" operation that returns data
-    getTaxonomies: builder.query({
-      // The URL for the request is '/fakeApi/posts'
-      query: () => 'api/taxonomy'
+    getData: builder.query({
+      query: (userId) => `api/user/${userId}/data`
     })
   })
 });
 
 // Export the auto-generated hooks for each endpoint
-export const { useSigninMutation, useSignupMutation, useGetTaxonomiesQuery } =
+export const { useSigninMutation, useSignupMutation, useGetDataQuery } =
   apiSlice;

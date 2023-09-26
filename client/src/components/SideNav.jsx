@@ -1,36 +1,28 @@
 import styled from 'styled-components';
 import { useState } from 'react';
-import { useGetTaxonomiesQuery } from '../slices/apiSlice';
+import { useSelector } from 'react-redux';
+import { useGetDataQuery } from '../slices/apiSlice';
+import { selectCurrentUser } from '../slices/authSlice';
 
 const SideNav = () => {
-  const {
-    data: taxonomies,
-    isLoading,
-    isSuccess,
-    isError,
-    error
-  } = useGetTaxonomiesQuery();
-  const [showTaxonomies, setShowTaxonomies] = useState(true);
+  const user = useSelector(selectCurrentUser);
+  const { data, isLoading, isSuccess, isError, error } = useGetDataQuery(user);
+  const [showData, setShowData] = useState(true);
 
   const handleClick = () => {
-    setShowTaxonomies(!showTaxonomies);
+    setShowData(!showData);
   };
 
   let content;
 
   if (isLoading) {
     content = (
-      <div style={{ display: showTaxonomies ? 'block' : 'none' }}>
-        Loading...
-      </div>
+      <div style={{ display: showData ? 'block' : 'none' }}>Loading...</div>
     );
   } else if (isSuccess) {
-    content = taxonomies.map((taxonomy) => (
-      <LinkItem
-        key={taxonomy._id}
-        style={{ display: showTaxonomies ? 'block' : 'none' }}
-      >
-        <Link>{taxonomy.name}</Link>
+    content = data.map((d) => (
+      <LinkItem key={d._id} style={{ display: showData ? 'block' : 'none' }}>
+        <Link>{d.name}</Link>
       </LinkItem>
     ));
   } else if (isError) {
@@ -45,7 +37,7 @@ const SideNav = () => {
           <Link>Dashboard</Link>
         </LinkItem>
         <LinkItem>
-          <Link onClick={handleClick}>My Taxonomies</Link>
+          <Link onClick={handleClick}>My Data</Link>
         </LinkItem>
         {content}
       </LinkList>
