@@ -33,7 +33,7 @@ const Header = () => {
           <Link to="/signup">Sign Up</Link>
         </LinkItem>
         <LinkItem>
-          <LinkText>Sign In</LinkText>
+          <Link to="/">Sign In</Link>
         </LinkItem>
       </>
     );

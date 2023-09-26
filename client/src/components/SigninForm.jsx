@@ -29,6 +29,7 @@ const SigninForm = () => {
       navigate('/');
     } catch (error) {
       console.log(`request error: ${error}`);
+      navigate('/');
     }
   };
 

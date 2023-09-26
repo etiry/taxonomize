@@ -29,7 +29,7 @@ const SignupForm = () => {
   };
 
   return (
-    <SignupContainer>
+    <Container>
       <Form onSubmit={handleSubmit(onSubmit)}>
         <Heading>Sign up</Heading>
         <FormGroup>
@@ -47,13 +47,13 @@ const SignupForm = () => {
         </FormGroup>
         <Button>Submit</Button>
       </Form>
-    </SignupContainer>
+    </Container>
   );
 };
 
 export default SignupForm;
 
-const SignupContainer = styled.main`
+const Container = styled.main`
   min-height: 100vh;
   display: grid;
   place-items: center;
