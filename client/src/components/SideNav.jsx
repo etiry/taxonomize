@@ -10,7 +10,7 @@ const SideNav = () => {
     isError,
     error
   } = useGetTaxonomiesQuery();
-  const [showTaxonomies, setShowTaxonomies] = useState(false);
+  const [showTaxonomies, setShowTaxonomies] = useState(true);
 
   const handleClick = () => {
     setShowTaxonomies(!showTaxonomies);
@@ -45,12 +45,9 @@ const SideNav = () => {
           <Link>Dashboard</Link>
         </LinkItem>
         <LinkItem>
-          <Link onClick={handleClick}>Taxonomies</Link>
+          <Link onClick={handleClick}>My Taxonomies</Link>
         </LinkItem>
         {content}
-        <LinkItem>
-          <Link>Data</Link>
-        </LinkItem>
       </LinkList>
     </Nav>
   );
