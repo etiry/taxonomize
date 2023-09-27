@@ -6,6 +6,8 @@ const Category = require('../models/category');
 exports.assignCategory = async (req, res, next) => {
   const { observationId } = req.params;
 
+  console.log(req);
+
   try {
     const category = await Category.findOne({ _id: req.body.category });
 
@@ -16,7 +18,7 @@ exports.assignCategory = async (req, res, next) => {
     );
 
     res.writeHead(200);
-    return res.end('Category updated successfully');
+    return res.end();
   } catch (error) {
     return res.end(`${error}`);
   }

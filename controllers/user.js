@@ -11,7 +11,7 @@ exports.getData = async (req, res, next) => {
     const { assignedData } = await User.findOne({ _id: userId }).populate({
       path: 'assignedData',
       populate: {
-        path: 'taxonomy'
+        path: 'taxonomy observations'
       }
     });
     const sortedData = assignedData.sort((a, b) => (a.name >= b.name ? 1 : -1));

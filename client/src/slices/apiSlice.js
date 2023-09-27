@@ -34,14 +34,26 @@ export const apiSlice = createApi({
       })
     }),
     getData: builder.query({
-      query: (userId) => ({
-        url: `api/user/${userId}/data`,
-        method: 'GET'
+      query: (userId) => `api/user/${userId}/data`
+    }),
+    getCategories: builder.query({
+      query: (taxonomyId) => `api/taxonomy/${taxonomyId}/categories`
+    }),
+    assignCategory: builder.mutation({
+      query: (params) => ({
+        url: `/api/${params.observationId}/category`,
+        method: 'POST',
+        body: { category: params.categoryId }
       })
     })
   })
 });
 
 // Export the auto-generated hooks for each endpoint
-export const { useSigninMutation, useSignupMutation, useGetDataQuery } =
-  apiSlice;
+export const {
+  useSigninMutation,
+  useSignupMutation,
+  useGetDataQuery,
+  useGetCategoriesQuery,
+  useAssignCategoryMutation
+} = apiSlice;
