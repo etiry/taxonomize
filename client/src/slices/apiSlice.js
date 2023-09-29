@@ -34,7 +34,8 @@ export const apiSlice = createApi({
       })
     }),
     getData: builder.query({
-      query: (userId) => `api/user/${userId}/data`
+      query: (userId) => `api/user/${userId}/data`,
+      providesTags: ['Data']
     }),
     getCategories: builder.query({
       query: (taxonomyId) => `api/taxonomy/${taxonomyId}/categories`
@@ -44,7 +45,8 @@ export const apiSlice = createApi({
         url: `/api/${params.observationId}/category`,
         method: 'POST',
         body: { category: params.categoryId }
-      })
+      }),
+      invalidatesTags: ['Data']
     })
   })
 });

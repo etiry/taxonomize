@@ -6,8 +6,6 @@ const Category = require('../models/category');
 exports.assignCategory = async (req, res, next) => {
   const { observationId } = req.params;
 
-  console.log(req);
-
   try {
     const category = await Category.findOne({ _id: req.body.category });
 

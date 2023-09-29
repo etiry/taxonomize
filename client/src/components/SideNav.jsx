@@ -1,12 +1,11 @@
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { useGetDataQuery } from '../slices/apiSlice';
 import { selectCurrentUser } from '../slices/authSlice';
-import { setCurrentData } from '../slices/dataSlice';
 
-const SideNav = () => {
-  const dispatch = useDispatch();
+const SideNav = ({ setSelectedDataId }) => {
   const user = useSelector(selectCurrentUser);
   const { data, isLoading, isSuccess, isError, error } = useGetDataQuery(user);
   const [showData, setShowData] = useState(true);
@@ -15,8 +14,8 @@ const SideNav = () => {
     setShowData(!showData);
   };
 
-  const handleSelectData = (selectedData) => {
-    dispatch(setCurrentData(selectedData));
+  const handleSelectData = (d) => {
+    setSelectedDataId(d);
   };
 
   let content;
@@ -30,7 +29,7 @@ const SideNav = () => {
       <LinkItem
         key={d._id}
         style={{ display: showData ? 'block' : 'none' }}
-        onClick={() => handleSelectData(d)}
+        onClick={() => handleSelectData(d._id)}
       >
         <Link>{d.name}</Link>
       </LinkItem>
@@ -53,6 +52,10 @@ const SideNav = () => {
       </LinkList>
     </Nav>
   );
+};
+
+SideNav.propTypes = {
+  setSelectedDataId: PropTypes.func
 };
 
 export default SideNav;
