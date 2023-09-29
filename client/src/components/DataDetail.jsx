@@ -36,6 +36,7 @@ export default DataDetail;
 
 const Table = styled.table`
   grid-row: 1;
+  width: 100%;
 `;
 
 const TableHeader = styled.thead``;
