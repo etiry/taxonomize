@@ -1,11 +1,12 @@
 const jwt = require('jwt-simple');
-const User = require('../models/user');
 const keys = require('../config/dev');
+const { pool } = require('../dbHandler');
+const { setPassword } = require('../util/auth.js');
 
-const tokenForUser = (user) =>
+const tokenForUser = (userId) =>
   jwt.encode(
     {
-      sub: user._id,
+      sub: userId,
       iat: Math.round(Date.now() / 1000),
       exp: Math.round(Date.now() / 1000 + 5 * 60 * 60)
     },
@@ -13,12 +14,14 @@ const tokenForUser = (user) =>
   );
 
 exports.signin = async (req, res, next) => {
-  const { email } = await User.findOne({ _id: req.user._id });
+  const user = await pool.query('SELECT id FROM users WHERE id = $1', [
+    req.user.id
+  ]);
 
   res.send({
-    id: req.user._id,
-    token: tokenForUser(req.user),
-    email
+    id: req.user.id,
+    token: tokenForUser(req.user.id),
+    email: user.rows[0].email
   });
 };
 
@@ -32,7 +35,7 @@ exports.currentUser = (req, res) => {
 };
 
 exports.signup = async (req, res, next) => {
-  const { email, password } = req.body;
+  const { email, password, team } = req.body;
 
   if (!email || !password) {
     return res
@@ -42,23 +45,28 @@ exports.signup = async (req, res, next) => {
 
   // See if a user with the given email exists
   try {
-    const existingUser = await User.findOne({ email });
+    const existingUser = await pool.query(
+      'SELECT email FROM users WHERE email = $1',
+      [email]
+    );
 
     // If a user with email does exist, return an error
-    if (existingUser) {
+    if (existingUser.rowCount !== 0) {
       return res.status(422).send({ error: 'Email is in use' });
     }
 
     // If a user with email does NOT exist, create and save user record
-    const user = new User();
+    const { salt, hash } = setPassword(password);
+    const user = await pool.query(
+      'INSERT INTO users (email, salt, hash, team_id) VALUES ($1, $2, $3, $4) RETURNING *',
+      [email, salt, hash, parseInt(team)]
+    );
 
-    user.email = email;
-    user.setPassword(password);
-
-    user.save();
-
-    // Repond to request indicating the user was created
-    res.json({ id: user._id, token: tokenForUser(user) });
+    // Respond to request indicating the user was created
+    res.status(200).json({
+      id: `${user.rows[0].id}`,
+      token: tokenForUser(`${user.rows[0].id}`)
+    });
   } catch (error) {
     return next(error);
   }

@@ -1,6 +1,7 @@
 const User = require('../models/user');
 const Data = require('../models/data');
 const Taxonomy = require('../models/taxonomy');
+const { pool } = require('../dbHandler');
 
 // GET /user/:userId/data
 // get user's assigned datasets
@@ -8,15 +9,13 @@ exports.getData = async (req, res, next) => {
   const { userId } = req.params;
 
   try {
-    const { assignedData } = await User.findOne({ _id: userId }).populate({
-      path: 'assignedData',
-      populate: {
-        path: 'taxonomy observations'
+    pool.query(
+      'SELECT * FROM dataset_assignments WHERE user_id = $1',
+      [userId],
+      (results) => {
+        res.status(200).json(results.rows);
       }
-    });
-    const sortedData = assignedData.sort((a, b) => (a.name >= b.name ? 1 : -1));
-    res.writeHead(200);
-    return res.end(JSON.stringify(sortedData));
+    );
   } catch (error) {
     return res.end(`${error}`);
   }

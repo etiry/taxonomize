@@ -2,8 +2,9 @@ const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const JwtStrategy = require('passport-jwt').Strategy;
 const { ExtractJwt } = require('passport-jwt');
+const { pool } = require('../dbHandler');
 const keys = require('../config/keys');
-const User = require('../models/user');
+const { validPassword } = require('../util/auth.js');
 
 // Create local strategy
 const localOptions = { usernameField: 'email' };
@@ -15,17 +16,19 @@ const localLogin = new LocalStrategy(
     // if it is the correct email and password
     // otherwise, call done with false
     try {
-      const user = await User.findOne({ email });
+      const data = await pool.query('SELECT * FROM users WHERE email=$1', [
+        email
+      ]);
 
-      if (!user) {
+      if (data.rowCount === 0) {
         return done(null, false);
       }
 
-      if (!user.validPassword(password)) {
+      if (!validPassword(password, data.rows[0].salt, data.rows[0].hash)) {
         return done(null, false, { message: 'Incorrect password' });
       }
 
-      return done(null, user);
+      return done(null, data.rows[0]);
     } catch (error) {
       return done(error);
     }
@@ -44,10 +47,12 @@ const jwtLogin = new JwtStrategy(jwtOptions, async (payload, done) => {
   // If it does, call 'done' with that other
   // otherwise, call done without a user object
   try {
-    const user = User.findById(payload.sub);
+    const user = await pool.query('SELECT id FROM users WHERE id = $1', [
+      payload.sub
+    ]);
 
     if (user) {
-      done(null, user);
+      done(null, user.rows[0]);
     } else {
       done(null, false);
     }
