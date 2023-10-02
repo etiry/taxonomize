@@ -1,5 +1,4 @@
-const Observation = require('../models/observation');
-const Category = require('../models/category');
+const { pool } = require('../dbHandler');
 
 // POST /:observationId/category
 // assign category to observation
@@ -7,16 +6,12 @@ exports.assignCategory = async (req, res, next) => {
   const { observationId } = req.params;
 
   try {
-    const category = await Category.findOne({ _id: req.body.category });
+    await pool.query('UPDATE observations SET category_id = $1 WHERE id = $2', [
+      parseInt(req.body.categoryId),
+      parseInt(observationId)
+    ]);
 
-    await Observation.findOneAndUpdate(
-      { _id: observationId },
-      { category },
-      { new: true }
-    );
-
-    res.writeHead(200);
-    return res.end();
+    return res.status(200).end();
   } catch (error) {
     return res.end(`${error}`);
   }
@@ -28,14 +23,12 @@ exports.deleteCategory = async (req, res, next) => {
   const { observationId } = req.params;
 
   try {
-    await Observation.findOneAndUpdate(
-      { _id: observationId },
-      { category: null },
-      { new: true }
+    await pool.query(
+      'UPDATE observations SET category_id = NULL WHERE id = $1',
+      [parseInt(observationId)]
     );
 
-    res.writeHead(200);
-    return res.end('Category deleted successfully');
+    return res.status(200).end('Category deleted successfully');
   } catch (error) {
     return res.end(`${error}`);
   }

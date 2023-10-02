@@ -25,6 +25,7 @@ const authSlice = createSlice({
       (state, { payload }) => {
         state.token = payload.token;
         state.id = payload.id;
+        state.email = payload.email;
       }
     );
   }

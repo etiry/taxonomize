@@ -1,6 +1,3 @@
-const User = require('../models/user');
-const Data = require('../models/data');
-const Taxonomy = require('../models/taxonomy');
 const { pool } = require('../dbHandler');
 
 // GET /user/:userId/data
@@ -9,13 +6,12 @@ exports.getData = async (req, res, next) => {
   const { userId } = req.params;
 
   try {
-    pool.query(
-      'SELECT * FROM dataset_assignments WHERE user_id = $1',
-      [userId],
-      (results) => {
-        res.status(200).json(results.rows);
-      }
+    const { rows: datasets } = await pool.query(
+      'SELECT * FROM dataset_assignments JOIN datasets ON dataset_assignments.dataset_id = datasets.id WHERE user_id = $1',
+      [parseInt(userId)]
     );
+
+    return res.status(200).json(datasets);
   } catch (error) {
     return res.end(`${error}`);
   }
@@ -27,19 +23,12 @@ exports.assignData = async (req, res, next) => {
   const { userId } = req.params;
 
   try {
-    const data = await Data.findOne({ _id: req.body.data });
-
-    const { assignedData } = await User.findOne({ _id: userId });
-    assignedData.push(data);
-
-    await User.findOneAndUpdate(
-      { _id: userId },
-      { assignedData },
-      { new: true }
+    await pool.query(
+      'INSERT INTO dataset_assignments (user_id, dataset_id, completed) VALUES ($1, $2, FALSE)',
+      [parseInt(userId), parseInt(req.body.dataId)]
     );
 
-    res.writeHead(200);
-    return res.end('Data assigned successfully');
+    return res.status(200).end('Data assigned successfully');
   } catch (error) {
     return res.end(`${error}`);
   }
@@ -51,11 +40,11 @@ exports.getTaxonomies = async (req, res, next) => {
   const { userId } = req.params;
 
   try {
-    const { assignedTaxonomies } = await User.findOne({ _id: userId }).populate(
-      'assignedTaxonomies'
+    const { rows: taxonomies } = await pool.query(
+      'SELECT * FROM taxonomy_assignments JOIN taxonomies USING taxonomy_assignments.taxonomy_id = taxonomies.id WHERE user_id = $1',
+      [parseInt(userId)]
     );
-    res.writeHead(200);
-    return res.end(JSON.stringify(assignedTaxonomies));
+    return res.status(200).end(JSON.stringify(taxonomies));
   } catch (error) {
     return res.end(`${error}`);
   }
@@ -67,19 +56,12 @@ exports.assignTaxonomy = async (req, res, next) => {
   const { userId } = req.params;
 
   try {
-    const taxonomy = await Taxonomy.findOne({ _id: req.body.taxonomy });
-
-    const { assignedTaxonomies } = await User.findOne({ _id: userId });
-    assignedTaxonomies.push(taxonomy);
-
-    await User.findOneAndUpdate(
-      { _id: userId },
-      { assignedTaxonomies },
-      { new: true }
+    await pool.query(
+      'INSERT INTO taxonomy_assignments (user_id, taxonomy_id) VALUES ($1, $2)',
+      [parseInt(userId), parseInt(req.body.taxonomyId)]
     );
 
-    res.writeHead(200);
-    return res.end('Taxonomy assigned successfully');
+    return res.status(200).end('Taxonomy assigned successfully');
   } catch (error) {
     return res.end(`${error}`);
   }

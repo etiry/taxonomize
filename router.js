@@ -22,7 +22,7 @@ module.exports = (app) => {
     upload.single('file'),
     taxonomyController.addTaxonomy
   );
-  app.delete('/api//taxonomy/:taxonomyId', taxonomyController.deleteTaxonomy);
+  app.delete('/api/taxonomy/:taxonomyId', taxonomyController.deleteTaxonomy);
   app.get(
     '/api/taxonomy/:taxonomyId/categories',
     taxonomyController.getCategories

@@ -14,9 +14,11 @@ const tokenForUser = (userId) =>
   );
 
 exports.signin = async (req, res, next) => {
-  const user = await pool.query('SELECT id FROM users WHERE id = $1', [
+  const user = await pool.query('SELECT id, email FROM users WHERE id = $1', [
     req.user.id
   ]);
+
+  console.log(user);
 
   res.send({
     id: req.user.id,
@@ -35,7 +37,7 @@ exports.currentUser = (req, res) => {
 };
 
 exports.signup = async (req, res, next) => {
-  const { email, password, team } = req.body;
+  const { email, password } = req.body;
 
   if (!email || !password) {
     return res
@@ -58,14 +60,15 @@ exports.signup = async (req, res, next) => {
     // If a user with email does NOT exist, create and save user record
     const { salt, hash } = setPassword(password);
     const user = await pool.query(
-      'INSERT INTO users (email, salt, hash, team_id) VALUES ($1, $2, $3, $4) RETURNING *',
-      [email, salt, hash, parseInt(team)]
+      'INSERT INTO users (email, salt, hash) VALUES ($1, $2, $3) RETURNING *',
+      [email, salt, hash]
     );
 
     // Respond to request indicating the user was created
     res.status(200).json({
       id: `${user.rows[0].id}`,
-      token: tokenForUser(`${user.rows[0].id}`)
+      token: tokenForUser(`${user.rows[0].id}`),
+      email
     });
   } catch (error) {
     return next(error);
