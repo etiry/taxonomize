@@ -25,6 +25,9 @@ const createTables = async () => {
   await pool.query(
     'CREATE TABLE dataset_assignments (id SERIAL PRIMARY KEY, user_id INT REFERENCES users(ID) ON DELETE CASCADE ON UPDATE CASCADE, dataset_id INT REFERENCES datasets(ID) ON DELETE CASCADE ON UPDATE CASCADE, completed BOOLEAN);'
   );
+  await pool.query(
+    'CREATE TABLE category_assignments (id SERIAL PRIMARY KEY, dataset_assignment_id INT REFERENCES dataset_assignments(id) ON DELETE CASCADE ON UPDATE CASCADE, observation_id INT REFERENCES observations(id) ON DELETE CASCADE ON UPDATE CASCADE, category_id INT REFERENCES categories(id) ON DELETE CASCADE ON UPDATE CASCADE);'
+  );
 };
 
 createTables();
