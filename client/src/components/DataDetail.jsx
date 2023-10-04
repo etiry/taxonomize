@@ -13,7 +13,7 @@ const DataDetail = ({ data }) => (
     <TableBody>
       <TableRow>
         <TableColumn>{data.name}</TableColumn>
-        <TableColumn>{data.taxonomy.name}</TableColumn>
+        <TableColumn>{data.taxonomy_id}</TableColumn>
         <TableColumn>{data.completed ? 'Yes' : 'No'}</TableColumn>
       </TableRow>
     </TableBody>
@@ -22,13 +22,12 @@ const DataDetail = ({ data }) => (
 
 DataDetail.propTypes = {
   data: PropTypes.shape({
-    id: PropTypes.string,
+    id: PropTypes.number,
+    user_id: PropTypes.number,
+    dataset_id: PropTypes.number,
+    taxonomy_id: PropTypes.number,
     completed: PropTypes.bool,
-    name: PropTypes.string,
-    taxonomy: PropTypes.shape({
-      id: PropTypes.string,
-      name: PropTypes.string
-    })
+    name: PropTypes.string
   })
 };
 

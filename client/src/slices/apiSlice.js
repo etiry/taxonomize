@@ -37,6 +37,11 @@ export const apiSlice = createApi({
       query: (userId) => `api/user/${userId}/data`,
       providesTags: ['Data']
     }),
+    getObservations: builder.query({
+      query: (params) =>
+        `api/data/${params.dataId}/observations?page=${params.page}`,
+      providesTags: ['Observations']
+    }),
     getCategories: builder.query({
       query: (taxonomyId) => `api/taxonomy/${taxonomyId}/categories`
     }),
@@ -44,9 +49,12 @@ export const apiSlice = createApi({
       query: (params) => ({
         url: `/api/${params.observationId}/category`,
         method: 'POST',
-        body: { category: params.categoryId }
+        body: {
+          categoryId: params.categoryId,
+          datasetAssignmentId: params.datasetAssignmentId
+        }
       }),
-      invalidatesTags: ['Data']
+      invalidatesTags: ['Observations']
     })
   })
 });
@@ -56,6 +64,7 @@ export const {
   useSigninMutation,
   useSignupMutation,
   useGetDataQuery,
+  useLazyGetObservationsQuery,
   useGetCategoriesQuery,
   useAssignCategoryMutation
 } = apiSlice;

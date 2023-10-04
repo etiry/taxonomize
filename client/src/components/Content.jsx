@@ -8,20 +8,18 @@ import Observations from './Observations';
 
 const Content = ({ selectedDataId }) => {
   const user = useSelector(selectCurrentUser);
-
   const selectedData = apiSlice.endpoints.getData.useQueryState(user, {
-    selectFromResult: ({ data }) => data?.find((d) => d._id === selectedDataId)
+    selectFromResult: ({ data }) => data?.find((d) => d.id === selectedDataId)
   });
-
-  console.log(selectedData);
 
   if (selectedDataId) {
     return (
       <ContentContainer>
         <DataDetail data={selectedData} />;
         <Observations
-          observations={selectedData.observations}
-          taxonomyId={selectedData.taxonomy._id}
+          selectedDataId={selectedDataId}
+          taxonomyId={selectedData.taxonomy_id}
+          datasetAssignmentId={selectedData.id}
         />
       </ContentContainer>
     );
@@ -31,7 +29,7 @@ const Content = ({ selectedDataId }) => {
 };
 
 Content.propTypes = {
-  selectedDataId: PropTypes.string
+  selectedDataId: PropTypes.number
 };
 
 export default Content;

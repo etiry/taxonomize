@@ -2,20 +2,26 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
-import { useGetDataQuery } from '../slices/apiSlice';
+import {
+  useGetDataQuery,
+  useLazyGetObservationsQuery
+} from '../slices/apiSlice';
 import { selectCurrentUser } from '../slices/authSlice';
 
 const SideNav = ({ setSelectedDataId }) => {
   const user = useSelector(selectCurrentUser);
   const { data, isLoading, isSuccess, isError, error } = useGetDataQuery(user);
+  const [getObs] = useLazyGetObservationsQuery();
   const [showData, setShowData] = useState(true);
 
   const handleClick = () => {
     setShowData(!showData);
   };
 
-  const handleSelectData = (d) => {
-    setSelectedDataId(d);
+  const handleSelectData = async (dataId) => {
+    const params = { dataId, page: 1 };
+    await getObs(params);
+    setSelectedDataId(dataId);
   };
 
   let content;
@@ -27,9 +33,9 @@ const SideNav = ({ setSelectedDataId }) => {
   } else if (isSuccess) {
     content = data.map((d) => (
       <LinkItem
-        key={d._id}
+        key={d.id}
         style={{ display: showData ? 'block' : 'none' }}
-        onClick={() => handleSelectData(d._id)}
+        onClick={() => handleSelectData(d.id)}
       >
         <Link>{d.name}</Link>
       </LinkItem>

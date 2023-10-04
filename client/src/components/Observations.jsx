@@ -11,14 +11,40 @@ import {
 } from '@table-library/react-table-library/table';
 import { useTheme } from '@table-library/react-table-library/theme';
 import { getTheme } from '@table-library/react-table-library/baseline';
+import { usePagination } from '@table-library/react-table-library/pagination';
 import {
+  apiSlice,
   useGetCategoriesQuery,
-  useAssignCategoryMutation
+  useAssignCategoryMutation,
+  useLazyGetObservationsQuery
 } from '../slices/apiSlice';
 
-const Observations = ({ observations, taxonomyId }) => {
+const Observations = ({ selectedDataId, taxonomyId, datasetAssignmentId }) => {
   const theme = useTheme(getTheme());
-  const data = { nodes: observations };
+  const [getObs] = useLazyGetObservationsQuery();
+  let data = {};
+
+  const onPaginationChange = async (action, state) => {
+    await getObs(params);
+  };
+
+  const pagination = usePagination(
+    data,
+    {
+      state: {
+        page: 0,
+        size: 10
+      },
+      onChange: onPaginationChange
+    },
+    {
+      isServer: true
+    }
+  );
+
+  const params = { page: pagination.state.page + 1, dataId: selectedDataId };
+  data = apiSlice.endpoints.getObservations.useQueryState(params).data;
+
   const {
     data: categories,
     isLoading,
@@ -29,7 +55,11 @@ const Observations = ({ observations, taxonomyId }) => {
   const [assignCategory] = useAssignCategoryMutation();
 
   const handleUpdate = async (observationId, event) => {
-    const queryParams = { observationId, categoryId: event.target.value };
+    const queryParams = {
+      observationId,
+      categoryId: event.target.value,
+      datasetAssignmentId
+    };
     try {
       await assignCategory(queryParams);
     } catch (error) {
@@ -40,7 +70,12 @@ const Observations = ({ observations, taxonomyId }) => {
   if (isSuccess) {
     return (
       <Container>
-        <Table data={data} theme={theme} layout={{ fixedHeader: true }}>
+        <Table
+          data={data}
+          theme={theme}
+          layout={{ fixedHeader: true }}
+          pagination={pagination}
+        >
           {(tableList) => (
             <>
               <Header>
@@ -53,9 +88,9 @@ const Observations = ({ observations, taxonomyId }) => {
 
               <Body>
                 {tableList.map((item) => (
-                  <Row key={item._id} item={item}>
+                  <Row key={item.id} item={item}>
                     <Cell>{item.text}</Cell>
-                    <Cell>{item.category}</Cell>
+                    <Cell>{item.category_id}</Cell>
                     <Cell>
                       <select
                         style={{
@@ -66,11 +101,11 @@ const Observations = ({ observations, taxonomyId }) => {
                           margin: 0
                         }}
                         value={item.type}
-                        onChange={(event) => handleUpdate(item._id, event)}
+                        onChange={(event) => handleUpdate(item.id, event)}
                       >
                         <option value="">-- Select a category</option>
                         {categories.map((category) => (
-                          <option key={category._id} value={category._id}>
+                          <option key={category.id} value={category.id}>
                             {category.name}
                           </option>
                         ))}
@@ -82,26 +117,75 @@ const Observations = ({ observations, taxonomyId }) => {
             </>
           )}
         </Table>
+
+        {data.pageInfo && (
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between'
+            }}
+          >
+            <span>Total Rows: {data.pageInfo.total}</span>
+            <span>
+              Rows per page: {data.pageInfo.startSize}-{data.pageInfo.endSize}
+              {' of '}
+              {data.pageInfo.total}{' '}
+              <button
+                type="button"
+                disabled={pagination.state.page === 0}
+                onClick={() => pagination.fns.onSetPage(0)}
+              >
+                {'|<'}
+              </button>
+              <button
+                type="button"
+                disabled={pagination.state.page === 0}
+                onClick={() =>
+                  pagination.fns.onSetPage(pagination.state.page - 1)
+                }
+              >
+                {'<'}
+              </button>
+              <button
+                type="button"
+                disabled={
+                  pagination.state.page + 1 === data.pageInfo.totalPages
+                }
+                onClick={() =>
+                  pagination.fns.onSetPage(pagination.state.page + 1)
+                }
+              >
+                {'>'}
+              </button>
+              <button
+                type="button"
+                disabled={
+                  pagination.state.page + 1 === data.pageInfo.totalPages
+                }
+                onClick={() =>
+                  pagination.fns.onSetPage(data.pageInfo.totalPages - 1)
+                }
+              >
+                {'>|'}
+              </button>
+            </span>
+          </div>
+        )}
       </Container>
     );
   }
 };
 
 Observations.propTypes = {
-  observations: PropTypes.arrayOf(
-    PropTypes.shape({
-      _id: PropTypes.string,
-      text: PropTypes.string,
-      category: PropTypes.string
-    })
-  ),
-  taxonomyId: PropTypes.string
+  selectedDataId: PropTypes.number,
+  taxonomyId: PropTypes.number,
+  datasetAssignmentId: PropTypes.number
 };
 
 export default Observations;
 
 const Container = styled.div`
-  max-height: 400px;
+  max-height: 425px;
   overflow-y: scroll;
   width: 100%;
   grid-row: 2 / end;

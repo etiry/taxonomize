@@ -18,8 +18,6 @@ exports.signin = async (req, res, next) => {
     req.user.id
   ]);
 
-  console.log(user);
-
   res.send({
     id: req.user.id,
     token: tokenForUser(req.user.id),

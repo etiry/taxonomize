@@ -6,10 +6,14 @@ exports.assignCategory = async (req, res, next) => {
   const { observationId } = req.params;
 
   try {
-    await pool.query('UPDATE observations SET category_id = $1 WHERE id = $2', [
-      parseInt(req.body.categoryId),
-      parseInt(observationId)
-    ]);
+    await pool.query(
+      'INSERT INTO category_assignments (dataset_assignment_id, observation_id, category_id) VALUES ($1, $2, $3)',
+      [
+        parseInt(req.body.datasetAssignmentId),
+        parseInt(observationId),
+        parseInt(req.body.categoryId)
+      ]
+    );
 
     return res.status(200).end();
   } catch (error) {
@@ -24,7 +28,7 @@ exports.deleteCategory = async (req, res, next) => {
 
   try {
     await pool.query(
-      'UPDATE observations SET category_id = NULL WHERE id = $1',
+      'UPDATE category_assignments SET category_id = NULL WHERE id = $1',
       [parseInt(observationId)]
     );
 

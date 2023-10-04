@@ -38,14 +38,31 @@ exports.deleteData = async (req, res, next) => {
 // GET /data/:dataId/observations
 // get all observations for a given dataset
 exports.getObservations = async (req, res, next) => {
+  const perPage = 10;
+  const page = req.query.page || 1;
   const { dataId } = req.params;
 
   try {
-    const { rows: observations } = await pool.query(
-      'SELECT id, text FROM observations WHERE dataset_id = $1',
-      [parseInt(dataId)]
+    const totals = await pool.query(
+      'SELECT COUNT(*) as total_records, CEIL(COUNT(*) / $1) AS total_pages FROM observations WHERE dataset_id = $2',
+      [perPage, parseInt(dataId)]
     );
-    return res.status(200).end(JSON.stringify(observations));
+    const { rows: nodes } = await pool.query(
+      'SELECT observations.id, observations.text, category_assignments.category_id FROM observations LEFT JOIN category_assignments ON category_assignments.observation_id = observations.id WHERE dataset_id = $1 LIMIT $2 OFFSET $3',
+      [parseInt(dataId), perPage, perPage * page - perPage]
+    );
+
+    return res.status(200).end(
+      JSON.stringify({
+        pageInfo: {
+          total: totals.rows[0].total_records,
+          totalPages: totals.rows[0].total,
+          startSize: perPage * page - perPage + 1,
+          endSize: perPage * page
+        },
+        nodes
+      })
+    );
   } catch (error) {
     return res.end(`${error}`);
   }

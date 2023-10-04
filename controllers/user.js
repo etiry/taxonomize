@@ -41,7 +41,7 @@ exports.getTaxonomies = async (req, res, next) => {
 
   try {
     const { rows: taxonomies } = await pool.query(
-      'SELECT * FROM taxonomy_assignments JOIN taxonomies USING taxonomy_assignments.taxonomy_id = taxonomies.id WHERE user_id = $1',
+      'SELECT * FROM taxonomy_assignments JOIN taxonomies ON taxonomy_assignments.taxonomy_id = taxonomies.id WHERE user_id = $1',
       [parseInt(userId)]
     );
     return res.status(200).end(JSON.stringify(taxonomies));
