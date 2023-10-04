@@ -16,13 +16,14 @@ const SigninForm = () => {
 
   const onSubmit = async (data) => {
     try {
-      const { id, email, token } = await login(data).unwrap();
+      const { id, email, token, team } = await login(data).unwrap();
       // Being that the result is handled in extraReducers in authSlice,
       // we know that we're authenticated after this, so the user
       // and token will be present in the store
       localStorage.setItem('taxonomizeId', id);
       localStorage.setItem('taxonomizeEmail', email);
       localStorage.setItem('taxonomizeToken', token);
+      localStorage.setItem('taxonomizeTeam', team);
       navigate('/');
     } catch (error) {
       console.log(`${error}`);

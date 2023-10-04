@@ -14,14 +14,16 @@ const tokenForUser = (userId) =>
   );
 
 exports.signin = async (req, res, next) => {
-  const user = await pool.query('SELECT id, email FROM users WHERE id = $1', [
-    req.user.id
-  ]);
+  const user = await pool.query(
+    'SELECT users.id, users.email, teams.name FROM users JOIN teams ON users.team_id = teams.id WHERE users.id = $1',
+    [req.user.id]
+  );
 
   res.send({
     id: req.user.id,
     token: tokenForUser(req.user.id),
-    email: user.rows[0].email
+    email: user.rows[0].email,
+    team: user.rows[0].name
   });
 };
 

@@ -4,6 +4,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import {
   selectCurrentUser,
   selectCurrentUserEmail,
+  selectCurrentUserTeam,
   logout
 } from '../slices/authSlice';
 
@@ -12,6 +13,7 @@ const Header = () => {
   const navigate = useNavigate();
   const authenticated = useSelector(selectCurrentUser);
   const email = useSelector(selectCurrentUserEmail);
+  const team = useSelector(selectCurrentUserTeam);
 
   const handleSignout = () => {
     dispatch(logout());
@@ -23,6 +25,12 @@ const Header = () => {
   if (authenticated) {
     links = (
       <>
+        <LinkItem>
+          <LinkText>
+            <Label>Team: </Label>
+            {team}
+          </LinkText>
+        </LinkItem>
         <LinkItem>
           <LinkText>{email}</LinkText>
         </LinkItem>
@@ -70,3 +78,7 @@ const LinkList = styled.ul`
 const LinkItem = styled.li``;
 
 const LinkText = styled.a``;
+
+const Label = styled.span`
+  font-weight: bold;
+`;

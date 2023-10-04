@@ -3,9 +3,18 @@ import styled from 'styled-components';
 
 const DataDetail = ({ data }) => (
   <Container>
-    <DataDetailItem>Name: {data.name}</DataDetailItem>
-    <DataDetailItem>Taxonomy: {data.taxonomy_id}</DataDetailItem>
-    <DataDetailItem>Completed: {data.completed ? 'Yes' : 'No'}</DataDetailItem>
+    <DataDetailItem>
+      <Label>Name: </Label>
+      {data.name}
+    </DataDetailItem>
+    <DataDetailItem>
+      <Label>Taxonomy: </Label>
+      {data.taxonomy_id}
+    </DataDetailItem>
+    <DataDetailItem>
+      <Label>Completed: </Label>
+      {data.completed ? 'Yes' : 'No'}
+    </DataDetailItem>
   </Container>
 );
 
@@ -27,3 +36,7 @@ const Container = styled.div`
 `;
 
 const DataDetailItem = styled.div``;
+
+const Label = styled.span`
+  font-weight: bold;
+`;
