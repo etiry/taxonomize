@@ -2,22 +2,11 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
 const DataDetail = ({ data }) => (
-  <Table>
-    <TableHeader>
-      <TableRow>
-        <TableHeading>Name</TableHeading>
-        <TableHeading>Taxonomy</TableHeading>
-        <TableHeading>Completed</TableHeading>
-      </TableRow>
-    </TableHeader>
-    <TableBody>
-      <TableRow>
-        <TableColumn>{data.name}</TableColumn>
-        <TableColumn>{data.taxonomy_id}</TableColumn>
-        <TableColumn>{data.completed ? 'Yes' : 'No'}</TableColumn>
-      </TableRow>
-    </TableBody>
-  </Table>
+  <Container>
+    <DataDetailItem>Name: {data.name}</DataDetailItem>
+    <DataDetailItem>Taxonomy: {data.taxonomy_id}</DataDetailItem>
+    <DataDetailItem>Completed: {data.completed ? 'Yes' : 'No'}</DataDetailItem>
+  </Container>
 );
 
 DataDetail.propTypes = {
@@ -33,17 +22,8 @@ DataDetail.propTypes = {
 
 export default DataDetail;
 
-const Table = styled.table`
+const Container = styled.div`
   grid-row: 1;
-  width: 100%;
 `;
 
-const TableHeader = styled.thead``;
-
-const TableBody = styled.tbody``;
-
-const TableRow = styled.tr``;
-
-const TableHeading = styled.th``;
-
-const TableColumn = styled.td``;
+const DataDetailItem = styled.div``;

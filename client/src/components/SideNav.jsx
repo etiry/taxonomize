@@ -32,13 +32,13 @@ const SideNav = ({ setSelectedDataId }) => {
     );
   } else if (isSuccess) {
     content = data.map((d) => (
-      <LinkItem
+      <ContentLinkItem
         key={d.id}
         style={{ display: showData ? 'block' : 'none' }}
         onClick={() => handleSelectData(d.id)}
       >
         <Link>{d.name}</Link>
-      </LinkItem>
+      </ContentLinkItem>
     ));
   } else if (isError) {
     content = <div>{error.toString()}</div>;
@@ -46,15 +46,26 @@ const SideNav = ({ setSelectedDataId }) => {
 
   return (
     <Nav>
-      <Button>+ New Taxonomy</Button>
       <LinkList>
         <LinkItem>
           <Link>Dashboard</Link>
         </LinkItem>
         <LinkItem>
-          <Link onClick={handleClick}>My Data</Link>
+          <Link>[Taxonomy Name]</Link>
         </LinkItem>
+        <IndentLinkItem>
+          <Link>Edit Taxonomy</Link>
+        </IndentLinkItem>
+        <IndentLinkItem>
+          <Link>All Datasets</Link>
+        </IndentLinkItem>
+        <IndentLinkItem>
+          <Link onClick={handleClick}>My Datasets</Link>
+        </IndentLinkItem>
         {content}
+        <IndentLinkItem>
+          <Link>Compare Datasets</Link>
+        </IndentLinkItem>
       </LinkList>
     </Nav>
   );
@@ -78,5 +89,13 @@ const LinkList = styled.ul`
 `;
 
 const LinkItem = styled.li``;
+
+const IndentLinkItem = styled.li`
+  padding-left: 1rem;
+`;
+
+const ContentLinkItem = styled.li`
+  padding-left: 2rem;
+`;
 
 const Link = styled.a``;

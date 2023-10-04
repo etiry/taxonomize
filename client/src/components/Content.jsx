@@ -38,6 +38,6 @@ const ContentContainer = styled.header`
   grid-column: 2 / end;
   display: grid;
   grid-template-row: 1fr 4fr;
-  justify-items: center;
+  justify-items: start;
   max-width: 100%;
 `;
