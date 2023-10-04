@@ -1,9 +1,19 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { apiSlice } from './apiSlice';
 
+const loggedInUserId = localStorage.getItem('taxonomizeId');
+const loggedInUserEmail = localStorage.getItem('taxonomizeEmail');
+const loggedInUserToken = localStorage.getItem('taxonomizeToken');
+
+const initialState = {
+  id: loggedInUserId || null,
+  email: loggedInUserEmail || null,
+  token: loggedInUserToken || null
+};
+
 const authSlice = createSlice({
   name: 'auth',
-  initialState: { id: null, token: null, email: null },
+  initialState,
   reducers: {
     logout: (state) => {
       state.id = null;
@@ -37,3 +47,4 @@ export default authSlice.reducer;
 
 export const selectCurrentUser = (state) => state.auth.id;
 export const selectCurrentUserEmail = (state) => state.auth.email;
+export const selectCurrentUserToken = (state) => state.auth.token;

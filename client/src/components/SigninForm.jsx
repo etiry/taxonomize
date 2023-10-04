@@ -15,22 +15,21 @@ const SigninForm = () => {
   const [login, { isLoading }] = useSigninMutation();
 
   const onSubmit = async (data) => {
-    const formData = new FormData();
-    formData.append('email', data.email);
-    formData.append('password', data.password);
-
-    reset();
-
     try {
-      await login(data).unwrap();
+      const { id, email, token } = await login(data).unwrap();
       // Being that the result is handled in extraReducers in authSlice,
       // we know that we're authenticated after this, so the user
       // and token will be present in the store
+      localStorage.setItem('taxonomizeId', id);
+      localStorage.setItem('taxonomizeEmail', email);
+      localStorage.setItem('taxonomizeToken', token);
       navigate('/');
     } catch (error) {
-      console.log(`request error: ${error}`);
+      console.log(`${error}`);
       navigate('/');
     }
+
+    reset();
   };
 
   return (
