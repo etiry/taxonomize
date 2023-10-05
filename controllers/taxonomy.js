@@ -44,7 +44,7 @@ exports.getCategories = async (req, res, next) => {
 
   try {
     const { rows: categories } = await pool.query(
-      'SELECT id, name FROM categories WHERE taxonomy_id = $1',
+      'SELECT id, name FROM categories WHERE taxonomy_id = $1 ORDER BY name',
       [parseInt(taxonomyId)]
     );
     return res.status(200).end(JSON.stringify(categories));
