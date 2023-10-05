@@ -25,7 +25,8 @@ DataDetail.propTypes = {
     dataset_id: PropTypes.number,
     taxonomy_id: PropTypes.number,
     completed: PropTypes.bool,
-    name: PropTypes.string
+    dataset_name: PropTypes.string,
+    taxonomy_name: PropTypes.string
   })
 };
 
@@ -33,6 +34,7 @@ export default DataDetail;
 
 const Container = styled.div`
   grid-row: 1;
+  grid-column: 1;
 `;
 
 const DataDetailItem = styled.div``;

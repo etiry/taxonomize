@@ -5,6 +5,7 @@ import { selectCurrentUser } from '../slices/authSlice';
 import { apiSlice } from '../slices/apiSlice';
 import DataDetail from './DataDetail';
 import Observations from './Observations';
+import TableOptions from './TableOptions';
 
 const Content = ({ selectedDataId }) => {
   const user = useSelector(selectCurrentUser);
@@ -15,7 +16,8 @@ const Content = ({ selectedDataId }) => {
   if (selectedDataId) {
     return (
       <ContentContainer>
-        <DataDetail data={selectedData} />;
+        <DataDetail data={selectedData} />
+        <TableOptions taxonomyId={selectedData.taxonomy_id}/>
         <Observations
           selectedDataId={selectedDataId}
           taxonomyId={selectedData.taxonomy_id}
@@ -38,6 +40,7 @@ const ContentContainer = styled.header`
   grid-column: 2 / end;
   display: grid;
   grid-template-row: 1fr 5fr;
+  grid-template-column: 1fr 1fr;
   justify-items: start;
   max-width: 100%;
 `;
