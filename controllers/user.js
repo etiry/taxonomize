@@ -7,7 +7,7 @@ exports.getData = async (req, res, next) => {
 
   try {
     const { rows: datasets } = await pool.query(
-      'SELECT * FROM dataset_assignments JOIN datasets ON dataset_assignments.dataset_id = datasets.id WHERE user_id = $1',
+      'SELECT dataset_assignments.id, dataset_assignments.user_id, dataset_assignments.dataset_id, dataset_assignments.completed, datasets.name as dataset_name, datasets.taxonomy_id, taxonomies.name as taxonomy_name FROM dataset_assignments JOIN datasets ON dataset_assignments.dataset_id = datasets.id JOIN taxonomies ON datasets.taxonomy_id = taxonomies.id WHERE user_id = $1',
       [parseInt(userId)]
     );
 

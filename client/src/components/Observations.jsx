@@ -10,7 +10,10 @@ import {
   Cell
 } from '@table-library/react-table-library/table';
 import { useTheme } from '@table-library/react-table-library/theme';
-import { getTheme } from '@table-library/react-table-library/baseline';
+import {
+  DEFAULT_OPTIONS,
+  getTheme
+} from '@table-library/react-table-library/material-ui';
 import { usePagination } from '@table-library/react-table-library/pagination';
 import {
   apiSlice,
@@ -20,7 +23,8 @@ import {
 } from '../slices/apiSlice';
 
 const Observations = ({ selectedDataId, taxonomyId, datasetAssignmentId }) => {
-  const theme = useTheme(getTheme());
+  const materialTheme = getTheme(DEFAULT_OPTIONS);
+  const theme = useTheme(materialTheme);
   const [getObs] = useLazyGetObservationsQuery();
   let data = {};
 
@@ -90,7 +94,7 @@ const Observations = ({ selectedDataId, taxonomyId, datasetAssignmentId }) => {
                 {tableList.map((item) => (
                   <Row key={item.id} item={item}>
                     <Cell>{item.text}</Cell>
-                    <Cell>{item.category_id}</Cell>
+                    <Cell>{item.category_name}</Cell>
                     <Cell>
                       <select
                         style={{
@@ -185,8 +189,8 @@ Observations.propTypes = {
 export default Observations;
 
 const Container = styled.div`
-  max-height: 425px;
-  overflow-y: scroll;
+  // max-height: 425px;
+  // overflow-y: scroll;
   width: 100%;
   grid-row: 2 / end;
 `;

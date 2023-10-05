@@ -37,7 +37,7 @@ const SideNav = ({ setSelectedDataId }) => {
         style={{ display: showData ? 'block' : 'none' }}
         onClick={() => handleSelectData(d.id)}
       >
-        <Link>{d.name}</Link>
+        <Link>{d.dataset_name}</Link>
       </ContentLinkItem>
     ));
   } else if (isError) {

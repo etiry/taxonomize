@@ -48,7 +48,7 @@ exports.getObservations = async (req, res, next) => {
       [perPage, parseInt(dataId)]
     );
     const { rows: nodes } = await pool.query(
-      'SELECT observations.id, observations.text, category_assignments.category_id FROM observations LEFT JOIN category_assignments ON category_assignments.observation_id = observations.id WHERE dataset_id = $1 LIMIT $2 OFFSET $3',
+      'SELECT observations.id, observations.text, category_assignments.category_id, categories.name as category_name FROM observations LEFT JOIN category_assignments ON category_assignments.observation_id = observations.id LEFT JOIN categories ON category_assignments.category_id = categories.id WHERE dataset_id = $1 LIMIT $2 OFFSET $3',
       [parseInt(dataId), perPage, perPage * page - perPage]
     );
 

@@ -5,11 +5,11 @@ const DataDetail = ({ data }) => (
   <Container>
     <DataDetailItem>
       <Label>Name: </Label>
-      {data.name}
+      {data.dataset_name}
     </DataDetailItem>
     <DataDetailItem>
       <Label>Taxonomy: </Label>
-      {data.taxonomy_id}
+      {data.taxonomy_name}
     </DataDetailItem>
     <DataDetailItem>
       <Label>Completed: </Label>
