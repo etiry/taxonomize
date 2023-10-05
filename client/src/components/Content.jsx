@@ -17,7 +17,10 @@ const Content = ({ selectedDataId }) => {
     return (
       <ContentContainer>
         <DataDetail data={selectedData} />
-        <TableOptions taxonomyId={selectedData.taxonomy_id}/>
+        <TableOptions
+          selectedDataId={selectedDataId}
+          taxonomyId={selectedData.taxonomy_id}
+        />
         <Observations
           selectedDataId={selectedDataId}
           taxonomyId={selectedData.taxonomy_id}

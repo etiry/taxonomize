@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import {
   useGetDataQuery,
   useLazyGetObservationsQuery
@@ -9,6 +9,7 @@ import {
 import { selectCurrentUser } from '../slices/authSlice';
 
 const SideNav = ({ setSelectedDataId }) => {
+  const dispatch = useDispatch();
   const user = useSelector(selectCurrentUser);
   const { data, isLoading, isSuccess, isError, error } = useGetDataQuery(user);
   const [getObs] = useLazyGetObservationsQuery();
@@ -19,7 +20,7 @@ const SideNav = ({ setSelectedDataId }) => {
   };
 
   const handleSelectData = async (dataId) => {
-    const params = { dataId, page: 1 };
+    const params = { page: 1, dataId, query: '', sort: '', filter: '' };
     await getObs(params);
     setSelectedDataId(dataId);
   };

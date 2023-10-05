@@ -38,8 +38,25 @@ export const apiSlice = createApi({
       providesTags: ['Data']
     }),
     getObservations: builder.query({
-      query: (params) =>
-        `api/data/${params.dataId}/observations?page=${params.page}`,
+      query: (params) => {
+        console.log(params);
+        let url = `api/data/${params.dataId}/observations?page=${params.page}`;
+
+        if (params.query) {
+          url += `&query=${params.query}`;
+        }
+
+        if (params.sort) {
+          url += `&sort=${params.sort}`;
+        }
+
+        if (params.filter) {
+          url += `&filter=${params.filter}`;
+        }
+
+        console.log(url);
+        return url;
+      },
       providesTags: ['Observations']
     }),
     getCategories: builder.query({

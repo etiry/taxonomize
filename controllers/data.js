@@ -40,16 +40,19 @@ exports.deleteData = async (req, res, next) => {
 exports.getObservations = async (req, res, next) => {
   const perPage = 10;
   const page = req.query.page || 1;
+  const query = req.query.query || '';
+  const sort = req.query.sort || '';
+  const filter = req.query.filter || '';
   const { dataId } = req.params;
 
   try {
     const totals = await pool.query(
-      'SELECT COUNT(*) as total_records, CEIL(COUNT(*) / $1) AS total_pages FROM observations WHERE dataset_id = $2',
-      [perPage, parseInt(dataId)]
+      'SELECT COUNT(*) as total_records, CEIL(COUNT(*) / $1) AS total_pages FROM observations WHERE dataset_id = $2 AND LOWER(text) LIKE LOWER($3)',
+      [perPage, parseInt(dataId), `%${query}%`]
     );
     const { rows: nodes } = await pool.query(
-      'SELECT observations.id, observations.text, category_assignments.category_id, categories.name as category_name FROM observations LEFT JOIN category_assignments ON category_assignments.observation_id = observations.id LEFT JOIN categories ON category_assignments.category_id = categories.id WHERE dataset_id = $1 LIMIT $2 OFFSET $3',
-      [parseInt(dataId), perPage, perPage * page - perPage]
+      'SELECT observations.id, observations.text, category_assignments.category_id, categories.name as category_name FROM observations LEFT JOIN category_assignments ON category_assignments.observation_id = observations.id LEFT JOIN categories ON category_assignments.category_id = categories.id WHERE dataset_id = $1 AND LOWER(observations.text) LIKE LOWER($2) LIMIT $3 OFFSET $4',
+      [parseInt(dataId), `%${query}%`, perPage, perPage * page - perPage]
     );
 
     return res.status(200).end(
@@ -64,6 +67,7 @@ exports.getObservations = async (req, res, next) => {
       })
     );
   } catch (error) {
+    console.log(error);
     return res.end(`${error}`);
   }
 };

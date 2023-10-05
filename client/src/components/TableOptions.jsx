@@ -1,28 +1,51 @@
 import PropTypes from 'prop-types';
 import { useForm } from 'react-hook-form';
+import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
-import { apiSlice } from '../slices/apiSlice';
+import { useLazyGetObservationsQuery } from '../slices/apiSlice';
+import { selectGetObsParams, setGetObsParams } from '../slices/paramsSlice';
 import CategoryOptions from './CategoryOptions';
 
-const TableOptions = ({ taxonomyId }) => {
+const TableOptions = ({ selectedDataId, taxonomyId }) => {
+  const dispatch = useDispatch();
   const {
     register,
-    handleSubmit,
     setError,
     reset,
     formState: { errors }
   } = useForm();
-  const categories = apiSlice.endpoints.getCategories.useQueryState(taxonomyId);
+  const [getObs] = useLazyGetObservationsQuery();
 
-  const onSubmit = async (data) => {
-    reset();
+  const handleSearch = async (event) => {
+    dispatch(
+      setGetObsParams({
+        page: 1,
+        dataId: selectedDataId,
+        query: event.target.form[0].value,
+        sort: event.target.form[1].value,
+        filter: event.target.form[2].value
+      })
+    );
+    const params = {
+      page: 1,
+      dataId: selectedDataId,
+      query: event.target.form[0].value,
+      sort: event.target.form[1].value,
+      filter: event.target.form[2].value
+    };
+    await getObs(params);
   };
 
   return (
-    <Form onSubmit={handleSubmit(onSubmit)}>
+    <Form>
       <FormGroup>
         <FormLabel>Search Text: </FormLabel>
-        <FormInput type="text" {...register('searchTerm')} />
+        <FormInput
+          type="text"
+          id="searchTerm"
+          {...register('searchTerm')}
+          onChange={handleSearch}
+        />
       </FormGroup>
       <FormGroup>
         <FormLabel>Sort by: </FormLabel>
@@ -46,6 +69,7 @@ const TableOptions = ({ taxonomyId }) => {
 };
 
 TableOptions.propTypes = {
+  selectedDataId: PropTypes.number,
   taxonomyId: PropTypes.number
 };
 
