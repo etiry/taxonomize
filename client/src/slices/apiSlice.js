@@ -39,7 +39,6 @@ export const apiSlice = createApi({
     }),
     getObservations: builder.query({
       query: (params) => {
-        console.log(params);
         let url = `api/data/${params.dataId}/observations?page=${params.page}`;
 
         if (params.query) {
@@ -53,7 +52,6 @@ export const apiSlice = createApi({
         if (params.filter) {
           url += `&filter=${params.filter}`;
         }
-
         console.log(url);
         return url;
       },

@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import { useForm } from 'react-hook-form';
 import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
+import debounce from 'debounce';
 import { useLazyGetObservationsQuery } from '../slices/apiSlice';
 import { selectGetObsParams, setGetObsParams } from '../slices/paramsSlice';
 import CategoryOptions from './CategoryOptions';
@@ -16,7 +17,7 @@ const TableOptions = ({ selectedDataId, taxonomyId }) => {
   } = useForm();
   const [getObs] = useLazyGetObservationsQuery();
 
-  const handleSearch = async (event) => {
+  const handleInputChange = async (event) => {
     dispatch(
       setGetObsParams({
         page: 1,
@@ -36,6 +37,28 @@ const TableOptions = ({ selectedDataId, taxonomyId }) => {
     await getObs(params);
   };
 
+  const handleReset = async (event) => {
+    event.preventDefault();
+    reset();
+    dispatch(
+      setGetObsParams({
+        page: 1,
+        dataId: selectedDataId,
+        query: null,
+        sort: null,
+        filter: null
+      })
+    );
+    const params = {
+      page: 1,
+      dataId: selectedDataId,
+      query: null,
+      sort: null,
+      filter: null
+    };
+    await getObs(params);
+  };
+
   return (
     <Form>
       <FormGroup>
@@ -44,26 +67,27 @@ const TableOptions = ({ selectedDataId, taxonomyId }) => {
           type="text"
           id="searchTerm"
           {...register('searchTerm')}
-          onChange={handleSearch}
+          onChange={debounce((event) => handleInputChange(event), 500)}
         />
       </FormGroup>
       <FormGroup>
         <FormLabel>Sort by: </FormLabel>
-        <Select {...register('sort')}>
+        <Select {...register('sort')} onChange={handleInputChange}>
           <Option value="">None</Option>
-          <Option value="textAsc">Text: Ascending</Option>
-          <Option value="textDesc">Text: Descending</Option>
-          <Option value="categoryAsc">Category: Ascending</Option>
-          <Option value="categoryDesc">Category: Descending</Option>
+          <Option value="text_Asc">Text: Ascending</Option>
+          <Option value="text_Desc">Text: Descending</Option>
+          <Option value="category_Asc">Category: Ascending</Option>
+          <Option value="category_Desc">Category: Descending</Option>
         </Select>
       </FormGroup>
       <FormGroup>
-        <FormLabel>Filter by: </FormLabel>
-        <Select {...register('filter')}>
+        <FormLabel>Filter by category: </FormLabel>
+        <Select {...register('filter')} onChange={handleInputChange}>
           <Option value="">None</Option>
           <CategoryOptions taxonomyId={taxonomyId} />
         </Select>
       </FormGroup>
+      <Button onClick={handleReset}>Reset</Button>
     </Form>
   );
 };

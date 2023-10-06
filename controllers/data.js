@@ -45,14 +45,51 @@ exports.getObservations = async (req, res, next) => {
   const filter = req.query.filter || '';
   const { dataId } = req.params;
 
+  let queryStringTotals =
+    'SELECT COUNT(*) as total_records, CEIL(COUNT(*) / $1) AS total_pages FROM observations LEFT JOIN category_assignments ON category_assignments.observation_id = observations.id WHERE dataset_id = $2 AND LOWER(text) LIKE LOWER($3)';
+  const stringInterpolationsTotals = [perPage, parseInt(dataId), `%${query}%`];
+
+  let queryStringNodes =
+    'SELECT observations.id, observations.text, category_assignments.category_id, categories.name as category_name FROM observations LEFT JOIN category_assignments ON category_assignments.observation_id = observations.id LEFT JOIN categories ON category_assignments.category_id = categories.id WHERE dataset_id = $1 AND LOWER(observations.text) LIKE LOWER($2)';
+  const stringInterpolationsNodes = [
+    dataId,
+    `%${query}%`,
+    perPage,
+    perPage * page - perPage
+  ];
+
+  let queryStringLimitOffset = ' LIMIT $3 OFFSET $4';
+
+  if (filter) {
+    queryStringTotals += ' AND category_assignments.category_id = $4';
+    stringInterpolationsTotals.push(filter);
+
+    queryStringNodes += ' AND category_assignments.category_id = $3';
+    stringInterpolationsNodes.splice(2, 0, filter);
+    queryStringLimitOffset = ' LIMIT $4 OFFSET $5';
+  }
+
+  if (sort) {
+    const sortParams = sort.split('_');
+    if (sortParams[1] === 'Asc') {
+      sortParams[0] === 'text'
+        ? (queryStringNodes += ' ORDER BY observations.text')
+        : (queryStringNodes += ' ORDER BY categories.name');
+    } else {
+      sortParams[0] === 'text'
+        ? (queryStringNodes += ' ORDER BY observations.text DESC')
+        : (queryStringNodes += ' ORDER BY categories.name DESC');
+    }
+  }
+
   try {
     const totals = await pool.query(
-      'SELECT COUNT(*) as total_records, CEIL(COUNT(*) / $1) AS total_pages FROM observations WHERE dataset_id = $2 AND LOWER(text) LIKE LOWER($3)',
-      [perPage, parseInt(dataId), `%${query}%`]
+      queryStringTotals,
+      stringInterpolationsTotals
     );
     const { rows: nodes } = await pool.query(
-      'SELECT observations.id, observations.text, category_assignments.category_id, categories.name as category_name FROM observations LEFT JOIN category_assignments ON category_assignments.observation_id = observations.id LEFT JOIN categories ON category_assignments.category_id = categories.id WHERE dataset_id = $1 AND LOWER(observations.text) LIKE LOWER($2) LIMIT $3 OFFSET $4',
-      [parseInt(dataId), `%${query}%`, perPage, perPage * page - perPage]
+      queryStringNodes + queryStringLimitOffset,
+      stringInterpolationsNodes
     );
 
     return res.status(200).end(
@@ -61,7 +98,10 @@ exports.getObservations = async (req, res, next) => {
           total: totals.rows[0].total_records,
           totalPages: totals.rows[0].total,
           startSize: perPage * page - perPage + 1,
-          endSize: perPage * page
+          endSize:
+            totals.rows[0].total_records >= perPage
+              ? perPage * page
+              : totals.rows[0].total_records
         },
         nodes
       })

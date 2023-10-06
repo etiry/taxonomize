@@ -33,7 +33,13 @@ const Observations = ({ selectedDataId, taxonomyId, datasetAssignmentId }) => {
   let data = {};
 
   const onPaginationChange = async (action, state) => {
-    await getObs(obsParams);
+    await getObs({
+      dataId: selectedDataId,
+      page: pagination.state.page + 1,
+      query: obsParams.query,
+      sort: obsParams.sort,
+      filter: obsParams.filter
+    });
   };
 
   const pagination = usePagination(
