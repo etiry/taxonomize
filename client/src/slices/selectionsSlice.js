@@ -2,7 +2,8 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
   selectedDataId: null,
-  selectedTaxonomyId: null
+  selectedTaxonomyId: null,
+  isOpen: false
 };
 
 const selectionsSlice = createSlice({
@@ -14,11 +15,14 @@ const selectionsSlice = createSlice({
     },
     setSelectedTaxonomyId: (state, action) => {
       state.selectedTaxonomyId = action.payload;
+    },
+    setIsOpen: (state) => {
+      state.isOpen = !state.isOpen;
     }
   }
 });
 
-export const { setSelectedDataId, setSelectedTaxonomyId } =
+export const { setSelectedDataId, setSelectedTaxonomyId, setIsOpen } =
   selectionsSlice.actions;
 
 export default selectionsSlice.reducer;
@@ -26,3 +30,4 @@ export default selectionsSlice.reducer;
 export const selectSelectedDataId = (state) => state.selections.selectedDataId;
 export const selectSelectedTaxonomyId = (state) =>
   state.selections.selectedTaxonomyId;
+export const selectIsOpen = (state) => state.selections.isOpen;

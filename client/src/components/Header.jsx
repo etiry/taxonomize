@@ -8,7 +8,7 @@ import {
   logout
 } from '../slices/authSlice';
 import { useGetTaxonomiesQuery } from '../slices/apiSlice';
-import { setSelectedTaxonomyId } from '../slices/selectionsSlice';
+import { setIsOpen, setSelectedTaxonomyId } from '../slices/selectionsSlice';
 
 const Header = () => {
   const dispatch = useDispatch();
@@ -16,6 +16,7 @@ const Header = () => {
   const authenticated = useSelector(selectCurrentUser);
   const email = useSelector(selectCurrentUserEmail);
   const team = useSelector(selectCurrentUserTeam);
+
   const {
     data: taxonomies,
     isLoading,
@@ -33,13 +34,17 @@ const Header = () => {
     dispatch(setSelectedTaxonomyId(event.target.value));
   };
 
+  const toggleModal = () => {
+    dispatch(setIsOpen());
+  };
+
   let links;
 
   if (authenticated && isSuccess) {
     links = (
       <>
         <LinkItem>
-          <Button>Add a Taxonomy</Button>
+          <Button onClick={toggleModal}>Add a Taxonomy</Button>
         </LinkItem>
         <LinkItem>
           <Select onChange={handleChangeTaxonomy}>
