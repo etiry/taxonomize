@@ -74,6 +74,23 @@ export const apiSlice = createApi({
     getTaxonomies: builder.query({
       query: (userId) => `api/user/${userId}/taxonomy`,
       providesTags: ['Taxonomies']
+    }),
+    addTaxonomy: builder.mutation({
+      query: (data) => ({
+        url: 'api/taxonomy',
+        method: 'POST',
+        body: data,
+        formData: true
+      }),
+      invalidatesTags: ['Taxonomies']
+    }),
+    assignTaxonomy: builder.mutation({
+      query: (params) => ({
+        url: `api/user/${params.userId}/taxonomy`,
+        method: 'POST',
+        body: { taxonomyId: params.taxonomyId }
+      }),
+      invalidatesTags: ['Taxonomies']
     })
   })
 });
@@ -86,5 +103,7 @@ export const {
   useLazyGetObservationsQuery,
   useGetCategoriesQuery,
   useAssignCategoryMutation,
-  useGetTaxonomiesQuery
+  useGetTaxonomiesQuery,
+  useAddTaxonomyMutation,
+  useAssignTaxonomyMutation
 } = apiSlice;

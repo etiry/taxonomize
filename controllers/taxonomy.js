@@ -8,7 +8,7 @@ exports.addTaxonomy = async (req, res, next) => {
 
   const taxonomy = await pool.query(
     'INSERT INTO taxonomies (name, team_id) VALUES ($1, $2) RETURNING id',
-    [req.body.name, parseInt(req.body.teamId)]
+    [req.body.name, req.body.teamId]
   );
 
   rows.forEach(async (row) => {
@@ -18,7 +18,7 @@ exports.addTaxonomy = async (req, res, next) => {
     );
   });
 
-  res.status(200).end();
+  res.status(200).end(JSON.stringify(taxonomy.rows[0].id));
 };
 
 // DELETE /taxonomy/:taxonomyId

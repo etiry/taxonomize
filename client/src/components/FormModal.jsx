@@ -5,12 +5,23 @@ import styled from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
 import Modal from 'styled-react-modal';
+import { selectCurrentUser, selectCurrentUserTeam } from '../slices/authSlice';
 import { selectIsOpen, setIsOpen } from '../slices/selectionsSlice';
+import {
+  useAddTaxonomyMutation,
+  useAssignTaxonomyMutation
+} from '../slices/apiSlice';
 
 const FormModal = () => {
   const dispatch = useDispatch();
   const isOpen = useSelector(selectIsOpen);
   const [opacity, setOpacity] = useState(0);
+
+  const [addTaxonomy] = useAddTaxonomyMutation();
+  const [assignTaxonomy] = useAssignTaxonomyMutation();
+
+  const userId = useSelector(selectCurrentUser);
+  const team = useSelector(selectCurrentUserTeam);
 
   const toggleModal = () => {
     setOpacity(0);
@@ -41,6 +52,7 @@ const FormModal = () => {
     const formData = new FormData();
     formData.append('name', data.name);
     formData.append('file', data.file[0]);
+    formData.append('teamId', 1);
 
     const file = data.file[0];
     if (file.type !== 'text/csv') {
@@ -50,18 +62,17 @@ const FormModal = () => {
       });
       return;
     }
+
     reset();
 
-    const requestOptions = {
-      method: 'POST',
-      body: formData
-    };
-
     try {
-      const response = await fetch('/api/taxonomy', requestOptions);
+      const { data: taxonomyId } = await addTaxonomy(formData);
+      await assignTaxonomy({ userId, taxonomyId });
     } catch (error) {
       console.log(`request error: ${error}`);
     }
+
+    toggleModal();
   };
 
   return (
