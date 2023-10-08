@@ -42,7 +42,7 @@ exports.getTaxonomies = async (req, res, next) => {
   try {
     const { rows: taxonomies } = await pool.query(
       'SELECT * FROM taxonomy_assignments JOIN taxonomies ON taxonomy_assignments.taxonomy_id = taxonomies.id WHERE user_id = $1',
-      [parseInt(userId)]
+      [userId]
     );
     return res.status(200).end(JSON.stringify(taxonomies));
   } catch (error) {
@@ -58,7 +58,7 @@ exports.assignTaxonomy = async (req, res, next) => {
   try {
     await pool.query(
       'INSERT INTO taxonomy_assignments (user_id, taxonomy_id) VALUES ($1, $2)',
-      [parseInt(userId), parseInt(req.body.taxonomyId)]
+      [userId, req.body.taxonomyId]
     );
 
     return res.status(200).end('Taxonomy assigned successfully');
