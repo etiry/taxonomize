@@ -3,14 +3,27 @@ import styled from 'styled-components';
 import { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import {
+  apiSlice,
   useGetDataQuery,
   useLazyGetObservationsQuery
 } from '../slices/apiSlice';
 import { selectCurrentUser } from '../slices/authSlice';
+import {
+  selectSelectedTaxonomyId,
+  setSelectedDataId
+} from '../slices/selectionsSlice';
 
-const SideNav = ({ setSelectedDataId }) => {
+const SideNav = () => {
   const dispatch = useDispatch();
   const user = useSelector(selectCurrentUser);
+  const selectedTaxonomyId = useSelector(selectSelectedTaxonomyId);
+  const selectedTaxonomy = apiSlice.endpoints.getTaxonomies.useQueryState(
+    user,
+    {
+      selectFromResult: ({ data }) =>
+        data?.find((d) => d.id === parseInt(selectedTaxonomyId))
+    }
+  );
   const { data, isLoading, isSuccess, isError, error } = useGetDataQuery(user);
   const [getObs] = useLazyGetObservationsQuery();
   const [showData, setShowData] = useState(true);
@@ -22,7 +35,7 @@ const SideNav = ({ setSelectedDataId }) => {
   const handleSelectData = async (dataId) => {
     const params = { page: 1, dataId, query: '', sort: '', filter: '' };
     await getObs(params);
-    setSelectedDataId(dataId);
+    dispatch(setSelectedDataId(dataId));
   };
 
   let content;
@@ -52,7 +65,7 @@ const SideNav = ({ setSelectedDataId }) => {
           <Link>Dashboard</Link>
         </LinkItem>
         <LinkItem>
-          <Link>[Taxonomy Name]</Link>
+          <Link>{selectedTaxonomy ? selectedTaxonomy.name : 'Taxonomy'}</Link>
         </LinkItem>
         <IndentLinkItem>
           <Link>Edit Taxonomy</Link>
@@ -82,8 +95,6 @@ const Nav = styled.nav`
   min-height: 100vh;
   grid-column: 1;
 `;
-
-const Button = styled.button``;
 
 const LinkList = styled.ul`
   list-style-type: none;

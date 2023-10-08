@@ -52,7 +52,7 @@ export const apiSlice = createApi({
         if (params.filter) {
           url += `&filter=${params.filter}`;
         }
-        console.log(url);
+
         return url;
       },
       providesTags: ['Observations']
@@ -70,6 +70,10 @@ export const apiSlice = createApi({
         }
       }),
       invalidatesTags: ['Observations']
+    }),
+    getTaxonomies: builder.query({
+      query: (userId) => `api/user/${userId}/taxonomy`,
+      providesTags: ['Taxonomies']
     })
   })
 });
@@ -81,5 +85,6 @@ export const {
   useGetDataQuery,
   useLazyGetObservationsQuery,
   useGetCategoriesQuery,
-  useAssignCategoryMutation
+  useAssignCategoryMutation,
+  useGetTaxonomiesQuery
 } = apiSlice;

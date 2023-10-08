@@ -6,14 +6,16 @@ import { apiSlice } from '../slices/apiSlice';
 import DataDetail from './DataDetail';
 import Observations from './Observations';
 import TableOptions from './TableOptions';
+import { selectSelectedDataId } from '../slices/selectionsSlice';
 
-const Content = ({ selectedDataId }) => {
+const Content = () => {
   const user = useSelector(selectCurrentUser);
+  const selectedDataId = useSelector(selectSelectedDataId);
   const selectedData = apiSlice.endpoints.getData.useQueryState(user, {
     selectFromResult: ({ data }) => data?.find((d) => d.id === selectedDataId)
   });
 
-  if (selectedDataId) {
+  if (selectedData) {
     return (
       <ContentContainer>
         <DataDetail data={selectedData} />
@@ -31,10 +33,6 @@ const Content = ({ selectedDataId }) => {
   }
 
   return <ContentContainer>This is the content</ContentContainer>;
-};
-
-Content.propTypes = {
-  selectedDataId: PropTypes.number
 };
 
 export default Content;

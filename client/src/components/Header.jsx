@@ -7,6 +7,8 @@ import {
   selectCurrentUserTeam,
   logout
 } from '../slices/authSlice';
+import { useGetTaxonomiesQuery } from '../slices/apiSlice';
+import { setSelectedTaxonomyId } from '../slices/selectionsSlice';
 
 const Header = () => {
   const dispatch = useDispatch();
@@ -14,22 +16,44 @@ const Header = () => {
   const authenticated = useSelector(selectCurrentUser);
   const email = useSelector(selectCurrentUserEmail);
   const team = useSelector(selectCurrentUserTeam);
+  const {
+    data: taxonomies,
+    isLoading,
+    isSuccess,
+    isError,
+    error
+  } = useGetTaxonomiesQuery(authenticated);
 
   const handleSignout = () => {
     dispatch(logout());
     navigate('/');
   };
 
+  const handleChangeTaxonomy = (event) => {
+    dispatch(setSelectedTaxonomyId(event.target.value));
+  };
+
   let links;
 
-  if (authenticated) {
+  if (authenticated && isSuccess) {
     links = (
       <>
         <LinkItem>
-          <LinkText>
-            <Label>Team: </Label>
-            {team}
-          </LinkText>
+          <Button>Add a Taxonomy</Button>
+        </LinkItem>
+        <LinkItem>
+          <Select onChange={handleChangeTaxonomy}>
+            <Option value="">Select a taxonomy</Option>
+            {taxonomies.map((taxonomy) => (
+              <Option key={taxonomy.id} value={taxonomy.id}>
+                {taxonomy.name}
+              </Option>
+            ))}
+          </Select>
+        </LinkItem>
+        <LinkItem>
+          <Label>Team: </Label>
+          {team}
         </LinkItem>
         <LinkItem>
           <LinkText>{email}</LinkText>
@@ -82,3 +106,9 @@ const LinkText = styled.a``;
 const Label = styled.span`
   font-weight: bold;
 `;
+
+const Button = styled.button``;
+
+const Select = styled.select``;
+
+const Option = styled.option``;
