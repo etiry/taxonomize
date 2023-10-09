@@ -10,7 +10,7 @@ import './index.css';
 import store from './store/store';
 import Main from './components/Main';
 import SignupForm from './components/SignupForm.jsx';
-import FormModal from './components/FormModal';
+import ModalComponent from './components/ModalComponent';
 
 const FadingBackground = styled(BaseModalBackground)`
   opacity: ${(props) => props.opacity};
@@ -28,7 +28,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
               <Route exact path="/" element={<Main />} />
               <Route exact path="/signup" element={<SignupForm />} />
             </Routes>
-            <FormModal />
+            <ModalComponent />
           </App>
         </Router>
       </ModalProvider>

@@ -3,7 +3,11 @@ import { createSlice } from '@reduxjs/toolkit';
 const initialState = {
   selectedDataId: null,
   selectedTaxonomyId: null,
-  isOpen: false
+  isOpen: false,
+  formType: {
+    entity: null,
+    new: false
+  }
 };
 
 const selectionsSlice = createSlice({
@@ -18,12 +22,20 @@ const selectionsSlice = createSlice({
     },
     setIsOpen: (state) => {
       state.isOpen = !state.isOpen;
+    },
+    setFormType: (state, action) => {
+      state.formType.entity = action.payload.entity;
+      state.formType.new = action.payload.new;
     }
   }
 });
 
-export const { setSelectedDataId, setSelectedTaxonomyId, setIsOpen } =
-  selectionsSlice.actions;
+export const {
+  setSelectedDataId,
+  setSelectedTaxonomyId,
+  setIsOpen,
+  setFormType
+} = selectionsSlice.actions;
 
 export default selectionsSlice.reducer;
 
@@ -31,3 +43,4 @@ export const selectSelectedDataId = (state) => state.selections.selectedDataId;
 export const selectSelectedTaxonomyId = (state) =>
   state.selections.selectedTaxonomyId;
 export const selectIsOpen = (state) => state.selections.isOpen;
+export const selectFormType = (state) => state.selections.formType;

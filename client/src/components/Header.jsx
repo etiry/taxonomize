@@ -8,7 +8,11 @@ import {
   logout
 } from '../slices/authSlice';
 import { useGetTaxonomiesQuery } from '../slices/apiSlice';
-import { setIsOpen, setSelectedTaxonomyId } from '../slices/selectionsSlice';
+import {
+  setIsOpen,
+  setSelectedTaxonomyId,
+  setFormType
+} from '../slices/selectionsSlice';
 
 const Header = () => {
   const dispatch = useDispatch();
@@ -35,6 +39,7 @@ const Header = () => {
   };
 
   const toggleModal = () => {
+    dispatch(setFormType({ entity: 'taxonomy', new: true }));
     dispatch(setIsOpen());
   };
 
