@@ -15,7 +15,7 @@ const tokenForUser = (userId) =>
 
 exports.signin = async (req, res, next) => {
   const user = await pool.query(
-    'SELECT users.id, users.email, teams.name FROM users JOIN teams ON users.team_id = teams.id WHERE users.id = $1',
+    'SELECT users.id, users.email, users.team_id, teams.name FROM users JOIN teams ON users.team_id = teams.id WHERE users.id = $1',
     [req.user.id]
   );
 
@@ -23,7 +23,10 @@ exports.signin = async (req, res, next) => {
     id: req.user.id,
     token: tokenForUser(req.user.id),
     email: user.rows[0].email,
-    team: user.rows[0].name
+    team: {
+      id: user.rows[0].team_id,
+      name: user.rows[0].name
+    }
   });
 };
 

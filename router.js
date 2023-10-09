@@ -8,6 +8,7 @@ const dataController = require('./controllers/data');
 const observationController = require('./controllers/observation');
 const authenticationController = require('./controllers/authentication');
 const userController = require('./controllers/user');
+const teamController = require('./controllers/team');
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
@@ -62,4 +63,7 @@ module.exports = (app) => {
     requireAuth,
     userController.assignTaxonomy
   );
+
+  // team routes
+  app.get('/api/team/:teamId/user', requireAuth, teamController.getUsers);
 };

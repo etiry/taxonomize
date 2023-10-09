@@ -91,6 +91,10 @@ export const apiSlice = createApi({
         body: { taxonomyId: params.taxonomyId }
       }),
       invalidatesTags: ['Taxonomies']
+    }),
+    getUsers: builder.query({
+      query: (teamId) => `api/team/${teamId}/user`,
+      providesTags: ['Users']
     })
   })
 });
@@ -105,5 +109,6 @@ export const {
   useAssignCategoryMutation,
   useGetTaxonomiesQuery,
   useAddTaxonomyMutation,
-  useAssignTaxonomyMutation
+  useAssignTaxonomyMutation,
+  useGetUsersQuery
 } = apiSlice;

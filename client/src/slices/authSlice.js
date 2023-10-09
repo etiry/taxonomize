@@ -4,13 +4,16 @@ import { apiSlice } from './apiSlice';
 const loggedInUserId = localStorage.getItem('taxonomizeId');
 const loggedInUserEmail = localStorage.getItem('taxonomizeEmail');
 const loggedInUserToken = localStorage.getItem('taxonomizeToken');
-const loggedInUserTeam = localStorage.getItem('taxonomizeTeam');
+const loggedInUserTeam = JSON.parse(localStorage.getItem('taxonomizeTeam'));
 
 const initialState = {
   id: loggedInUserId || null,
   email: loggedInUserEmail || null,
   token: loggedInUserToken || null,
-  team: loggedInUserTeam || null
+  team: {
+    id: loggedInUserTeam.id || null,
+    name: loggedInUserTeam.name || null
+  }
 };
 
 const authSlice = createSlice({
@@ -21,7 +24,8 @@ const authSlice = createSlice({
       state.id = null;
       state.token = null;
       state.email = null;
-      state.team = null;
+      state.team.id = null;
+      state.team.name = null;
     }
   },
   extraReducers: (builder) => {
@@ -31,7 +35,8 @@ const authSlice = createSlice({
         state.token = payload.token;
         state.id = payload.id;
         state.email = payload.email;
-        state.team = payload.team;
+        state.team.id = payload.team.id;
+        state.team.name = payload.team.name;
       }
     );
     builder.addMatcher(

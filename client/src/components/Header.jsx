@@ -15,7 +15,7 @@ const Header = () => {
   const navigate = useNavigate();
   const authenticated = useSelector(selectCurrentUser);
   const email = useSelector(selectCurrentUserEmail);
-  const team = useSelector(selectCurrentUserTeam);
+  const { name: teamName } = useSelector(selectCurrentUserTeam);
 
   const {
     data: taxonomies,
@@ -58,7 +58,7 @@ const Header = () => {
         </LinkItem>
         <LinkItem>
           <Label>Team: </Label>
-          {team}
+          {teamName}
         </LinkItem>
         <LinkItem>
           <LinkText>{email}</LinkText>

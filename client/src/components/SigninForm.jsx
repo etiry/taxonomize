@@ -23,7 +23,7 @@ const SigninForm = () => {
       localStorage.setItem('taxonomizeId', id);
       localStorage.setItem('taxonomizeEmail', email);
       localStorage.setItem('taxonomizeToken', token);
-      localStorage.setItem('taxonomizeTeam', team);
+      localStorage.setItem('taxonomizeTeam', JSON.stringify(team));
       navigate('/');
     } catch (error) {
       console.log(`${error}`);
