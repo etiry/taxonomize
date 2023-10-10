@@ -38,6 +38,7 @@ const SideNav = ({ setContentType }) => {
     const params = { page: 1, dataId, query: '', sort: '', filter: '' };
     await getObs(params);
     dispatch(setSelectedDataId(dataId));
+    setContentType('dataDetail');
   };
 
   const toggleModal = () => {
