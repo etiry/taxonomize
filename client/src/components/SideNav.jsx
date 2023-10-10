@@ -72,6 +72,9 @@ const SideNav = () => {
           <Link>Dashboard</Link>
         </LinkItem>
         <LinkItem>
+          <Link>My Team</Link>
+        </LinkItem>
+        <LinkItem>
           <Link>{selectedTaxonomy ? selectedTaxonomy.name : 'Taxonomy'}</Link>
         </LinkItem>
         <IndentLinkItem>
