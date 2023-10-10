@@ -33,8 +33,8 @@ const Datasets = () => {
   const { data, isLoading, isSuccess, isError, error } =
     useGetDataByTaxonomyQuery(selectedTaxonomyId);
 
-  const toggleModal = () => {
-    dispatch(setFormType({ entity: 'Dataset', new: true }));
+  const toggleModal = (bool) => {
+    dispatch(setFormType({ entity: 'Dataset', new: bool }));
     dispatch(setIsOpen());
   };
 
@@ -54,40 +54,41 @@ const Datasets = () => {
     }
   );
 
-  return (
-    <Container>
-      <Button onClick={toggleModal}>Add Dataset</Button>
-      <Table
-        data={data}
-        theme={theme}
-        layout={{ fixedHeader: true }}
-        // pagination={pagination}
-      >
-        {(tableList) => (
-          <>
-            <Header>
-              <HeaderRow>
-                <HeaderCell>Name</HeaderCell>
-                <HeaderCell />
-              </HeaderRow>
-            </Header>
+  if (isSuccess) {
+    return (
+      <Container>
+        <Button onClick={() => toggleModal(true)}>Add Dataset</Button>
+        <Table
+          data={data}
+          theme={theme}
+          layout={{ fixedHeader: true }}
+          // pagination={pagination}
+        >
+          {(tableList) => (
+            <>
+              <Header>
+                <HeaderRow>
+                  <HeaderCell>Name</HeaderCell>
+                  <HeaderCell />
+                </HeaderRow>
+              </Header>
 
-            <Body>
-              {tableList.map((item) => (
-                <Row key={item.id} item={item}>
-                  <Cell>{item.name}</Cell>
-                  <Cell>
-                    <Button>Edit</Button>
-                    <Button>Delete</Button>
-                  </Cell>
-                </Row>
-              ))}
-            </Body>
-          </>
-        )}
-      </Table>
+              <Body>
+                {tableList.map((item) => (
+                  <Row key={item.id} item={item}>
+                    <Cell>{item.name}</Cell>
+                    <Cell>
+                      <Button onClick={() => toggleModal(false)}>Edit</Button>
+                      <Button>Delete</Button>
+                    </Cell>
+                  </Row>
+                ))}
+              </Body>
+            </>
+          )}
+        </Table>
 
-      {/* {data.pageInfo && (
+        {/* {data.pageInfo && (
         <div
           style={{
             display: 'flex',
@@ -136,8 +137,9 @@ const Datasets = () => {
           </span>
         </div>
       )} */}
-    </Container>
-  );
+      </Container>
+    );
+  }
 };
 
 export default Datasets;
