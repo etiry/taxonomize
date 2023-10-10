@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
@@ -74,29 +73,29 @@ const SideNav = () => {
         <LinkItem>
           <Link>My Team</Link>
         </LinkItem>
-        <LinkItem>
-          <Link>{selectedTaxonomy ? selectedTaxonomy.name : 'Taxonomy'}</Link>
-        </LinkItem>
-        <IndentLinkItem>
-          <Link onClick={toggleModal}>Edit Taxonomy</Link>
-        </IndentLinkItem>
-        <IndentLinkItem>
-          <Link>All Datasets</Link>
-        </IndentLinkItem>
-        <IndentLinkItem>
-          <Link onClick={handleClick}>My Datasets</Link>
-        </IndentLinkItem>
-        {content}
-        <IndentLinkItem>
-          <Link>Compare Datasets</Link>
-        </IndentLinkItem>
+        {selectedTaxonomy ? (
+          <>
+            <LinkItem>
+              <Link>{selectedTaxonomy.name}</Link>
+            </LinkItem>
+            <IndentLinkItem>
+              <Link onClick={toggleModal}>Edit Taxonomy</Link>
+            </IndentLinkItem>
+            <IndentLinkItem>
+              <Link>All Datasets</Link>
+            </IndentLinkItem>
+            <IndentLinkItem>
+              <Link onClick={handleClick}>My Datasets</Link>
+            </IndentLinkItem>
+            {content}
+            <IndentLinkItem>
+              <Link>Compare Datasets</Link>
+            </IndentLinkItem>
+          </>
+        ) : null}
       </LinkList>
     </Nav>
   );
-};
-
-SideNav.propTypes = {
-  setSelectedDataId: PropTypes.func
 };
 
 export default SideNav;

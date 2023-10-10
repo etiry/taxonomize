@@ -8,11 +8,10 @@ const SigninForm = () => {
   const {
     register,
     handleSubmit,
-    setError,
     reset,
     formState: { errors }
   } = useForm();
-  const [login, { isLoading }] = useSigninMutation();
+  const [login] = useSigninMutation();
 
   const onSubmit = async (data) => {
     try {

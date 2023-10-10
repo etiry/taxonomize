@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate, Link } from 'react-router-dom';
 import {
@@ -21,13 +22,7 @@ const Header = () => {
   const email = useSelector(selectCurrentUserEmail);
   const team = useSelector(selectCurrentUserTeam);
 
-  const {
-    data: taxonomies,
-    isLoading,
-    isSuccess,
-    isError,
-    error
-  } = useGetTaxonomiesQuery(authenticated);
+  const { data: taxonomies, isSuccess } = useGetTaxonomiesQuery(authenticated);
 
   const handleSignout = () => {
     dispatch(logout());
