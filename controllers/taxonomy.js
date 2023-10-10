@@ -77,15 +77,15 @@ exports.getCategories = async (req, res, next) => {
 
 // GET /taxonomy/:taxonomyId/data
 // get all datasets for a given taxonomy
-exports.getData = async (req, res, next) => {
+exports.getDataByTaxonomy = async (req, res, next) => {
   const { taxonomyId } = req.params;
 
   try {
-    const { rows: datasets } = await pool.query(
+    const { rows: nodes } = await pool.query(
       'SELECT id, name FROM datasets WHERE taxonomy_id = $1',
-      [parseInt(taxonomyId)]
+      [taxonomyId]
     );
-    return res.status(200).end(JSON.stringify(datasets));
+    return res.status(200).end(JSON.stringify({ nodes }));
   } catch (error) {
     return res.end(`${error}`);
   }

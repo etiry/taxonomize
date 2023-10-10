@@ -7,32 +7,58 @@ import DataDetail from './DataDetail';
 import Observations from './Observations';
 import TableOptions from './TableOptions';
 import { selectSelectedDataId } from '../slices/selectionsSlice';
+import Datasets from './Datasets';
 
-const Content = () => {
+const Content = ({ contentType }) => {
   const user = useSelector(selectCurrentUser);
   const selectedDataId = useSelector(selectSelectedDataId);
   const selectedData = apiSlice.endpoints.getData.useQueryState(user, {
     selectFromResult: ({ data }) => data?.find((d) => d.id === selectedDataId)
   });
 
-  if (selectedData) {
+  let content;
+
+  if (contentType === 'dashboard') {
+    return <ContentContainer>This is the content</ContentContainer>;
+  }
+  if (contentType === 'team') {
+    return <ContentContainer>My Team</ContentContainer>;
+  }
+  if (contentType === 'allDatasets') {
     return (
       <ContentContainer>
-        <DataDetail data={selectedData} />
-        <TableOptions
-          selectedDataId={selectedDataId}
-          taxonomyId={selectedData.taxonomy_id}
-        />
-        <Observations
-          selectedDataId={selectedDataId}
-          taxonomyId={selectedData.taxonomy_id}
-          datasetAssignmentId={selectedData.id}
-        />
+        All Datasets
+        <Datasets />
       </ContentContainer>
     );
   }
+  if (contentType === 'dataDetail') {
+    if (selectedData) {
+      return (
+        <ContentContainer>
+          <DataDetail data={selectedData} />
+          <TableOptions
+            selectedDataId={selectedDataId}
+            taxonomyId={selectedData.taxonomy_id}
+          />
+          <Observations
+            selectedDataId={selectedDataId}
+            taxonomyId={selectedData.taxonomy_id}
+            datasetAssignmentId={selectedData.id}
+          />
+        </ContentContainer>
+      );
+    }
+  }
+  if (contentType === 'compareDatasets') {
+    return <ContentContainer>Compare Datasets</ContentContainer>;
+  }
 
-  return <ContentContainer>This is the content</ContentContainer>;
+  return content;
+};
+
+Content.propTypes = {
+  contentType: PropTypes.string
 };
 
 export default Content;

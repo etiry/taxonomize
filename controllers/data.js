@@ -35,7 +35,7 @@ exports.addData = async (req, res, next) => {
       ]);
       rows.forEach(async (row) => {
         await pool.query(
-          'INSERT INTO observations (name, dataset_id) VALUES ($1, $2)',
+          'INSERT INTO observations (text, dataset_id) VALUES ($1, $2)',
           [row, req.body.dataId]
         );
       });

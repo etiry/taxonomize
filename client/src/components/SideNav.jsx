@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
@@ -14,7 +15,7 @@ import {
   setFormType
 } from '../slices/selectionsSlice';
 
-const SideNav = () => {
+const SideNav = ({ setContentType }) => {
   const dispatch = useDispatch();
   const user = useSelector(selectCurrentUser);
   const selectedTaxonomyId = useSelector(selectSelectedTaxonomyId);
@@ -29,7 +30,7 @@ const SideNav = () => {
   const [getObs] = useLazyGetObservationsQuery();
   const [showData, setShowData] = useState(true);
 
-  const handleClick = () => {
+  const toggleDatasets = () => {
     setShowData(!showData);
   };
 
@@ -68,10 +69,10 @@ const SideNav = () => {
     <Nav>
       <LinkList>
         <LinkItem>
-          <Link>Dashboard</Link>
+          <Link onClick={() => setContentType('dashboard')}>Dashboard</Link>
         </LinkItem>
         <LinkItem>
-          <Link>My Team</Link>
+          <Link onClick={() => setContentType('team')}>My Team</Link>
         </LinkItem>
         {selectedTaxonomy ? (
           <>
@@ -82,20 +83,28 @@ const SideNav = () => {
               <Link onClick={toggleModal}>Edit Taxonomy</Link>
             </IndentLinkItem>
             <IndentLinkItem>
-              <Link>All Datasets</Link>
+              <Link onClick={() => setContentType('allDatasets')}>
+                All Datasets
+              </Link>
             </IndentLinkItem>
             <IndentLinkItem>
-              <Link onClick={handleClick}>My Datasets</Link>
+              <Link onClick={toggleDatasets}>My Datasets</Link>
             </IndentLinkItem>
             {content}
             <IndentLinkItem>
-              <Link>Compare Datasets</Link>
+              <Link onClick={() => setContentType('compareDatasets')}>
+                Compare Datasets
+              </Link>
             </IndentLinkItem>
           </>
         ) : null}
       </LinkList>
     </Nav>
   );
+};
+
+SideNav.propTypes = {
+  setContentType: PropTypes.func
 };
 
 export default SideNav;

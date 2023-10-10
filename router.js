@@ -28,7 +28,10 @@ module.exports = (app) => {
     '/api/taxonomy/:taxonomyId/categories',
     taxonomyController.getCategories
   );
-  app.get('/api/taxonomy/:taxonomyId/data', taxonomyController.getData);
+  app.get(
+    '/api/taxonomy/:taxonomyId/data',
+    taxonomyController.getDataByTaxonomy
+  );
   app.get('/api/taxonomy', taxonomyController.getTaxonomies);
   app.get(
     '/api/taxonomy/:taxonomyId/user',

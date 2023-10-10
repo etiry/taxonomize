@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import SideNav from './SideNav';
 import Content from './Content';
@@ -7,12 +8,13 @@ import { selectCurrentUser } from '../slices/authSlice';
 
 const Main = () => {
   const authenticated = useSelector(selectCurrentUser);
+  const [contentType, setContentType] = useState('dashboard');
 
   if (authenticated) {
     return (
       <ContentContainer>
-        <SideNav />
-        <Content />
+        <SideNav setContentType={setContentType} />
+        <Content contentType={contentType} />
       </ContentContainer>
     );
   }

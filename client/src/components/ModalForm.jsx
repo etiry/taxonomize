@@ -16,8 +16,6 @@ import {
 } from '../slices/apiSlice';
 
 const ModalForm = ({ toggleModal, formType }) => {
-  const dispatch = useDispatch();
-
   const [addTaxonomy] = useAddTaxonomyMutation();
   const [assignTaxonomy] = useAssignTaxonomyMutation();
   const [addData] = useAddDataMutation();
@@ -61,6 +59,7 @@ const ModalForm = ({ toggleModal, formType }) => {
         formData.append('dataId', selectedDataId);
       }
     }
+    console.log(data.users);
 
     const file = data.file[0];
     if (file.type !== 'text/csv') {
@@ -76,12 +75,12 @@ const ModalForm = ({ toggleModal, formType }) => {
     try {
       if (formType.entity === 'Taxonomy') {
         const { data: taxonomyId } = await addTaxonomy(formData);
-        data.users.forEach(async (userId) => {
+        Array.from(data.users).forEach(async (userId) => {
           await assignTaxonomy({ userId, taxonomyId });
         });
       } else {
         const { data: dataId } = await addData(formData);
-        data.users.forEach(async (userId) => {
+        Array.from(data.users).forEach(async (userId) => {
           await assignData({ userId, dataId });
         });
       }
