@@ -51,7 +51,7 @@ exports.deleteData = async (req, res, next) => {
   const { dataId } = req.params;
 
   try {
-    await pool.query('DELETE FROM datasets WHERE id = $1', [parseInt(dataId)]);
+    await pool.query('DELETE FROM datasets WHERE id = $1', [dataId]);
 
     return res.status(200).end('Dataset deleted successfully');
   } catch (error) {

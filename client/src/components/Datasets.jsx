@@ -16,7 +16,11 @@ import {
 import { usePagination } from '@table-library/react-table-library/pagination';
 import { useSelector, useDispatch } from 'react-redux';
 
-import { apiSlice, useGetDataByTaxonomyQuery } from '../slices/apiSlice';
+import {
+  apiSlice,
+  useGetDataByTaxonomyQuery,
+  useDeleteDataMutation
+} from '../slices/apiSlice';
 import { selectCurrentUser } from '../slices/authSlice';
 import {
   selectSelectedTaxonomyId,
@@ -32,6 +36,7 @@ const Datasets = () => {
   const selectedTaxonomyId = useSelector(selectSelectedTaxonomyId);
   const { data, isLoading, isSuccess, isError, error } =
     useGetDataByTaxonomyQuery(selectedTaxonomyId);
+  const [deleteData] = useDeleteDataMutation();
 
   const toggleModal = (bool) => {
     dispatch(setFormType({ entity: 'Dataset', new: bool }));
@@ -79,7 +84,9 @@ const Datasets = () => {
                     <Cell>{item.name}</Cell>
                     <Cell>
                       <Button onClick={() => toggleModal(false)}>Edit</Button>
-                      <Button>Delete</Button>
+                      <Button onClick={() => deleteData(item.id)}>
+                        Delete
+                      </Button>
                     </Cell>
                   </Row>
                 ))}

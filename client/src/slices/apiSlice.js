@@ -120,6 +120,13 @@ export const apiSlice = createApi({
     getDataByTaxonomy: builder.query({
       query: (taxonomyId) => `api/taxonomy/${taxonomyId}/data`,
       providesTags: ['Data']
+    }),
+    deleteData: builder.mutation({
+      query: (dataId) => ({
+        url: `api/data/${dataId}`,
+        method: 'DELETE'
+      }),
+      invalidatesTags: ['Data']
     })
   })
 });
@@ -139,5 +146,6 @@ export const {
   useAddDataMutation,
   useAssignDataMutation,
   useGetTaxonomyUsersQuery,
-  useGetDataByTaxonomyQuery
+  useGetDataByTaxonomyQuery,
+  useDeleteDataMutation
 } = apiSlice;
