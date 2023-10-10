@@ -1,21 +1,11 @@
 import { useState } from 'react';
-import { useForm } from 'react-hook-form';
 import { useSelector, useDispatch } from 'react-redux';
-import styled from 'styled-components';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faXmark } from '@fortawesome/free-solid-svg-icons';
 import Modal from 'styled-react-modal';
-import { selectCurrentUserTeam } from '../slices/authSlice';
 import {
   selectIsOpen,
   setIsOpen,
   selectFormType
 } from '../slices/selectionsSlice';
-import {
-  useAddTaxonomyMutation,
-  useAssignTaxonomyMutation,
-  useGetUsersQuery
-} from '../slices/apiSlice';
 import ModalForm from './ModalForm';
 
 const ModalComponent = () => {

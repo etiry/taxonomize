@@ -19,7 +19,7 @@ const Header = () => {
   const navigate = useNavigate();
   const authenticated = useSelector(selectCurrentUser);
   const email = useSelector(selectCurrentUserEmail);
-  const { name: teamName } = useSelector(selectCurrentUserTeam);
+  const team = useSelector(selectCurrentUserTeam);
 
   const {
     data: taxonomies,
@@ -39,7 +39,7 @@ const Header = () => {
   };
 
   const toggleModal = () => {
-    dispatch(setFormType({ entity: 'taxonomy', new: true }));
+    dispatch(setFormType({ entity: 'Taxonomy', new: true }));
     dispatch(setIsOpen());
   };
 
@@ -63,7 +63,7 @@ const Header = () => {
         </LinkItem>
         <LinkItem>
           <Label>Team: </Label>
-          {teamName}
+          {team.name}
         </LinkItem>
         <LinkItem>
           <LinkText>{email}</LinkText>

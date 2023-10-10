@@ -30,6 +30,10 @@ module.exports = (app) => {
   );
   app.get('/api/taxonomy/:taxonomyId/data', taxonomyController.getData);
   app.get('/api/taxonomy', taxonomyController.getTaxonomies);
+  app.get(
+    '/api/taxonomy/:taxonomyId/user',
+    taxonomyController.getTaxonomyUsers
+  );
 
   // data routes
   app.post('/api/data', upload.single('file'), dataController.addData);
@@ -65,5 +69,5 @@ module.exports = (app) => {
   );
 
   // team routes
-  app.get('/api/team/:teamId/user', requireAuth, teamController.getUsers);
+  app.get('/api/team/:teamId/user', requireAuth, teamController.getTeamUsers);
 };

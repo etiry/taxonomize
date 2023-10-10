@@ -10,10 +10,7 @@ const initialState = {
   id: loggedInUserId || null,
   email: loggedInUserEmail || null,
   token: loggedInUserToken || null,
-  team: {
-    id: loggedInUserTeam.id || null,
-    name: loggedInUserTeam.name || null
-  }
+  team: loggedInUserTeam || {}
 };
 
 const authSlice = createSlice({
@@ -24,8 +21,7 @@ const authSlice = createSlice({
       state.id = null;
       state.token = null;
       state.email = null;
-      state.team.id = null;
-      state.team.name = null;
+      state.team = {};
     }
   },
   extraReducers: (builder) => {
@@ -35,8 +31,7 @@ const authSlice = createSlice({
         state.token = payload.token;
         state.id = payload.id;
         state.email = payload.email;
-        state.team.id = payload.team.id;
-        state.team.name = payload.team.name;
+        state.team = payload.team;
       }
     );
     builder.addMatcher(

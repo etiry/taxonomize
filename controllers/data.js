@@ -3,22 +3,46 @@ const { pool } = require('../dbHandler');
 // POST /data
 // create new dataset via csv upload and save to db
 exports.addData = async (req, res, next) => {
-  const { buffer } = req.file;
-  const rows = [...new Set(buffer.toString().split('\n'))].slice(1);
+  let rows;
+  if (req.file) {
+    const { buffer } = req.file;
+    rows = [...new Set(buffer.toString().split('\n'))].slice(1);
+  }
 
-  const dataset = await pool.query(
-    'INSERT INTO datasets (name, taxonomy_id) VALUES ($1, $2) RETURNING id',
-    [req.body.name, parseInt(req.body.taxonomyId)]
-  );
-
-  rows.forEach(async (row) => {
-    await pool.query(
-      'INSERT INTO observations (text, category_id, dataset_id) VALUES ($1, NULL, $2)',
-      [row, dataset.rows[0].id]
+  if (req.body.new === 'true') {
+    const dataset = await pool.query(
+      'INSERT INTO datasets (name, taxonomy_id) VALUES ($1, $2) RETURNING id',
+      [req.body.name, req.body.taxonomyId]
     );
-  });
 
-  res.status(200).end();
+    rows.forEach(async (row) => {
+      await pool.query(
+        'INSERT INTO observations (text, category_id, dataset_id) VALUES ($1, NULL, $2)',
+        [row, dataset.rows[0].id]
+      );
+    });
+
+    res.status(200).end(JSON.stringify(dataset.rows[0].id));
+  } else {
+    await pool.query('UPDATE datasets SET name = $1 WHERE id = $2;', [
+      req.body.name,
+      req.body.dataId
+    ]);
+
+    if (req.file) {
+      await pool.query('DELETE FROM observations WHERE dataset_id = $1', [
+        req.body.dataId
+      ]);
+      rows.forEach(async (row) => {
+        await pool.query(
+          'INSERT INTO observations (name, dataset_id) VALUES ($1, $2)',
+          [row, req.body.dataId]
+        );
+      });
+    }
+
+    res.status(200).end(JSON.stringify(req.body.dataId));
+  }
 };
 
 // DELETE /data/:dataId

@@ -92,8 +92,29 @@ export const apiSlice = createApi({
       }),
       invalidatesTags: ['Taxonomies']
     }),
-    getUsers: builder.query({
+    getTeamUsers: builder.query({
       query: (teamId) => `api/team/${teamId}/user`,
+      providesTags: ['Users']
+    }),
+    addData: builder.mutation({
+      query: (data) => ({
+        url: 'api/data',
+        method: 'POST',
+        body: data,
+        formData: true
+      }),
+      invalidatesTags: ['Data']
+    }),
+    assignData: builder.mutation({
+      query: (params) => ({
+        url: `api/user/${params.userId}/data`,
+        method: 'POST',
+        body: { dataId: params.dataId }
+      }),
+      invalidatesTags: ['Data']
+    }),
+    getTaxonomyUsers: builder.query({
+      query: (taxonomyId) => `api/taxonomy/${taxonomyId}/user`,
       providesTags: ['Users']
     })
   })
@@ -110,5 +131,8 @@ export const {
   useGetTaxonomiesQuery,
   useAddTaxonomyMutation,
   useAssignTaxonomyMutation,
-  useGetUsersQuery
+  useGetTeamUsersQuery,
+  useAddDataMutation,
+  useAssignDataMutation,
+  useGetTaxonomyUsersQuery
 } = apiSlice;

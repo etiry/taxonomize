@@ -1,16 +1,18 @@
 import PropTypes from 'prop-types';
-import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useSelector, useDispatch } from 'react-redux';
 import styled from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
 import { selectCurrentUser, selectCurrentUserTeam } from '../slices/authSlice';
-import { selectIsOpen, setIsOpen } from '../slices/selectionsSlice';
+import { selectSelectedTaxonomyId } from '../slices/selectionsSlice';
 import {
+  useAddDataMutation,
   useAddTaxonomyMutation,
+  useAssignDataMutation,
   useAssignTaxonomyMutation,
-  useGetUsersQuery
+  useGetTeamUsersQuery,
+  useGetTaxonomyUsersQuery
 } from '../slices/apiSlice';
 
 const ModalForm = ({ toggleModal, formType }) => {
@@ -18,16 +20,21 @@ const ModalForm = ({ toggleModal, formType }) => {
 
   const [addTaxonomy] = useAddTaxonomyMutation();
   const [assignTaxonomy] = useAssignTaxonomyMutation();
+  const [addData] = useAddDataMutation();
+  const [assignData] = useAssignDataMutation();
 
   const { id: teamId } = useSelector(selectCurrentUserTeam);
+  // const { selectedTaxonomyId } = useSelector(selectSelectedTaxonomyId);
+  const selectedTaxonomyId = 14;
+  const selectedDataId = 1;
 
-  const {
-    data: users,
-    isLoading,
-    isSuccess,
-    isError,
-    error
-  } = useGetUsersQuery(teamId);
+  const { data: teamUsers, isSuccess: retrievedTeamUsers } =
+    useGetTeamUsersQuery(teamId);
+
+  const { data: taxonomyUsers, isSuccess: retrievedTaxonomyUsers } =
+    useGetTaxonomyUsersQuery(selectedTaxonomyId);
+
+  const users = formType.entity === 'Taxonomy' ? teamUsers : taxonomyUsers;
 
   const {
     register,
@@ -41,8 +48,19 @@ const ModalForm = ({ toggleModal, formType }) => {
     const formData = new FormData();
     formData.append('name', data.name);
     formData.append('file', data.file[0]);
-    formData.append('teamId', teamId);
     formData.append('users', data.users);
+    formData.append('new', formType.new);
+    if (formType.entity === 'Taxonomy') {
+      formData.append('teamId', teamId);
+      if (!formType.new) {
+        formData.append('taxonomyId', selectedTaxonomyId);
+      }
+    } else {
+      formData.append('taxonomyId', selectedTaxonomyId);
+      if (!formType.new) {
+        formData.append('dataId', selectedDataId);
+      }
+    }
 
     const file = data.file[0];
     if (file.type !== 'text/csv') {
@@ -56,10 +74,17 @@ const ModalForm = ({ toggleModal, formType }) => {
     reset();
 
     try {
-      const { data: taxonomyId } = await addTaxonomy(formData);
-      data.users.forEach(async (userId) => {
-        await assignTaxonomy({ userId, taxonomyId });
-      });
+      if (formType.entity === 'Taxonomy') {
+        const { data: taxonomyId } = await addTaxonomy(formData);
+        data.users.forEach(async (userId) => {
+          await assignTaxonomy({ userId, taxonomyId });
+        });
+      } else {
+        const { data: dataId } = await addData(formData);
+        data.users.forEach(async (userId) => {
+          await assignData({ userId, dataId });
+        });
+      }
     } catch (error) {
       console.log(`request error: ${error}`);
     }
@@ -67,15 +92,17 @@ const ModalForm = ({ toggleModal, formType }) => {
     toggleModal();
   };
 
-  if (isSuccess) {
+  if (retrievedTeamUsers && retrievedTaxonomyUsers) {
     return (
       <Form onSubmit={handleSubmit(onSubmit)}>
         <IconWrapper onClick={toggleModal}>
           <FontAwesomeIcon icon={faXmark} />
         </IconWrapper>
-        <Heading>Add a Taxonomy</Heading>
+        <Heading>
+          {formType.new ? 'Add a ' : 'Edit '} {formType.entity}
+        </Heading>
         <FormGroup>
-          <FormLabel>Taxonomy name:</FormLabel>
+          <FormLabel>{formType.entity} name:</FormLabel>
           <FormInput type="text" {...register('name', { required: true })} />
           {errors.name && <span>This field is required</span>}
         </FormGroup>

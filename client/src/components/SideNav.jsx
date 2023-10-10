@@ -10,7 +10,9 @@ import {
 import { selectCurrentUser } from '../slices/authSlice';
 import {
   selectSelectedTaxonomyId,
-  setSelectedDataId
+  setSelectedDataId,
+  setIsOpen,
+  setFormType
 } from '../slices/selectionsSlice';
 
 const SideNav = () => {
@@ -36,6 +38,11 @@ const SideNav = () => {
     const params = { page: 1, dataId, query: '', sort: '', filter: '' };
     await getObs(params);
     dispatch(setSelectedDataId(dataId));
+  };
+
+  const toggleModal = () => {
+    dispatch(setFormType({ entity: 'Taxonomy', new: false }));
+    dispatch(setIsOpen());
   };
 
   let content;
@@ -68,7 +75,7 @@ const SideNav = () => {
           <Link>{selectedTaxonomy ? selectedTaxonomy.name : 'Taxonomy'}</Link>
         </LinkItem>
         <IndentLinkItem>
-          <Link>Edit Taxonomy</Link>
+          <Link onClick={toggleModal}>Edit Taxonomy</Link>
         </IndentLinkItem>
         <IndentLinkItem>
           <Link>All Datasets</Link>

@@ -23,9 +23,12 @@ exports.assignData = async (req, res, next) => {
   const { userId } = req.params;
 
   try {
+    await pool.query('DELETE FROM dataset_assignments WHERE dataset_id = $1', [
+      req.body.dataId
+    ]);
     await pool.query(
       'INSERT INTO dataset_assignments (user_id, dataset_id, completed) VALUES ($1, $2, FALSE)',
-      [parseInt(userId), parseInt(req.body.dataId)]
+      [userId, req.body.dataId]
     );
 
     return res.status(200).end('Data assigned successfully');
@@ -56,6 +59,10 @@ exports.assignTaxonomy = async (req, res, next) => {
   const { userId } = req.params;
 
   try {
+    await pool.query(
+      'DELETE FROM taxonomy_assignments WHERE taxonomy_id = $1',
+      [req.body.taxonomyId]
+    );
     await pool.query(
       'INSERT INTO taxonomy_assignments (user_id, taxonomy_id) VALUES ($1, $2)',
       [userId, req.body.taxonomyId]
