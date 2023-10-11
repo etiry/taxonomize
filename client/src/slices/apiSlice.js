@@ -127,6 +127,10 @@ export const apiSlice = createApi({
         method: 'DELETE'
       }),
       invalidatesTags: ['Data']
+    }),
+    getDataUsers: builder.query({
+      query: (dataId) => `api/data/${dataId}/user`,
+      providesTags: ['Users']
     })
   })
 });
@@ -147,5 +151,6 @@ export const {
   useAssignDataMutation,
   useGetTaxonomyUsersQuery,
   useGetDataByTaxonomyQuery,
-  useDeleteDataMutation
+  useDeleteDataMutation,
+  useGetDataUsersQuery
 } = apiSlice;

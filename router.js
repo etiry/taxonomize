@@ -42,6 +42,7 @@ module.exports = (app) => {
   app.post('/api/data', upload.single('file'), dataController.addData);
   app.delete('/api/data/:dataId', dataController.deleteData);
   app.get('/api/data/:dataId/observations', dataController.getObservations);
+  app.get('/api/data/:dataId/user', dataController.getDataUsers);
 
   // observation routes
   app.post(

@@ -83,7 +83,14 @@ const Datasets = () => {
                   <Row key={item.id} item={item}>
                     <Cell>{item.name}</Cell>
                     <Cell>
-                      <Button onClick={() => toggleModal(false)}>Edit</Button>
+                      <Button
+                        onClick={async () => {
+                          await dispatch(setSelectedDataId(item.id));
+                          toggleModal(false);
+                        }}
+                      >
+                        Edit
+                      </Button>
                       <Button onClick={() => deleteData(item.id)}>
                         Delete
                       </Button>

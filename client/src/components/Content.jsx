@@ -13,7 +13,8 @@ const Content = ({ contentType }) => {
   const user = useSelector(selectCurrentUser);
   const selectedDataId = useSelector(selectSelectedDataId);
   const selectedData = apiSlice.endpoints.getData.useQueryState(user, {
-    selectFromResult: ({ data }) => data?.find((d) => d.id === selectedDataId)
+    selectFromResult: ({ data }) =>
+      data?.find((d) => d.dataset_id === selectedDataId)
   });
 
   let content;

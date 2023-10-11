@@ -55,9 +55,9 @@ const SideNav = ({ setContentType }) => {
   } else if (isSuccess) {
     content = data.map((d) => (
       <ContentLinkItem
-        key={d.id}
+        key={d.dataset_id}
         style={{ display: showData ? 'block' : 'none' }}
-        onClick={() => handleSelectData(d.id)}
+        onClick={() => handleSelectData(d.dataset_id)}
       >
         <Link>{d.dataset_name}</Link>
       </ContentLinkItem>

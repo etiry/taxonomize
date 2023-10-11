@@ -135,3 +135,22 @@ exports.getObservations = async (req, res, next) => {
     return res.end(`${error}`);
   }
 };
+
+// GET /data/:dataId/user
+// get users assigned to given dataset
+exports.getDataUsers = async (req, res, next) => {
+  const { dataId } = req.params;
+
+  try {
+    const { rows: users } = await pool.query(
+      'SELECT users.id, users.email, users.name, dataset_assignments.dataset_id FROM users JOIN dataset_assignments ON users.id = dataset_assignments.user_id WHERE dataset_assignments.dataset_id = $1',
+      [dataId]
+    );
+
+    console.log(users);
+
+    return res.status(200).json(users);
+  } catch (error) {
+    return res.end(`${error}`);
+  }
+};
