@@ -59,7 +59,11 @@ module.exports = (app) => {
   app.post('/auth/signin', requireSignin, authenticationController.signin);
 
   // user routes
-  app.get('/api/user/:userId/data', requireAuth, userController.getData);
+  app.get(
+    '/api/user/:userId/taxonomy/:taxonomyId/data',
+    requireAuth,
+    userController.getData
+  );
   app.post('/api/user/:userId/data', requireAuth, userController.assignData);
   app.get(
     '/api/user/:userId/taxonomy',

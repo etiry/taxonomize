@@ -26,7 +26,10 @@ const SideNav = ({ setContentType }) => {
         data?.find((d) => d.id === parseInt(selectedTaxonomyId))
     }
   );
-  const { data, isLoading, isSuccess, isError, error } = useGetDataQuery(user);
+  const { data, isLoading, isSuccess, isError, error } = useGetDataQuery({
+    userId: user,
+    taxonomyId: selectedTaxonomyId
+  });
   const [getObs] = useLazyGetObservationsQuery();
   const [showData, setShowData] = useState(true);
 

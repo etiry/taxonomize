@@ -34,7 +34,7 @@ export const apiSlice = createApi({
       })
     }),
     getData: builder.query({
-      query: (userId) => `api/user/${userId}/data`,
+      query: (params) => `api/user/${params.userId}/taxonomy/${params.taxonomyId}/data`,
       providesTags: ['Data']
     }),
     getObservations: builder.query({

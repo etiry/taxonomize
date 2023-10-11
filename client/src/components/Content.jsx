@@ -6,16 +6,23 @@ import { apiSlice } from '../slices/apiSlice';
 import DataDetail from './DataDetail';
 import Observations from './Observations';
 import TableOptions from './TableOptions';
-import { selectSelectedDataId } from '../slices/selectionsSlice';
+import {
+  selectSelectedDataId,
+  selectSelectedTaxonomyId
+} from '../slices/selectionsSlice';
 import Datasets from './Datasets';
 
 const Content = ({ contentType }) => {
   const user = useSelector(selectCurrentUser);
+  const selectedTaxonomyId = useSelector(selectSelectedTaxonomyId);
   const selectedDataId = useSelector(selectSelectedDataId);
-  const selectedData = apiSlice.endpoints.getData.useQueryState(user, {
-    selectFromResult: ({ data }) =>
-      data?.find((d) => d.dataset_id === selectedDataId)
-  });
+  const selectedData = apiSlice.endpoints.getData.useQueryState(
+    { userId: user, taxonomyId: selectedTaxonomyId },
+    {
+      selectFromResult: ({ data }) =>
+        data?.find((d) => d.dataset_id === selectedDataId)
+    }
+  );
 
   let content;
 
