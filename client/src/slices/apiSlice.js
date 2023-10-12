@@ -34,7 +34,8 @@ export const apiSlice = createApi({
       })
     }),
     getData: builder.query({
-      query: (params) => `api/user/${params.userId}/taxonomy/${params.taxonomyId}/data`,
+      query: (params) =>
+        `api/user/${params.userId}/taxonomy/${params.taxonomyId}/data`,
       providesTags: ['Data']
     }),
     getObservations: builder.query({
@@ -131,6 +132,24 @@ export const apiSlice = createApi({
     getDataUsers: builder.query({
       query: (dataId) => `api/data/${dataId}/user`,
       providesTags: ['Users']
+    }),
+    findUser: builder.query({
+      query: (email) => `api/user?query=${email}`
+    }),
+    addTeam: builder.mutation({
+      query: (data) => ({
+        url: 'api/team',
+        method: 'POST',
+        body: data
+      })
+    }),
+    assignTeam: builder.mutation({
+      query: (data) => ({
+        url: `api/user/team`,
+        method: 'POST',
+        body: data
+      }),
+      invalidatesTags: ['Users']
     })
   })
 });
@@ -152,5 +171,8 @@ export const {
   useGetTaxonomyUsersQuery,
   useGetDataByTaxonomyQuery,
   useDeleteDataMutation,
-  useGetDataUsersQuery
+  useGetDataUsersQuery,
+  useLazyFindUserQuery,
+  useAddTeamMutation,
+  useAssignTeamMutation
 } = apiSlice;

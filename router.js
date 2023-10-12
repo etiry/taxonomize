@@ -75,7 +75,10 @@ module.exports = (app) => {
     requireAuth,
     userController.assignTaxonomy
   );
+  app.get('/api/user', requireAuth, userController.findUser);
+  app.post('/api/user/team', requireAuth, userController.assignTeam);
 
   // team routes
   app.get('/api/team/:teamId/user', requireAuth, teamController.getTeamUsers);
+  app.post('/api/team', teamController.addTeam);
 };

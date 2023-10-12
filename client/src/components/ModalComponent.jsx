@@ -7,6 +7,7 @@ import {
   selectFormType
 } from '../slices/selectionsSlice';
 import ModalForm from './ModalForm';
+import TeamUserForm from './TeamUserForm';
 
 const ModalComponent = () => {
   const dispatch = useDispatch();
@@ -41,7 +42,11 @@ const ModalComponent = () => {
       opacity={opacity}
       backgroundProps={{ opacity }}
     >
-      <ModalForm toggleModal={toggleModal} formType={formType} />
+      {formType.entity === 'Team' ? (
+        <TeamUserForm toggleModal={toggleModal} formType={formType} />
+      ) : (
+        <ModalForm toggleModal={toggleModal} formType={formType} />
+      )}
     </StyledModal>
   );
 };

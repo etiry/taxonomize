@@ -11,6 +11,7 @@ import {
   selectSelectedTaxonomyId
 } from '../slices/selectionsSlice';
 import Datasets from './Datasets';
+import Team from './Team';
 
 const Content = ({ contentType }) => {
   const user = useSelector(selectCurrentUser);
@@ -30,7 +31,11 @@ const Content = ({ contentType }) => {
     return <ContentContainer>This is the content</ContentContainer>;
   }
   if (contentType === 'team') {
-    return <ContentContainer>My Team</ContentContainer>;
+    return (
+      <ContentContainer>
+        <Team />
+      </ContentContainer>
+    );
   }
   if (contentType === 'allDatasets') {
     return (

@@ -73,3 +73,40 @@ exports.assignTaxonomy = async (req, res, next) => {
     return res.end(`${error}`);
   }
 };
+
+// GET /user
+// find user by email
+exports.findUser = async (req, res, next) => {
+  const { query } = req.query;
+
+  try {
+    const { rows: userFound } = await pool.query(
+      'SELECT * FROM users WHERE email = $1 AND team_id IS NULL',
+      [query]
+    );
+
+    if (userFound.length === 0) {
+      return res.status(200).end();
+    }
+
+    return res.status(200).end(JSON.stringify(userFound));
+  } catch (error) {
+    return res.end(`${error}`);
+  }
+};
+
+// POST /user/team
+// assign users to team
+exports.assignTeam = async (req, res, next) => {
+  try {
+    req.body.users.forEach(async (user) => {
+      await pool.query('UPDATE users SET team_id = $1 WHERE id = $2', [
+        req.body.team,
+        user.id
+      ]);
+      return res.status(200).end();
+    });
+  } catch (error) {
+    return res.end(`${error}`);
+  }
+};

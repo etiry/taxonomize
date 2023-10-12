@@ -16,3 +16,24 @@ exports.getTeamUsers = async (req, res, next) => {
     return res.end(`${error}`);
   }
 };
+
+// POST /team
+// create a team or edit
+exports.addTeam = async (req, res, next) => {
+  console.log(req.body);
+  if (req.body.new === 'true') {
+    const team = await pool.query(
+      'INSERT INTO teams (name) VALUES ($1) RETURNING id',
+      [req.body.name]
+    );
+
+    res.status(200).send(JSON.stringify(team.rows[0].id));
+  } else {
+    await pool.query('UPDATE teams SET name = $1 WHERE id = $2;', [
+      req.body.name,
+      req.body.teamId
+    ]);
+
+    res.status(200).send(JSON.stringify(req.body.teamId));
+  }
+};
