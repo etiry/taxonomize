@@ -15,7 +15,7 @@ const tokenForUser = (userId) =>
 
 exports.signin = async (req, res, next) => {
   const user = await pool.query(
-    'SELECT users.id, users.email, users.team_id, teams.name FROM users JOIN teams ON users.team_id = teams.id WHERE users.id = $1',
+    'SELECT users.id, users.email, users.team_id, teams.name FROM users LEFT JOIN teams ON users.team_id = teams.id WHERE users.id = $1',
     [req.user.id]
   );
 
@@ -63,7 +63,7 @@ exports.signup = async (req, res, next) => {
     // If a user with email does NOT exist, create and save user record
     const { salt, hash } = setPassword(password);
     const user = await pool.query(
-      'INSERT INTO users (email, salt, hash) VALUES ($1, $2, $3) RETURNING *',
+      'INSERT INTO users (email, salt, hash, team_id) VALUES ($1, $2, $3, NULL) RETURNING *',
       [email, salt, hash]
     );
 
