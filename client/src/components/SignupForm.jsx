@@ -33,6 +33,11 @@ const SignupForm = () => {
       <Form onSubmit={handleSubmit(onSubmit)}>
         <Heading>Sign up</Heading>
         <FormGroup>
+          <FormLabel>Full name:</FormLabel>
+          <FormInput type="text" {...register('name', { required: true })} />
+          {errors.name && <span>This field is required</span>}
+        </FormGroup>
+        <FormGroup>
           <FormLabel>Email:</FormLabel>
           <FormInput type="text" {...register('email', { required: true })} />
           {errors.email && <span>This field is required</span>}

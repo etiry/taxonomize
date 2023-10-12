@@ -40,7 +40,7 @@ exports.currentUser = (req, res) => {
 };
 
 exports.signup = async (req, res, next) => {
-  const { email, password } = req.body;
+  const { name, email, password } = req.body;
 
   if (!email || !password) {
     return res
@@ -63,8 +63,8 @@ exports.signup = async (req, res, next) => {
     // If a user with email does NOT exist, create and save user record
     const { salt, hash } = setPassword(password);
     const user = await pool.query(
-      'INSERT INTO users (email, salt, hash, team_id) VALUES ($1, $2, $3, NULL) RETURNING *',
-      [email, salt, hash]
+      'INSERT INTO users (name, email, salt, hash, team_id) VALUES ($1, $2, $3, $4, NULL) RETURNING *',
+      [name, email, salt, hash]
     );
 
     // Respond to request indicating the user was created
