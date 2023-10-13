@@ -9,7 +9,8 @@ import { faXmark } from '@fortawesome/free-solid-svg-icons';
 import { selectCurrentUser, selectCurrentUserTeam } from '../slices/authSlice';
 import {
   selectSelectedTaxonomyId,
-  selectSelectedDataId
+  selectSelectedDataId,
+  setSelectedTaxonomyId
 } from '../slices/selectionsSlice';
 import {
   apiSlice,
@@ -19,14 +20,17 @@ import {
   useAssignTaxonomyMutation,
   useGetTeamUsersQuery,
   useGetTaxonomyUsersQuery,
-  useGetDataUsersQuery
+  useGetDataUsersQuery,
+  useDeleteTaxonomyMutation
 } from '../slices/apiSlice';
 
 const ModalForm = ({ toggleModal, formType }) => {
+  const dispatch = useDispatch();
   const [addTaxonomy] = useAddTaxonomyMutation();
   const [assignTaxonomy] = useAssignTaxonomyMutation();
   const [addData] = useAddDataMutation();
   const [assignData] = useAssignDataMutation();
+  const [deleteTaxonomy] = useDeleteTaxonomyMutation();
 
   const userId = useSelector(selectCurrentUser);
   const { id: teamId } = useSelector(selectCurrentUserTeam);
@@ -59,17 +63,18 @@ const ModalForm = ({ toggleModal, formType }) => {
   const users = formType.entity === 'Taxonomy' ? teamUsers : taxonomyUsers;
 
   const setFormValues = () => {
-    let initialName;
-    let initialAssignedUsers;
+    let initialName = '';
+    let initialAssignedUsers = [];
 
-    if (formType.new) {
-      initialName = '';
-      initialAssignedUsers = [];
-    } else if (formType.entity === 'Taxonomy') {
-      initialName = selectedTaxonomy.name;
+    if (
+      !formType.new &&
+      (selectedTaxonomy || selectedData) &&
+      formType.entity === 'Taxonomy'
+    ) {
+      initialName = selectedTaxonomy.name || '';
       initialAssignedUsers = taxonomyUsers || [];
-    } else {
-      initialName = selectedData.name;
+    } else if (formType.entity === 'Dataset') {
+      initialName = selectedData.name || '';
       initialAssignedUsers = dataUsers || [];
     }
 
@@ -136,6 +141,11 @@ const ModalForm = ({ toggleModal, formType }) => {
     toggleModal();
   };
 
+  const handleDeleteTaxonomy = async () => {
+    await deleteTaxonomy(selectedTaxonomyId);
+    dispatch(setSelectedTaxonomyId(null));
+  };
+
   if (
     (formType.entity === 'Taxonomy' && retrievedTeamUsers) ||
     (formType.entity === 'Dataset' && retrievedTaxonomyUsers)
@@ -148,6 +158,9 @@ const ModalForm = ({ toggleModal, formType }) => {
         <Heading>
           {formType.new ? 'Add a ' : 'Edit '} {formType.entity}
         </Heading>
+        {!formType.new ? (
+          <Button onClick={handleDeleteTaxonomy}>Delete Taxonomy</Button>
+        ) : null}
         <FormGroup>
           <FormLabel>{formType.entity} name:</FormLabel>
           <FormInput

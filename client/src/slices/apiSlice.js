@@ -157,6 +157,12 @@ export const apiSlice = createApi({
         method: 'DELETE'
       }),
       invalidatesTags: ['Users']
+    }),
+    deleteTaxonomy: builder.mutation({
+      query: (taxonomyId) => ({
+        url: `api/taxonomy/${taxonomyId}`,
+        method: 'DELETE'
+      })
     })
   })
 });
@@ -182,5 +188,6 @@ export const {
   useLazyFindUserQuery,
   useAddTeamMutation,
   useAssignTeamMutation,
-  useRemoveTeamMutation
+  useRemoveTeamMutation,
+  useDeleteTaxonomyMutation
 } = apiSlice;
