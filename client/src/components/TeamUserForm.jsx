@@ -5,20 +5,19 @@ import { useSelector, useDispatch } from 'react-redux';
 import styled from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
-import { selectCurrentUser, selectCurrentUserTeam } from '../slices/authSlice';
+import { selectCurrentUserTeam } from '../slices/authSlice';
 import {
-  apiSlice,
   useLazyFindUserQuery,
   useAddTeamMutation,
   useAssignTeamMutation
 } from '../slices/apiSlice';
 
 const TeamUserForm = ({ toggleModal, formType }) => {
+  const dispatch = useDispatch();
   const [findUser] = useLazyFindUserQuery();
   const [addTeam] = useAddTeamMutation();
   const [assignTeam] = useAssignTeamMutation();
   const { id: teamId, name: teamName } = useSelector(selectCurrentUserTeam);
-  const { data: users } = apiSlice.endpoints.getTeamUsers.useQueryState(teamId);
 
   const [name, setName] = useState(teamName || '');
   const [usersToAdd, setUsersToAdd] = useState([]);
@@ -53,8 +52,7 @@ const TeamUserForm = ({ toggleModal, formType }) => {
         new: formType.new,
         teamId
       });
-      console.log(team);
-      await assignTeam({ team, users: usersToAdd });
+      await assignTeam({ team, name: data.name, users: usersToAdd });
     } catch (error) {
       console.log(`${error}`);
     }

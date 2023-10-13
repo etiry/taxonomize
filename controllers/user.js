@@ -110,3 +110,16 @@ exports.assignTeam = async (req, res, next) => {
     return res.end(`${error}`);
   }
 };
+
+// DELETE /user/:userId/team
+// remove user from team
+exports.removeTeam = async (req, res, next) => {
+  const { userId } = req.params;
+
+  try {
+    await pool.query('UPDATE users SET team_id = NULL WHERE id = $1', [userId]);
+    return res.status(200).end();
+  } catch (error) {
+    return res.end(`${error}`);
+  }
+};

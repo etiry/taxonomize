@@ -150,6 +150,13 @@ export const apiSlice = createApi({
         body: data
       }),
       invalidatesTags: ['Users']
+    }),
+    removeTeam: builder.mutation({
+      query: (userId) => ({
+        url: `api/user/${userId}/team`,
+        method: 'DELETE'
+      }),
+      invalidatesTags: ['Users']
     })
   })
 });
@@ -174,5 +181,6 @@ export const {
   useGetDataUsersQuery,
   useLazyFindUserQuery,
   useAddTeamMutation,
-  useAssignTeamMutation
+  useAssignTeamMutation,
+  useRemoveTeamMutation
 } = apiSlice;

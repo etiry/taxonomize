@@ -77,6 +77,7 @@ module.exports = (app) => {
   );
   app.get('/api/user', requireAuth, userController.findUser);
   app.post('/api/user/team', requireAuth, userController.assignTeam);
+  app.delete('/api/user/:userId/team', requireAuth, userController.removeTeam);
 
   // team routes
   app.get('/api/team/:teamId/user', requireAuth, teamController.getTeamUsers);

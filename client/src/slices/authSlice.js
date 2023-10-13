@@ -42,6 +42,24 @@ const authSlice = createSlice({
         state.email = payload.email;
       }
     );
+    builder.addMatcher(
+      apiSlice.endpoints.assignTeam.matchFulfilled,
+      (state, { payload }) => {
+        console.log(payload.users);
+        if (payload.users.find((user) => user.id === state.id)) {
+          state.team.id = payload.team;
+          state.team.name = payload.name;
+        }
+      }
+    );
+    builder.addMatcher(
+      apiSlice.endpoints.removeTeam.matchFulfilled,
+      (state, { payload }) => {
+        if (payload === state.id) {
+          state.team = {};
+        }
+      }
+    );
   }
 });
 

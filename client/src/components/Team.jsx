@@ -15,7 +15,10 @@ import {
 } from '@table-library/react-table-library/material-ui';
 import { useSelector, useDispatch } from 'react-redux';
 import { selectCurrentUserTeam } from '../slices/authSlice';
-import { useGetTeamUsersQuery } from '../slices/apiSlice';
+import {
+  useGetTeamUsersQuery,
+  useRemoveTeamMutation
+} from '../slices/apiSlice';
 import { setIsOpen, setFormType } from '../slices/selectionsSlice';
 
 const Team = () => {
@@ -25,6 +28,7 @@ const Team = () => {
   const team = useSelector(selectCurrentUserTeam);
   const { data: teamUsers, isSuccess } = useGetTeamUsersQuery(team.id);
   const data = { nodes: teamUsers };
+  const [removeTeam] = useRemoveTeamMutation();
 
   const toggleModal = (bool) => {
     dispatch(setFormType({ entity: 'Team', new: bool }));
@@ -50,6 +54,7 @@ const Team = () => {
                 <HeaderRow>
                   <HeaderCell>Name</HeaderCell>
                   <HeaderCell>Email</HeaderCell>
+                  <HeaderCell />
                 </HeaderRow>
               </Header>
 
@@ -58,6 +63,11 @@ const Team = () => {
                   <Row key={item.id} item={item}>
                     <Cell>{item.name}</Cell>
                     <Cell>{item.email}</Cell>
+                    <Cell>
+                      <Button onClick={() => removeTeam(item.id)}>
+                        Remove
+                      </Button>
+                    </Cell>
                   </Row>
                 ))}
               </Body>

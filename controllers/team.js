@@ -20,8 +20,7 @@ exports.getTeamUsers = async (req, res, next) => {
 // POST /team
 // create a team or edit
 exports.addTeam = async (req, res, next) => {
-  console.log(req.body);
-  if (req.body.new === 'true') {
+  if (req.body.new === true) {
     const team = await pool.query(
       'INSERT INTO teams (name) VALUES ($1) RETURNING id',
       [req.body.name]
