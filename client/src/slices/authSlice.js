@@ -45,8 +45,7 @@ const authSlice = createSlice({
     builder.addMatcher(
       apiSlice.endpoints.assignTeam.matchFulfilled,
       (state, { payload }) => {
-        console.log(payload.users);
-        if (payload.users.find((user) => user.id === state.id)) {
+        if (payload.users.find((user) => user.id === parseInt(state.id))) {
           state.team.id = payload.team;
           state.team.name = payload.name;
         }
@@ -55,7 +54,7 @@ const authSlice = createSlice({
     builder.addMatcher(
       apiSlice.endpoints.removeTeam.matchFulfilled,
       (state, { payload }) => {
-        if (payload === state.id) {
+        if (payload === parseInt(state.id)) {
           state.team = {};
         }
       }

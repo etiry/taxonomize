@@ -91,7 +91,7 @@ export const apiSlice = createApi({
         method: 'POST',
         body: { taxonomyId: params.taxonomyId }
       }),
-      invalidatesTags: ['Taxonomies']
+      invalidatesTags: ['Taxonomies', 'Users']
     }),
     getTeamUsers: builder.query({
       query: (teamId) => `api/team/${teamId}/user`,
@@ -104,7 +104,7 @@ export const apiSlice = createApi({
         body: data,
         formData: true
       }),
-      invalidatesTags: ['Data']
+      invalidatesTags: ['Data', 'Users']
     }),
     assignData: builder.mutation({
       query: (params) => ({
@@ -154,7 +154,8 @@ export const apiSlice = createApi({
     removeTeam: builder.mutation({
       query: (userId) => ({
         url: `api/user/${userId}/team`,
-        method: 'DELETE'
+        method: 'DELETE',
+        body: { data: userId }
       }),
       invalidatesTags: ['Users']
     }),
