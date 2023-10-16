@@ -183,6 +183,7 @@ export const {
   useAddDataMutation,
   useAssignDataMutation,
   useGetTaxonomyUsersQuery,
+  useLazyGetTaxonomyUsersQuery,
   useGetDataByTaxonomyQuery,
   useDeleteDataMutation,
   useGetDataUsersQuery,

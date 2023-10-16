@@ -63,22 +63,28 @@ const ModalForm = ({ toggleModal, formType }) => {
   const users = formType.entity === 'Taxonomy' ? teamUsers : taxonomyUsers;
 
   const setFormValues = () => {
-    let initialName = '';
-    let initialAssignedUsers = [];
+    let selectedName = '';
+    let assignedUsers = [];
 
     if (
       !formType.new &&
-      (selectedTaxonomy || selectedData) &&
+      selectedTaxonomy &&
+      taxonomyUsers &&
       formType.entity === 'Taxonomy'
     ) {
-      initialName = selectedTaxonomy.name || '';
-      initialAssignedUsers = taxonomyUsers || [];
-    } else if (formType.entity === 'Dataset') {
-      initialName = selectedData.name || '';
-      initialAssignedUsers = dataUsers || [];
+      selectedName = selectedTaxonomy.name || '';
+      assignedUsers = taxonomyUsers || [];
+    } else if (
+      !formType.new &&
+      formType.entity === 'Dataset' &&
+      selectedData &&
+      dataUsers
+    ) {
+      selectedName = selectedData.name || '';
+      assignedUsers = dataUsers || [];
     }
 
-    return [initialName, initialAssignedUsers];
+    return [selectedName, assignedUsers];
   };
 
   const [initialName, initialAssignedUsers] = setFormValues();

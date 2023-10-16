@@ -8,7 +8,10 @@ import {
   selectCurrentUserTeam,
   logout
 } from '../slices/authSlice';
-import { useGetTaxonomiesQuery } from '../slices/apiSlice';
+import {
+  useGetTaxonomiesQuery,
+  useLazyGetTaxonomyUsersQuery
+} from '../slices/apiSlice';
 import {
   setIsOpen,
   setSelectedTaxonomyId,
@@ -23,6 +26,7 @@ const Header = () => {
   const team = useSelector(selectCurrentUserTeam);
 
   const { data: taxonomies, isSuccess } = useGetTaxonomiesQuery(authenticated);
+  const [getTaxonomyUsers] = useLazyGetTaxonomyUsersQuery();
 
   const handleSignout = () => {
     dispatch(logout());
@@ -31,6 +35,7 @@ const Header = () => {
 
   const handleChangeTaxonomy = (event) => {
     dispatch(setSelectedTaxonomyId(event.target.value));
+    getTaxonomyUsers(event.target.value);
   };
 
   const toggleModal = () => {
@@ -58,7 +63,7 @@ const Header = () => {
         </LinkItem>
         <LinkItem>
           <Label>Team: </Label>
-          {team.name}
+          {team.name || 'None'}
         </LinkItem>
         <LinkItem>
           <LinkText>{email}</LinkText>
