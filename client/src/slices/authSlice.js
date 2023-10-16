@@ -46,8 +46,8 @@ const authSlice = createSlice({
       apiSlice.endpoints.assignTeam.matchFulfilled,
       (state, { payload }) => {
         if (payload.users.find((user) => user.id === parseInt(state.id))) {
-          state.team.id = payload.team;
-          state.team.name = payload.name;
+          state.team.id = payload.team.id;
+          state.team.name = payload.team.name;
         }
       }
     );

@@ -26,13 +26,17 @@ exports.addTeam = async (req, res, next) => {
       [req.body.name]
     );
 
-    res.status(200).send(JSON.stringify(team.rows[0].id));
+    res
+      .status(200)
+      .send(JSON.stringify({ id: team.rows[0].id, name: req.body.name }));
   } else {
     await pool.query('UPDATE teams SET name = $1 WHERE id = $2;', [
       req.body.name,
       req.body.teamId
     ]);
 
-    res.status(200).send(JSON.stringify(req.body.teamId));
+    res
+      .status(200)
+      .send(JSON.stringify({ id: req.body.teamId, name: req.body.name }));
   }
 };

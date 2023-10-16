@@ -154,8 +154,7 @@ export const apiSlice = createApi({
     removeTeam: builder.mutation({
       query: (userId) => ({
         url: `api/user/${userId}/team`,
-        method: 'DELETE',
-        body: { data: userId }
+        method: 'DELETE'
       }),
       invalidatesTags: ['Users']
     }),
@@ -163,7 +162,8 @@ export const apiSlice = createApi({
       query: (taxonomyId) => ({
         url: `api/taxonomy/${taxonomyId}`,
         method: 'DELETE'
-      })
+      }),
+      invalidatesTags: ['Taxonomies']
     })
   })
 });

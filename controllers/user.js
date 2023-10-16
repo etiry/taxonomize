@@ -101,7 +101,7 @@ exports.assignTeam = async (req, res, next) => {
   try {
     req.body.users.forEach(async (user) => {
       await pool.query('UPDATE users SET team_id = $1 WHERE id = $2', [
-        req.body.team,
+        req.body.team.id,
         user.id
       ]);
       return res.status(200).end(JSON.stringify(req.body));

@@ -53,6 +53,7 @@ const TeamUserForm = ({ toggleModal, formType }) => {
         teamId
       });
       await assignTeam({ team, name: data.name, users: usersToAdd });
+      localStorage.setItem('taxonomizeTeam', JSON.stringify(team));
     } catch (error) {
       console.log(`${error}`);
     }
