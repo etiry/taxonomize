@@ -35,6 +35,11 @@ const Team = () => {
     dispatch(setIsOpen());
   };
 
+  const handleRemoveTeam = (userId) => {
+    removeTeam(userId);
+    localStorage.setItem('taxonomizeTeam', {});
+  };
+
   if (!team.id) {
     return (
       <Container>
@@ -64,7 +69,7 @@ const Team = () => {
                     <Cell>{item.name}</Cell>
                     <Cell>{item.email}</Cell>
                     <Cell>
-                      <Button onClick={() => removeTeam(item.id)}>
+                      <Button onClick={() => handleRemoveTeam(item.id)}>
                         Remove
                       </Button>
                     </Cell>

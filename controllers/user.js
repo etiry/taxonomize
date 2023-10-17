@@ -118,6 +118,12 @@ exports.removeTeam = async (req, res, next) => {
 
   try {
     await pool.query('UPDATE users SET team_id = NULL WHERE id = $1', [userId]);
+    await pool.query('DELETE FROM taxonomy_assignments WHERE user_id = $1', [
+      userId
+    ]);
+    await pool.query('DELETE FROM dataset_assignments WHERE user_id = $1', [
+      userId
+    ]);
     return res.status(200).end(userId);
   } catch (error) {
     return res.end(`${error}`);
