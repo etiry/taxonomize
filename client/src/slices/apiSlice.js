@@ -112,7 +112,7 @@ export const apiSlice = createApi({
         method: 'POST',
         body: { dataId: params.dataId }
       }),
-      invalidatesTags: ['Data']
+      invalidatesTags: ['Users', 'Data']
     }),
     getTaxonomyUsers: builder.query({
       query: (taxonomyId) => `api/taxonomy/${taxonomyId}/user`,

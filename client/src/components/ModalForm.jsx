@@ -57,8 +57,17 @@ const ModalForm = ({ toggleModal, formType }) => {
   const { data: taxonomyUsers, isSuccess: retrievedTaxonomyUsers } =
     useGetTaxonomyUsersQuery(selectedTaxonomyId);
 
-  const { data: dataUsers, isSuccess: retrievedDataUsers } =
-    useGetDataUsersQuery(selectedDataId);
+  const dataUsers = apiSlice.endpoints.getDataByTaxonomy.useQueryState(
+    selectedTaxonomyId,
+    {
+      selectFromResult: ({ data }) =>
+        data?.nodes
+          .find((d) => d.id === parseInt(selectedDataId))
+          .users.map((user) => ({
+            id: user
+          }))
+    }
+  );
 
   const users = formType.entity === 'Taxonomy' ? teamUsers : taxonomyUsers;
 
@@ -88,6 +97,8 @@ const ModalForm = ({ toggleModal, formType }) => {
   };
 
   const [initialName, initialAssignedUsers] = setFormValues();
+
+  console.log(initialAssignedUsers);
 
   const [name, setName] = useState(initialName);
 
