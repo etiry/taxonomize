@@ -37,7 +37,7 @@ const Team = () => {
 
   const handleRemoveTeam = (userId) => {
     removeTeam(userId);
-    localStorage.setItem('taxonomizeTeam', {});
+    localStorage.setItem('taxonomizeTeam', { id: null, name: null });
   };
 
   if (!team.id) {
