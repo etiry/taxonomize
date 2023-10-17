@@ -164,8 +164,10 @@ const ModalForm = ({ toggleModal, formType }) => {
         <Heading>
           {formType.new ? 'Add a ' : 'Edit '} {formType.entity}
         </Heading>
-        {!formType.new ? (
-          <Button onClick={handleDeleteTaxonomy}>Delete Taxonomy</Button>
+        {!formType.new && formType.entity === 'Taxonomy' ? (
+          <Button onClick={handleDeleteTaxonomy}>
+            Delete {formType.entity}
+          </Button>
         ) : null}
         <FormGroup>
           <FormLabel>{formType.entity} name:</FormLabel>
