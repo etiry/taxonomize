@@ -71,7 +71,7 @@ exports.getObservations = async (req, res, next) => {
 
   let queryStringTotals =
     'SELECT COUNT(*) as total_records, CEIL(COUNT(*) / $1) AS total_pages FROM observations LEFT JOIN category_assignments ON category_assignments.observation_id = observations.id WHERE dataset_id = $2 AND LOWER(text) LIKE LOWER($3)';
-  const stringInterpolationsTotals = [perPage, parseInt(dataId), `%${query}%`];
+  const stringInterpolationsTotals = [perPage, dataId, `%${query}%`];
 
   let queryStringNodes =
     'SELECT observations.id, observations.text, category_assignments.category_id, categories.name as category_name FROM observations LEFT JOIN category_assignments ON category_assignments.observation_id = observations.id LEFT JOIN categories ON category_assignments.category_id = categories.id WHERE dataset_id = $1 AND LOWER(observations.text) LIKE LOWER($2)';

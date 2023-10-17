@@ -85,7 +85,6 @@ exports.getDataByTaxonomy = async (req, res, next) => {
       'SELECT datasets.id, datasets.name, array_agg(dataset_assignments.user_id) users FROM datasets JOIN dataset_assignments ON datasets.id = dataset_assignments.dataset_id WHERE taxonomy_id = $1 GROUP BY datasets.id',
       [taxonomyId]
     );
-    console.log(nodes);
     return res.status(200).end(JSON.stringify({ nodes }));
   } catch (error) {
     return res.end(`${error}`);
