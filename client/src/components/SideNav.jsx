@@ -96,7 +96,12 @@ const SideNav = ({ setContentType }) => {
             </IndentLinkItem>
             {content}
             <IndentLinkItem>
-              <Link onClick={() => setContentType('compareDatasets')}>
+              <Link
+                onClick={() => {
+                  setContentType('compareDatasets');
+                  dispatch(setSelectedDataId(null));
+                }}
+              >
                 Compare Datasets
               </Link>
             </IndentLinkItem>

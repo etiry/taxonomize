@@ -164,6 +164,10 @@ export const apiSlice = createApi({
         method: 'DELETE'
       }),
       invalidatesTags: ['Taxonomies']
+    }),
+    getUserAssignedCategories: builder.query({
+      query: (params) =>
+        `api/user/${params.userId}/observations?obIds=${params.obIds}`
     })
   })
 });
@@ -191,5 +195,6 @@ export const {
   useAddTeamMutation,
   useAssignTeamMutation,
   useRemoveTeamMutation,
-  useDeleteTaxonomyMutation
+  useDeleteTaxonomyMutation,
+  useLazyGetUserAssignedCategoriesQuery
 } = apiSlice;

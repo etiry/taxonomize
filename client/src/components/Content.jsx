@@ -12,6 +12,8 @@ import {
 } from '../slices/selectionsSlice';
 import Datasets from './Datasets';
 import Team from './Team';
+import CompareDatasets from './CompareDatasets';
+import CompareDataDetail from './CompareDataDetail';
 
 const Content = ({ contentType }) => {
   const user = useSelector(selectCurrentUser);
@@ -64,7 +66,16 @@ const Content = ({ contentType }) => {
     }
   }
   if (contentType === 'compareDatasets') {
-    return <ContentContainer>Compare Datasets</ContentContainer>;
+    return (
+      <ContentContainer>
+        <CompareDataDetail selectedTaxonomyId={selectedTaxonomyId} />
+        <TableOptions
+          selectedDataId={selectedDataId}
+          taxonomyId={parseInt(selectedTaxonomyId)}
+        />
+        <CompareDatasets taxonomyId={parseInt(selectedTaxonomyId)} />
+      </ContentContainer>
+    );
   }
 
   return content;
