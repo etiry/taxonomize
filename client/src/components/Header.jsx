@@ -25,7 +25,11 @@ const Header = () => {
   const email = useSelector(selectCurrentUserEmail);
   const team = useSelector(selectCurrentUserTeam);
 
-  const { data: taxonomies, isSuccess } = useGetTaxonomiesQuery(authenticated);
+  const {
+    data: taxonomies,
+    isSuccess,
+    isLoading
+  } = useGetTaxonomiesQuery(authenticated);
   const [getTaxonomyUsers] = useLazyGetTaxonomyUsersQuery();
 
   const handleSignout = () => {
@@ -73,6 +77,8 @@ const Header = () => {
         </LinkItem>
       </>
     );
+  } else if (authenticated && isLoading) {
+    links = 'Loading...';
   } else {
     links = (
       <>
