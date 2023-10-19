@@ -18,7 +18,7 @@ import { usePagination } from '@table-library/react-table-library/pagination';
 import { useSelector, useDispatch } from 'react-redux';
 import {
   apiSlice,
-  useAssignCategoryMutation,
+  useAssignUserCategoryMutation,
   useLazyGetObservationsQuery
 } from '../slices/apiSlice';
 import { selectGetObsParams, setGetObsParams } from '../slices/paramsSlice';
@@ -64,7 +64,7 @@ const Observations = ({ selectedDataId, taxonomyId, datasetAssignmentId }) => {
     filter: obsParams.filter
   }).data;
 
-  const [assignCategory] = useAssignCategoryMutation();
+  const [assignUserCategory] = useAssignUserCategoryMutation();
 
   const handleUpdate = async (observationId, event) => {
     const queryParams = {
@@ -73,7 +73,7 @@ const Observations = ({ selectedDataId, taxonomyId, datasetAssignmentId }) => {
       datasetAssignmentId
     };
     try {
-      await assignCategory(queryParams);
+      await assignUserCategory(queryParams);
     } catch (error) {
       console.log(`${error}`);
     }
@@ -115,7 +115,7 @@ const Observations = ({ selectedDataId, taxonomyId, datasetAssignmentId }) => {
                         value={item.type}
                         onChange={(event) => handleUpdate(item.id, event)}
                       >
-                        <option value="">-- Select a category</option>
+                        <option value="NULL">-- Select a category</option>
                         <CategoryOptions taxonomyId={taxonomyId} />
                       </select>
                     </Cell>

@@ -61,13 +61,12 @@ export const apiSlice = createApi({
     getCategories: builder.query({
       query: (taxonomyId) => `api/taxonomy/${taxonomyId}/categories`
     }),
-    assignCategory: builder.mutation({
+    assignUserCategory: builder.mutation({
       query: (params) => ({
-        url: `/api/${params.observationId}/category`,
+        url: `/api/user/${params.datasetAssignmentId}/observation/${params.observationId}/category`,
         method: 'POST',
         body: {
-          categoryId: params.categoryId,
-          datasetAssignmentId: params.datasetAssignmentId
+          categoryId: params.categoryId
         }
       }),
       invalidatesTags: ['Observations']
@@ -168,6 +167,25 @@ export const apiSlice = createApi({
     getUserAssignedCategories: builder.query({
       query: (params) =>
         `api/user/${params.userId}/observations?obIds=${params.obIds}`
+    }),
+    assignFinalCategory: builder.mutation({
+      query: (params) => ({
+        url: `/api/observation/${params.observationId}/category`,
+        method: 'POST',
+        body: {
+          categoryId: params.categoryId
+        }
+      }),
+      invalidatesTags: ['Observations']
+    }),
+    markDataComplete: builder.mutation({
+      query: (params) => ({
+        url: `/api/data/${params.datasetAssignmentId}`,
+        method: 'POST',
+        body: {
+          value: params.value
+        }
+      })
     })
   })
 });
@@ -179,7 +197,7 @@ export const {
   useGetDataQuery,
   useLazyGetObservationsQuery,
   useGetCategoriesQuery,
-  useAssignCategoryMutation,
+  useAssignUserCategoryMutation,
   useGetTaxonomiesQuery,
   useAddTaxonomyMutation,
   useAssignTaxonomyMutation,
@@ -197,5 +215,7 @@ export const {
   useRemoveTeamMutation,
   useDeleteTaxonomyMutation,
   useGetUserAssignedCategoriesQuery,
-  useLazyGetUserAssignedCategoriesQuery
+  useLazyGetUserAssignedCategoriesQuery,
+  useAssignFinalCategoryMutation,
+  useMarkDataCompleteMutation
 } = apiSlice;

@@ -43,15 +43,16 @@ module.exports = (app) => {
   app.delete('/api/data/:dataId', dataController.deleteData);
   app.get('/api/data/:dataId/observations', dataController.getObservations);
   app.get('/api/data/:dataId/user', dataController.getDataUsers);
+  app.post(
+    '/api/data/:datasetAssignmentId',
+    requireAuth,
+    dataController.markDataComplete
+  );
 
   // observation routes
   app.post(
-    '/api/:observationId/category',
-    observationController.assignCategory
-  );
-  app.delete(
-    '/api/:observationId/category',
-    observationController.deleteCategory
+    '/api/observation/:observationId/category',
+    observationController.assignFinalCategory
   );
 
   // authentication routes
@@ -78,10 +79,20 @@ module.exports = (app) => {
   app.get('/api/user', requireAuth, userController.findUser);
   app.post('/api/user/team', requireAuth, userController.assignTeam);
   app.delete('/api/user/:userId/team', requireAuth, userController.removeTeam);
+  app.post(
+    '/api/user/:datasetAssignmentId/observation/:observationId/category',
+    requireAuth,
+    userController.assignUserCategory
+  );
   app.get(
     '/api/user/:userId/observations',
     requireAuth,
     userController.getUserAssignedCategories
+  );
+  app.post(
+    '/api/user/:datasetAssignmentId/observation/:observationId/category',
+    requireAuth,
+    userController.assignUserCategory
   );
 
   // team routes

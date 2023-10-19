@@ -18,9 +18,9 @@ import { usePagination } from '@table-library/react-table-library/pagination';
 import { useSelector, useDispatch } from 'react-redux';
 import {
   apiSlice,
-  useAssignCategoryMutation,
   useLazyGetObservationsQuery,
-  useGetUserAssignedCategoriesQuery
+  useGetUserAssignedCategoriesQuery,
+  useAssignFinalCategoryMutation
 } from '../slices/apiSlice';
 import { selectGetObsParams, setGetObsParams } from '../slices/paramsSlice';
 import {
@@ -37,6 +37,7 @@ const CompareDatasets = ({ taxonomyId }) => {
   const comparedUsers = useSelector(selectComparedUsers);
   const obsParams = useSelector(selectGetObsParams);
   const [getObs] = useLazyGetObservationsQuery();
+  const [assignFinalCategory] = useAssignFinalCategoryMutation();
   let tableData = {};
 
   const onPaginationChange = async (action, state) => {
@@ -102,16 +103,13 @@ const CompareDatasets = ({ taxonomyId }) => {
 
   tableData = { ...data, nodes };
 
-  const [assignCategory] = useAssignCategoryMutation();
-
   const handleUpdate = async (observationId, event) => {
     const queryParams = {
       observationId,
-      categoryId: event.target.value,
-      datasetAssignmentId
+      categoryId: event.target.value
     };
     try {
-      await assignCategory(queryParams);
+      await assignFinalCategory(queryParams);
     } catch (error) {
       console.log(`${error}`);
     }

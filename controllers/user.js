@@ -130,6 +130,42 @@ exports.removeTeam = async (req, res, next) => {
   }
 };
 
+// POST /datasetAssignment/:datasetAssignmentId/observation/:observationId/category
+// assign category to observation for specific user
+exports.assignUserCategory = async (req, res, next) => {
+  const { datasetAssignmentId, observationId } = req.params;
+
+  console.log(observationId);
+
+  try {
+    const { rows: exists } = await pool.query(
+      'SELECT * FROM category_assignments WHERE dataset_assignment_id = $1 AND observation_id = $2',
+      [datasetAssignmentId, observationId]
+    );
+
+    if (exists.length === 0) {
+      await pool.query(
+        'INSERT INTO category_assignments (dataset_assignment_id, observation_id, category_id) VALUES ($1, $2, $3)',
+        [datasetAssignmentId, observationId, req.body.categoryId]
+      );
+    } else if (req.body.categoryId === 'NULL') {
+      await pool.query(
+        'DELETE FROM category_assignments WHERE dataset_assignment_id = $1 AND observation_id = $2',
+        [datasetAssignmentId, observationId]
+      );
+    } else {
+      await pool.query(
+        'UPDATE category_assignments SET category_id = $1 WHERE dataset_assignment_id = $2 AND observation_id = $3',
+        [req.body.categoryId, datasetAssignmentId, observationId]
+      );
+    }
+
+    return res.status(200).end();
+  } catch (error) {
+    return res.end(`${error}`);
+  }
+};
+
 // GET /user/:userID/data/:dataID/observations
 // get user's assigned categories for specific observations
 exports.getUserAssignedCategories = async (req, res, next) => {
