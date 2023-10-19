@@ -147,8 +147,6 @@ exports.getDataUsers = async (req, res, next) => {
       [dataId]
     );
 
-    console.log(users);
-
     return res.status(200).json(users);
   } catch (error) {
     return res.end(`${error}`);

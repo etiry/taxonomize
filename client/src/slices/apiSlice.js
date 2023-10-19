@@ -196,5 +196,6 @@ export const {
   useAssignTeamMutation,
   useRemoveTeamMutation,
   useDeleteTaxonomyMutation,
+  useGetUserAssignedCategoriesQuery,
   useLazyGetUserAssignedCategoriesQuery
 } = apiSlice;

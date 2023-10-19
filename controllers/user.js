@@ -141,7 +141,6 @@ exports.getUserAssignedCategories = async (req, res, next) => {
       'SELECT observation_id, category_id, user_id, name as category_name FROM category_assignments JOIN dataset_assignments ON category_assignments.dataset_assignment_id = dataset_assignments.id JOIN categories ON category_assignments.category_id = categories.id WHERE observation_id = ANY($1) AND user_id = $2',
       [obIds, userId]
     );
-    console.log(nodes);
     return res.status(200).end(JSON.stringify(nodes));
   } catch (error) {
     console.log(error);

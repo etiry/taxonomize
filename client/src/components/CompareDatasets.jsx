@@ -19,7 +19,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import {
   apiSlice,
   useAssignCategoryMutation,
-  useLazyGetObservationsQuery
+  useLazyGetObservationsQuery,
+  useGetUserAssignedCategoriesQuery
 } from '../slices/apiSlice';
 import { selectGetObsParams, setGetObsParams } from '../slices/paramsSlice';
 import {
@@ -70,39 +71,35 @@ const CompareDatasets = ({ taxonomyId }) => {
     filter: obsParams.filter
   });
 
-  const addUserCategories = () => {
-    const getUserCategories = (userId) =>
-      apiSlice.endpoints.getUserAssignedCategories.useQueryState({
-        userId,
-        dataId: selectedDataId,
-        obIds: data?.nodes.map((ob) => ob.id) || []
-      }).data;
+  const { data: user1Data } = useGetUserAssignedCategoriesQuery({
+    userId: comparedUsers.user1,
+    dataId: selectedDataId,
+    obIds: data?.nodes.map((ob) => ob.id) || []
+  });
 
-    const user1Data = getUserCategories(comparedUsers.user1);
-    const user2Data = getUserCategories(comparedUsers.user2);
+  const { data: user2Data } = useGetUserAssignedCategoriesQuery({
+    userId: comparedUsers.user2,
+    dataId: selectedDataId,
+    obIds: data?.nodes.map((ob) => ob.id) || []
+  });
 
-    const newNodes = data?.nodes.map((ob) => {
-      let match1 = null;
-      let match2 = null;
+  const nodes = data?.nodes.map((ob) => {
+    let match1 = null;
+    let match2 = null;
 
-      if (user1Data && user2Data) {
-        match1 = user1Data.find(
-          (userDataOb) => userDataOb.observation_id === ob.id
-        );
-        match2 = user2Data.find(
-          (userDataOb) => userDataOb.observation_id === ob.id
-        );
-      }
-      return {
-        ...ob,
-        user1Category: match1 ? match1.category_name : null,
-        user2Category: match2 ? match2.category_name : null
-      };
-    });
-    return newNodes;
-  };
+    match1 = user1Data?.find(
+      (userDataOb) => userDataOb.observation_id === ob.id
+    );
+    match2 = user2Data?.find(
+      (userDataOb) => userDataOb.observation_id === ob.id
+    );
+    return {
+      ...ob,
+      user1Category: match1 ? match1.category_name : null,
+      user2Category: match2 ? match2.category_name : null
+    };
+  });
 
-  const nodes = addUserCategories();
   tableData = { ...data, nodes };
 
   const [assignCategory] = useAssignCategoryMutation();
