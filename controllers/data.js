@@ -152,3 +152,20 @@ exports.getDataUsers = async (req, res, next) => {
     return res.end(`${error}`);
   }
 };
+
+// POST /data/:datasetAssignment
+// mark dataset assignment complete or incomplete
+exports.markDataComplete = async (req, res, next) => {
+  const { datasetAssignmentId } = req.params;
+
+  try {
+    await pool.query(
+      'UPDATE dataset_assignments SET completed = $1 WHERE id = $2',
+      [req.body.value, datasetAssignmentId]
+    );
+
+    return res.status(200).end();
+  } catch (error) {
+    return res.end(`${error}`);
+  }
+};
