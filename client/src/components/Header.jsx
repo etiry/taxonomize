@@ -33,6 +33,10 @@ const Header = () => {
   const [getTaxonomyUsers] = useLazyGetTaxonomyUsersQuery();
 
   const handleSignout = () => {
+    localStorage.removeItem('taxonomizeId');
+    localStorage.removeItem('taxonomizeEmail');
+    localStorage.removeItem('taxonomizeToken');
+    localStorage.removeItem('taxonomizeTeam');
     dispatch(logout());
     navigate('/');
   };
