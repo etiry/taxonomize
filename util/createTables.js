@@ -5,7 +5,7 @@ const createTables = async () => {
     'CREATE TABLE teams (id SERIAL PRIMARY KEY, name VARCHAR(50));'
   );
   await pool.query(
-    'CREATE TABLE users (id SERIAL PRIMARY KEY, email VARCHAR(50), hash TEXT, salt TEXT, team_id INT REFERENCES teams(id));'
+    'CREATE TABLE users (id SERIAL PRIMARY KEY, name VARCHAR(50), email VARCHAR(50), hash TEXT, salt TEXT, team_id INT REFERENCES teams(id));'
   );
   await pool.query(
     'CREATE TABLE taxonomies (id SERIAL PRIMARY KEY, name VARCHAR(50), team_id INT REFERENCES teams(id));'
