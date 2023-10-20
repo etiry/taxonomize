@@ -67,53 +67,99 @@ exports.getObservations = async (req, res, next) => {
   const query = req.query.query || '';
   const sort = req.query.sort || '';
   const filter = req.query.filter || '';
-  const userIds = req.query.userIds.split(',');
   const { dataId } = req.params;
+  const userIds = req.query.userIds.split(',');
 
-  let queryStringTotals =
-    'SELECT COUNT(*) as total_records, CEIL(COUNT(*) / $1) AS total_pages FROM observations JOIN dataset_assignments ON dataset_assignments.dataset_id = observations.dataset_id LEFT JOIN category_assignments ON category_assignments.dataset_assignment_id = dataset_assignments.id AND category_assignments.observation_id = observations.id LEFT JOIN categories ON category_assignments.category_id = categories.id WHERE observations.dataset_id = $2 AND user_id = $3 AND LOWER(text) LIKE LOWER($4)';
+  if (userIds.length === 1) {
+    userIds.push(null);
+  }
+
+  let queryStringTotals = `WITH user1category AS (
+      SELECT observation_id, category_id as user1_category_id, name as user1_category_name 
+      FROM dataset_assignments AS da 
+      JOIN category_assignments AS ca
+      ON da.id = ca.dataset_assignment_id
+      JOIN categories as c
+      ON ca.category_id = c.id 
+      WHERE da.dataset_id = $1 AND user_id = $2
+    ), user2category AS (
+      SELECT observation_id, category_id as user2_category_id, name as user2_category_name 
+      FROM dataset_assignments AS da 
+      JOIN category_assignments AS ca
+      ON da.id = ca.dataset_assignment_id
+      JOIN categories as c
+      ON ca.category_id = c.id 
+      WHERE da.dataset_id = $1 AND user_id = $3
+    )
+    SELECT  COUNT(*) as total_records, CEIL(COUNT(*) / $4) AS total_pages 
+    FROM observations AS o
+    LEFT JOIN user1category AS uc1
+    ON o.id = uc1.observation_id
+    LEFT JOIN user2category AS uc2
+    USING (observation_id)
+    WHERE LOWER(text) LIKE LOWER($5)`;
   const stringInterpolationsTotals = [
-    perPage,
     dataId,
     userIds[0],
+    userIds[1],
+    perPage,
     `%${query}%`
   ];
 
-  let queryStringNodes =
-    'SELECT observations.id, observations.text, category_assignments.category_id, categories.name FROM observations JOIN dataset_assignments ON dataset_assignments.dataset_id = observations.dataset_id LEFT JOIN category_assignments ON category_assignments.dataset_assignment_id = dataset_assignments.id AND category_assignments.observation_id = observations.id LEFT JOIN categories ON category_assignments.category_id = categories.id WHERE observations.dataset_id = $1 AND user_id = $2 AND LOWER(observations.text) LIKE LOWER($3)';
+  let queryStringNodes = `WITH user1category AS (
+      SELECT observation_id, category_id as user1_category_id, name as user1_category_name 
+      FROM dataset_assignments AS da 
+      JOIN category_assignments AS ca
+      ON da.id = ca.dataset_assignment_id
+      JOIN categories as c
+      ON ca.category_id = c.id 
+      WHERE da.dataset_id = $1 AND user_id = $2
+    ), user2category AS (
+      SELECT observation_id, category_id as user2_category_id, name as user2_category_name 
+      FROM dataset_assignments AS da 
+      JOIN category_assignments AS ca
+      ON da.id = ca.dataset_assignment_id
+      JOIN categories as c
+      ON ca.category_id = c.id 
+      WHERE da.dataset_id = $1 AND user_id = $3
+    )
+    SELECT id, text, category_id, dataset_id, user1_category_id, user1_category_name, user2_category_id, user2_category_name 
+    FROM observations AS o
+    LEFT JOIN user1category AS uc1
+    ON o.id = uc1.observation_id
+    LEFT JOIN user2category AS uc2
+    USING (observation_id)
+    WHERE LOWER(text) LIKE LOWER($4)`;
   const stringInterpolationsNodes = [
     dataId,
     userIds[0],
+    userIds[1],
     `%${query}%`,
     perPage,
     perPage * page - perPage
   ];
 
-  let queryStringLimitOffset = ' LIMIT $4 OFFSET $5';
+  let queryStringLimitOffset = ' LIMIT $5 OFFSET $6';
 
   if (filter) {
-    queryStringTotals += ' AND category_assignments.category_id = $5';
+    queryStringTotals += ' AND user1_category_id = $6';
     stringInterpolationsTotals.push(filter);
 
-    console.log(stringInterpolationsTotals);
-
-    queryStringNodes += ' AND category_assignments.category_id = $4';
-    stringInterpolationsNodes.splice(3, 0, filter);
-    queryStringLimitOffset = ' LIMIT $5 OFFSET $6';
-
-    console.log(stringInterpolationsNodes);
+    queryStringNodes += ' AND user1_category_id = $5';
+    stringInterpolationsNodes.splice(4, 0, filter);
+    queryStringLimitOffset = ' LIMIT $6 OFFSET $7';
   }
 
   if (sort) {
     const sortParams = sort.split('_');
     if (sortParams[1] === 'Asc') {
       sortParams[0] === 'text'
-        ? (queryStringNodes += ' ORDER BY observations.text')
-        : (queryStringNodes += ' ORDER BY categories.name');
+        ? (queryStringNodes += ' ORDER BY text')
+        : (queryStringNodes += ' ORDER BY user1_category_name');
     } else {
       sortParams[0] === 'text'
-        ? (queryStringNodes += ' ORDER BY observations.text DESC')
-        : (queryStringNodes += ' ORDER BY categories.name DESC');
+        ? (queryStringNodes += ' ORDER BY text DESC')
+        : (queryStringNodes += ' ORDER BY user1_category_name DESC');
     }
   }
 

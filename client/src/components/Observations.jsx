@@ -70,24 +70,6 @@ const Observations = ({ selectedDataId, taxonomyId, datasetAssignmentId }) => {
     filter: obsParams.filter
   }).data;
 
-  // const { data: userData } = useGetUserAssignedCategoriesQuery({
-  //   userId,
-  //   dataId: selectedDataId,
-  //   obIds: data?.nodes.map((ob) => ob.id) || []
-  // });
-
-  // const nodes = data?.nodes.map((ob) => {
-  //   let match = null;
-
-  //   match = userData?.find((userDataOb) => userDataOb.observation_id === ob.id);
-  //   return {
-  //     ...ob,
-  //     userCategory: match ? match.category_name : null
-  //   };
-  // });
-
-  // tableData = { ...data, nodes };
-
   const handleUpdate = async (observationId, event) => {
     const queryParams = {
       observationId,
@@ -124,7 +106,7 @@ const Observations = ({ selectedDataId, taxonomyId, datasetAssignmentId }) => {
                 {tableList.map((item) => (
                   <Row key={item.id} item={item}>
                     <Cell>{item.text}</Cell>
-                    <Cell>{item.name}</Cell>
+                    <Cell>{item.user1_category_name}</Cell>
                     <Cell>
                       <select
                         style={{
