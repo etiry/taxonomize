@@ -40,7 +40,7 @@ export const apiSlice = createApi({
     }),
     getObservations: builder.query({
       query: (params) => {
-        let url = `api/data/${params.dataId}/observations?page=${params.page}`;
+        let url = `api/data/${params.dataId}/observations?page=${params.page}&userIds=${params.userIds}`;
 
         if (params.query) {
           url += `&query=${params.query}`;
@@ -166,7 +166,8 @@ export const apiSlice = createApi({
     }),
     getUserAssignedCategories: builder.query({
       query: (params) =>
-        `api/user/${params.userId}/observations?obIds=${params.obIds}`
+        `api/user/${params.userId}/observations?obIds=${params.obIds}`,
+      providesTags: ['Observations']
     }),
     assignFinalCategory: builder.mutation({
       query: (params) => ({

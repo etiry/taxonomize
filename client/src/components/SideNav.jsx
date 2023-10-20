@@ -38,7 +38,14 @@ const SideNav = ({ setContentType }) => {
   };
 
   const handleSelectData = async (dataId) => {
-    const params = { page: 1, dataId, query: '', sort: '', filter: '' };
+    const params = {
+      page: 1,
+      dataId,
+      userIds: user,
+      query: '',
+      sort: '',
+      filter: ''
+    };
     await getObs(params);
     dispatch(setSelectedDataId(dataId));
     setContentType('dataDetail');

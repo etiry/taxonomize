@@ -1,10 +1,11 @@
 import PropTypes from 'prop-types';
 import { useForm } from 'react-hook-form';
-import { useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import styled from 'styled-components';
 import debounce from 'debounce';
 import { useLazyGetObservationsQuery } from '../slices/apiSlice';
 import { selectGetObsParams, setGetObsParams } from '../slices/paramsSlice';
+import { selectCurrentUser } from '../slices/authSlice';
 import CategoryOptions from './CategoryOptions';
 
 const TableOptions = ({ selectedDataId, taxonomyId }) => {
@@ -16,12 +17,14 @@ const TableOptions = ({ selectedDataId, taxonomyId }) => {
     formState: { errors }
   } = useForm();
   const [getObs] = useLazyGetObservationsQuery();
+  const userId = useSelector(selectCurrentUser);
 
   const handleInputChange = async (event) => {
     dispatch(
       setGetObsParams({
         page: 1,
         dataId: selectedDataId,
+        userIds: userId,
         query: event.target.form[0].value,
         sort: event.target.form[1].value,
         filter: event.target.form[2].value
@@ -30,6 +33,7 @@ const TableOptions = ({ selectedDataId, taxonomyId }) => {
     const params = {
       page: 1,
       dataId: selectedDataId,
+      userIds: userId,
       query: event.target.form[0].value,
       sort: event.target.form[1].value,
       filter: event.target.form[2].value
@@ -44,6 +48,7 @@ const TableOptions = ({ selectedDataId, taxonomyId }) => {
       setGetObsParams({
         page: 1,
         dataId: selectedDataId,
+        userIds: userId,
         query: null,
         sort: null,
         filter: null
@@ -52,6 +57,7 @@ const TableOptions = ({ selectedDataId, taxonomyId }) => {
     const params = {
       page: 1,
       dataId: selectedDataId,
+      userIds: userId,
       query: null,
       sort: null,
       filter: null

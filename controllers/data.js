@@ -67,30 +67,41 @@ exports.getObservations = async (req, res, next) => {
   const query = req.query.query || '';
   const sort = req.query.sort || '';
   const filter = req.query.filter || '';
+  const userIds = req.query.userIds.split(',');
   const { dataId } = req.params;
 
   let queryStringTotals =
-    'SELECT COUNT(*) as total_records, CEIL(COUNT(*) / $1) AS total_pages FROM observations LEFT JOIN category_assignments ON category_assignments.observation_id = observations.id WHERE dataset_id = $2 AND LOWER(text) LIKE LOWER($3)';
-  const stringInterpolationsTotals = [perPage, dataId, `%${query}%`];
+    'SELECT COUNT(*) as total_records, CEIL(COUNT(*) / $1) AS total_pages FROM observations JOIN dataset_assignments ON dataset_assignments.dataset_id = observations.dataset_id LEFT JOIN category_assignments ON category_assignments.dataset_assignment_id = dataset_assignments.id AND category_assignments.observation_id = observations.id LEFT JOIN categories ON category_assignments.category_id = categories.id WHERE observations.dataset_id = $2 AND user_id = $3 AND LOWER(text) LIKE LOWER($4)';
+  const stringInterpolationsTotals = [
+    perPage,
+    dataId,
+    userIds[0],
+    `%${query}%`
+  ];
 
   let queryStringNodes =
-    'SELECT observations.id, observations.text, category_assignments.category_id, categories.name as category_name FROM observations LEFT JOIN category_assignments ON category_assignments.observation_id = observations.id LEFT JOIN categories ON category_assignments.category_id = categories.id WHERE dataset_id = $1 AND LOWER(observations.text) LIKE LOWER($2)';
+    'SELECT observations.id, observations.text, category_assignments.category_id, categories.name FROM observations JOIN dataset_assignments ON dataset_assignments.dataset_id = observations.dataset_id LEFT JOIN category_assignments ON category_assignments.dataset_assignment_id = dataset_assignments.id AND category_assignments.observation_id = observations.id LEFT JOIN categories ON category_assignments.category_id = categories.id WHERE observations.dataset_id = $1 AND user_id = $2 AND LOWER(observations.text) LIKE LOWER($3)';
   const stringInterpolationsNodes = [
     dataId,
+    userIds[0],
     `%${query}%`,
     perPage,
     perPage * page - perPage
   ];
 
-  let queryStringLimitOffset = ' LIMIT $3 OFFSET $4';
+  let queryStringLimitOffset = ' LIMIT $4 OFFSET $5';
 
   if (filter) {
-    queryStringTotals += ' AND category_assignments.category_id = $4';
+    queryStringTotals += ' AND category_assignments.category_id = $5';
     stringInterpolationsTotals.push(filter);
 
-    queryStringNodes += ' AND category_assignments.category_id = $3';
-    stringInterpolationsNodes.splice(2, 0, filter);
-    queryStringLimitOffset = ' LIMIT $4 OFFSET $5';
+    console.log(stringInterpolationsTotals);
+
+    queryStringNodes += ' AND category_assignments.category_id = $4';
+    stringInterpolationsNodes.splice(3, 0, filter);
+    queryStringLimitOffset = ' LIMIT $5 OFFSET $6';
+
+    console.log(stringInterpolationsNodes);
   }
 
   if (sort) {

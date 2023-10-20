@@ -135,8 +135,6 @@ exports.removeTeam = async (req, res, next) => {
 exports.assignUserCategory = async (req, res, next) => {
   const { datasetAssignmentId, observationId } = req.params;
 
-  console.log(observationId);
-
   try {
     const { rows: exists } = await pool.query(
       'SELECT * FROM category_assignments WHERE dataset_assignment_id = $1 AND observation_id = $2',
@@ -166,7 +164,7 @@ exports.assignUserCategory = async (req, res, next) => {
   }
 };
 
-// GET /user/:userID/data/:dataID/observations
+// GET /user/:userID/observations
 // get user's assigned categories for specific observations
 exports.getUserAssignedCategories = async (req, res, next) => {
   const { userId } = req.params;

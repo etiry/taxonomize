@@ -19,8 +19,10 @@ import { useSelector, useDispatch } from 'react-redux';
 import {
   apiSlice,
   useAssignUserCategoryMutation,
-  useLazyGetObservationsQuery
+  useLazyGetObservationsQuery,
+  useGetUserAssignedCategoriesQuery
 } from '../slices/apiSlice';
+import { selectCurrentUser } from '../slices/authSlice';
 import { selectGetObsParams, setGetObsParams } from '../slices/paramsSlice';
 import CategoryOptions from './CategoryOptions';
 
@@ -28,13 +30,16 @@ const Observations = ({ selectedDataId, taxonomyId, datasetAssignmentId }) => {
   const materialTheme = getTheme(DEFAULT_OPTIONS);
   const theme = useTheme(materialTheme);
   const dispatch = useDispatch();
+  const userId = useSelector(selectCurrentUser);
   const obsParams = useSelector(selectGetObsParams);
   const [getObs] = useLazyGetObservationsQuery();
+  const [assignUserCategory] = useAssignUserCategoryMutation();
   let data = {};
 
   const onPaginationChange = async (action, state) => {
     await getObs({
       dataId: selectedDataId,
+      userIds: userId,
       page: pagination.state.page + 1,
       query: obsParams.query,
       sort: obsParams.sort,
@@ -58,13 +63,30 @@ const Observations = ({ selectedDataId, taxonomyId, datasetAssignmentId }) => {
 
   data = apiSlice.endpoints.getObservations.useQueryState({
     dataId: selectedDataId,
+    userIds: userId,
     page: pagination.state.page + 1,
     query: obsParams.query,
     sort: obsParams.sort,
     filter: obsParams.filter
   }).data;
 
-  const [assignUserCategory] = useAssignUserCategoryMutation();
+  // const { data: userData } = useGetUserAssignedCategoriesQuery({
+  //   userId,
+  //   dataId: selectedDataId,
+  //   obIds: data?.nodes.map((ob) => ob.id) || []
+  // });
+
+  // const nodes = data?.nodes.map((ob) => {
+  //   let match = null;
+
+  //   match = userData?.find((userDataOb) => userDataOb.observation_id === ob.id);
+  //   return {
+  //     ...ob,
+  //     userCategory: match ? match.category_name : null
+  //   };
+  // });
+
+  // tableData = { ...data, nodes };
 
   const handleUpdate = async (observationId, event) => {
     const queryParams = {
@@ -102,7 +124,7 @@ const Observations = ({ selectedDataId, taxonomyId, datasetAssignmentId }) => {
                 {tableList.map((item) => (
                   <Row key={item.id} item={item}>
                     <Cell>{item.text}</Cell>
-                    <Cell>{item.category_name}</Cell>
+                    <Cell>{item.name}</Cell>
                     <Cell>
                       <select
                         style={{
