@@ -60,12 +60,17 @@ const ModalForm = ({ toggleModal, formType }) => {
   const dataUsers = apiSlice.endpoints.getDataByTaxonomy.useQueryState(
     selectedTaxonomyId,
     {
-      selectFromResult: ({ data }) =>
-        data?.nodes
-          .find((d) => d.id === parseInt(selectedDataId))
-          .users.map((user) => ({
-            id: user
-          }))
+      selectFromResult: ({ data }) => {
+        try {
+          return data?.nodes
+            .find((d) => d.id === parseInt(selectedDataId))
+            .users.map((user) => ({
+              id: user
+            }));
+        } catch (error) {
+          return [];
+        }
+      }
     }
   );
 
@@ -97,8 +102,6 @@ const ModalForm = ({ toggleModal, formType }) => {
   };
 
   const [initialName, initialAssignedUsers] = setFormValues();
-
-  console.log(initialAssignedUsers);
 
   const [name, setName] = useState(initialName);
 
