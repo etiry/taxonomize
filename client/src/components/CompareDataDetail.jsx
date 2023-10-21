@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useSelector, useDispatch } from 'react-redux';
 import styled from 'styled-components';
@@ -15,6 +16,8 @@ import {
 } from '../slices/apiSlice';
 import UserOptions from './UserOptions';
 import DataOptions from './DataOptions';
+import ToggleSwitch from './ToggleSwitch';
+import AgreementStatistics from './AgreementStatistics';
 
 const CompareDataDetail = ({ selectedTaxonomyId }) => {
   const dispatch = useDispatch();
@@ -27,28 +30,15 @@ const CompareDataDetail = ({ selectedTaxonomyId }) => {
     formState: { errors }
   } = useForm();
   const selectedDataId = useSelector(selectSelectedDataId);
-  const comparedUsers = useSelector(selectComparedUsers);
+  const [toggleValue, setToggleValue] = useState(false);
 
-  // const { data } = apiSlice.endpoints.getObservations.useQueryState({
-  //   dataId: selectedDataId,
-  //   userIds: [comparedUsers.user1, comparedUsers.user2],
-  //   page: 1,
-  //   query: '',
-  //   sort: '',
-  //   filter: ''
-  // });
+  const handleToggle = async () => {
+    setToggleValue(!toggleValue);
+  };
 
   const handleInputChange = async (event, type) => {
     if (type === 'data') {
       await dispatch(setSelectedDataId(parseInt(event.target.value)));
-      // await getObs({
-      //   dataId: parseInt(event.target.value),
-      //   userIds: [comparedUsers.user1, comparedUsers.user2],
-      //   page: 1,
-      //   query: '',
-      //   sort: '',
-      //   filter: ''
-      // });
     } else {
       dispatch(
         setComparedUsers({
@@ -92,8 +82,16 @@ const CompareDataDetail = ({ selectedTaxonomyId }) => {
             <UserOptions dataId={selectedDataId} />
           </Select>
         </FormGroup>
-        <Button>Calculate Agreement Statistics</Button>
+        <FormGroup>
+          <FormLabel>
+            Show Agreement Statistics:{' '}
+            <ToggleSwitch isOn={toggleValue} handleToggle={handleToggle} />
+          </FormLabel>
+        </FormGroup>
       </Form>
+      <InfoBox style={{ display: toggleValue ? 'block' : 'none' }}>
+        <AgreementStatistics />
+      </InfoBox>
     </Container>
   );
 };
@@ -116,3 +114,4 @@ const FormInput = styled.input``;
 const Select = styled.select``;
 const Option = styled.option``;
 const Button = styled.button``;
+const InfoBox = styled.div``;
