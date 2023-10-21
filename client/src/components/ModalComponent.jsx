@@ -54,12 +54,13 @@ const ModalComponent = () => {
 export default ModalComponent;
 
 const StyledModal = Modal.styled`
-  width: 20rem;
-  height: 20rem;
+  width: 25%;
+  height: 65%;
   display: flex;
   align-items: center;
   justify-content: center;
   background-color: white;
   opacity: ${(props) => props.opacity};
   transition : all 0.3s ease-in-out;
+  border-radius: 1rem;
 `;

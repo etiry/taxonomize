@@ -62,6 +62,7 @@ const Datasets = () => {
   if (isSuccess) {
     return (
       <Container>
+        <Heading>All Datasets</Heading>
         <Button onClick={() => toggleModal(true)}>Add Dataset</Button>
         <Table
           data={data}
@@ -162,8 +163,12 @@ const Container = styled.div`
   // max-height: 425px;
   // overflow-y: scroll;
   width: 100%;
-  grid-row: 2 / end;
-  grid-column: 1 / 3;
+  // grid-row: 2 / end;
+  // grid-column: 1 / 3;
 `;
 
-const Button = styled.button``;
+const Button = styled.button`
+  margin: 1rem;
+`;
+
+const Heading = styled.h3``;

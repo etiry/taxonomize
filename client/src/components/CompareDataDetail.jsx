@@ -108,10 +108,15 @@ const Container = styled.div`
 `;
 
 const Form = styled.form``;
-const FormGroup = styled.div``;
-const FormLabel = styled.label``;
-const FormInput = styled.input``;
-const Select = styled.select``;
+const FormGroup = styled.div`
+  padding: 0.2rem;
+`;
+const FormLabel = styled.label`
+  font-weight: 500;
+`;
+const Select = styled.select`
+  padding: 0.2rem 0.5rem;
+  border-radius: 1rem;
+`;
 const Option = styled.option``;
-const Button = styled.button``;
 const InfoBox = styled.div``;

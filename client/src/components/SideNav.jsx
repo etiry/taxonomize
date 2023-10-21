@@ -32,9 +32,11 @@ const SideNav = ({ setContentType }) => {
   });
   const [getObs] = useLazyGetObservationsQuery();
   const [showData, setShowData] = useState(true);
+  const [expandIcon, setExpandIcon] = useState('-');
 
   const toggleDatasets = () => {
     setShowData(!showData);
+    expandIcon === '-' ? setExpandIcon('+') : setExpandIcon('-');
   };
 
   const handleSelectData = async (dataId) => {
@@ -99,7 +101,12 @@ const SideNav = ({ setContentType }) => {
               </Link>
             </IndentLinkItem>
             <IndentLinkItem>
-              <Link onClick={toggleDatasets}>My Datasets</Link>
+              <Link onClick={toggleDatasets}>
+                <Wrapper>
+                  <Link>My Datasets</Link>
+                  <Link>{expandIcon}</Link>
+                </Wrapper>
+              </Link>
             </IndentLinkItem>
             {content}
             <IndentLinkItem>
@@ -134,14 +141,23 @@ const LinkList = styled.ul`
   list-style-type: none;
 `;
 
-const LinkItem = styled.li``;
+const LinkItem = styled.li`
+  padding: 0.25rem;
+`;
 
 const IndentLinkItem = styled.li`
-  padding-left: 1rem;
+  padding: 0.25rem 0.25rem 0.25rem 1rem;
 `;
 
 const ContentLinkItem = styled.li`
-  padding-left: 2rem;
+  padding: 0.25rem 0.25rem 0.25rem 2rem;
 `;
 
-const Link = styled.a``;
+const Link = styled.a`
+  cursor: pointer;
+`;
+
+const Wrapper = styled.div`
+  display: flex;
+  justify-content: space-between;
+`;

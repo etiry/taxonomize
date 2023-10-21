@@ -51,6 +51,7 @@ const Team = () => {
   if (isSuccess) {
     return (
       <Container>
+        <Heading>My Team</Heading>
         <Button onClick={() => toggleModal(false)}>Add Team Members</Button>
         <Table data={data} theme={theme} layout={{ fixedHeader: true }}>
           {(tableList) => (
@@ -86,12 +87,8 @@ const Team = () => {
 
 export default Team;
 
-const Container = styled.div`
-  // max-height: 425px;
-  // overflow-y: scroll;
-  width: 100%;
-  grid-row: 2 / end;
-  grid-column: 1 / 3;
-`;
+const Container = styled.div``;
 
 const Button = styled.button``;
+
+const Heading = styled.h3``;

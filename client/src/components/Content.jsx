@@ -14,6 +14,7 @@ import Datasets from './Datasets';
 import Team from './Team';
 import CompareDatasets from './CompareDatasets';
 import CompareDataDetail from './CompareDataDetail';
+import Dashboard from './Dashboard';
 
 const Content = ({ contentType }) => {
   const user = useSelector(selectCurrentUser);
@@ -30,7 +31,11 @@ const Content = ({ contentType }) => {
   let content;
 
   if (contentType === 'dashboard') {
-    return <ContentContainer>This is the content</ContentContainer>;
+    return (
+      <ContentContainer>
+        <Dashboard />
+      </ContentContainer>
+    );
   }
   if (contentType === 'team') {
     return (
@@ -42,7 +47,6 @@ const Content = ({ contentType }) => {
   if (contentType === 'allDatasets') {
     return (
       <ContentContainer>
-        All Datasets
         <Datasets />
       </ContentContainer>
     );
@@ -51,16 +55,18 @@ const Content = ({ contentType }) => {
     if (selectedData) {
       return (
         <ContentContainer>
-          <DataDetail data={selectedData} />
-          <TableOptions
-            selectedDataId={selectedDataId}
-            taxonomyId={selectedData.taxonomy_id}
-          />
-          <Observations
-            selectedDataId={selectedDataId}
-            taxonomyId={selectedData.taxonomy_id}
-            datasetAssignmentId={selectedData.id}
-          />
+          <DataDetailContainer>
+            <DataDetail data={selectedData} />
+            <TableOptions
+              selectedDataId={selectedDataId}
+              taxonomyId={selectedData.taxonomy_id}
+            />
+            <Observations
+              selectedDataId={selectedDataId}
+              taxonomyId={selectedData.taxonomy_id}
+              datasetAssignmentId={selectedData.id}
+            />
+          </DataDetailContainer>
         </ContentContainer>
       );
     }
@@ -68,12 +74,14 @@ const Content = ({ contentType }) => {
   if (contentType === 'compareDatasets') {
     return (
       <ContentContainer>
-        <CompareDataDetail selectedTaxonomyId={selectedTaxonomyId} />
-        <TableOptions
-          selectedDataId={selectedDataId}
-          taxonomyId={parseInt(selectedTaxonomyId)}
-        />
-        <CompareDatasets taxonomyId={parseInt(selectedTaxonomyId)} />
+        <DataDetailContainer>
+          <CompareDataDetail selectedTaxonomyId={selectedTaxonomyId} />
+          <TableOptions
+            selectedDataId={selectedDataId}
+            taxonomyId={parseInt(selectedTaxonomyId)}
+          />
+          <CompareDatasets taxonomyId={parseInt(selectedTaxonomyId)} />
+        </DataDetailContainer>
       </ContentContainer>
     );
   }
@@ -87,8 +95,17 @@ Content.propTypes = {
 
 export default Content;
 
-const ContentContainer = styled.header`
+const ContentContainer = styled.div`
   grid-column: 2 / end;
+  padding: 1rem;
+  // display: grid;
+  // grid-template-row: 1fr 5fr;
+  // grid-template-column: 1fr 1fr;
+  // justify-items: start;
+  // max-width: 100%;
+`;
+
+const DataDetailContainer = styled.div`
   display: grid;
   grid-template-row: 1fr 5fr;
   grid-template-column: 1fr 1fr;

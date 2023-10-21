@@ -56,8 +56,10 @@ const Container = styled.div`
 const DataDetailItem = styled.div`
   display: flex;
   align-items: center;
+  padding: 0.2rem;
 `;
 
 const Label = styled.span`
-  font-weight: bold;
+  font-weight: 500;
+  padding-right: 0.2rem;
 `;

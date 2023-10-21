@@ -241,6 +241,7 @@ const Form = styled.form`
 const FormGroup = styled.div``;
 const FormLabel = styled.label`
   display: block;
+  font-weight: 500;
 `;
 const FormInput = styled.input``;
 const Button = styled.button``;

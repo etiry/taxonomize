@@ -68,7 +68,7 @@ const TableOptions = ({ selectedDataId, taxonomyId }) => {
   return (
     <Form>
       <FormGroup>
-        <FormLabel>Search Text: </FormLabel>
+        <FormLabel>Search text: </FormLabel>
         <FormInput
           type="text"
           id="searchTerm"
@@ -109,9 +109,20 @@ const Form = styled.form`
   grid-row: 1;
   grid-column: 2;
 `;
-const FormGroup = styled.div``;
-const FormLabel = styled.label``;
-const FormInput = styled.input``;
-const Select = styled.select``;
+const FormGroup = styled.div`
+  padding: 0.2rem;
+`;
+const FormLabel = styled.label`
+  font-weight: 500;
+`;
+const FormInput = styled.input`
+  padding: 0.2rem 0.5rem;
+  border-radius: 1rem;
+  border: solid 1px gray;
+`;
+const Select = styled.select`
+  padding: 0.2rem 0.5rem;
+  border-radius: 1rem;
+`;
 const Option = styled.option``;
 const Button = styled.button``;

@@ -60,6 +60,7 @@ const Header = () => {
           <Button onClick={toggleModal}>Add a Taxonomy</Button>
         </LinkItem>
         <LinkItem>
+          <Label>Current Taxonomy: </Label>
           <Select onChange={handleChangeTaxonomy}>
             <Option value="">Select a taxonomy</Option>
             {taxonomies.map((taxonomy) => (
@@ -110,25 +111,37 @@ const HeaderContainer = styled.header`
   grid-column: 1 / end;
   display: flex;
   justify-content: space-between;
+  align-content: center;
 `;
 
-const Logo = styled.h2``;
+const Logo = styled.h2`
+  padding-left: 1rem;
+  padding-bottom: 1rem;
+`;
 
 const LinkList = styled.ul`
   list-style-type: none;
   display: flex;
+  align-content: center;
 `;
 
-const LinkItem = styled.li``;
+const LinkItem = styled.li`
+  padding: 1rem;
+`;
 
-const LinkText = styled.a``;
+const LinkText = styled.a`
+  cursor: pointer;
+`;
 
 const Label = styled.span`
-  font-weight: bold;
+  font-weight: 500;
 `;
 
 const Button = styled.button``;
 
-const Select = styled.select``;
+const Select = styled.select`
+  padding: 0.2rem 0.5rem;
+  border-radius: 1rem;
+`;
 
 const Option = styled.option``;
