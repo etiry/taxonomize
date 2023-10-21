@@ -196,6 +196,7 @@ export const {
   useSigninMutation,
   useSignupMutation,
   useGetDataQuery,
+  useGetObservationsQuery,
   useLazyGetObservationsQuery,
   useGetCategoriesQuery,
   useAssignUserCategoryMutation,

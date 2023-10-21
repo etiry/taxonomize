@@ -5,7 +5,8 @@ import styled from 'styled-components';
 import {
   setSelectedDataId,
   selectSelectedDataId,
-  setComparedUsers
+  setComparedUsers,
+  selectComparedUsers
 } from '../slices/selectionsSlice';
 import {
   apiSlice,
@@ -26,25 +27,28 @@ const CompareDataDetail = ({ selectedTaxonomyId }) => {
     formState: { errors }
   } = useForm();
   const selectedDataId = useSelector(selectSelectedDataId);
+  const comparedUsers = useSelector(selectComparedUsers);
 
-  const { data } = apiSlice.endpoints.getObservations.useQueryState({
-    dataId: selectedDataId,
-    page: 1,
-    query: '',
-    sort: '',
-    filter: ''
-  });
+  // const { data } = apiSlice.endpoints.getObservations.useQueryState({
+  //   dataId: selectedDataId,
+  //   userIds: [comparedUsers.user1, comparedUsers.user2],
+  //   page: 1,
+  //   query: '',
+  //   sort: '',
+  //   filter: ''
+  // });
 
   const handleInputChange = async (event, type) => {
     if (type === 'data') {
       await dispatch(setSelectedDataId(parseInt(event.target.value)));
-      await getObs({
-        dataId: parseInt(event.target.value),
-        page: 1,
-        query: '',
-        sort: '',
-        filter: ''
-      });
+      // await getObs({
+      //   dataId: parseInt(event.target.value),
+      //   userIds: [comparedUsers.user1, comparedUsers.user2],
+      //   page: 1,
+      //   query: '',
+      //   sort: '',
+      //   filter: ''
+      // });
     } else {
       dispatch(
         setComparedUsers({
@@ -52,11 +56,6 @@ const CompareDataDetail = ({ selectedTaxonomyId }) => {
           user2: event.target.form[2].value
         })
       );
-      const params = {
-        userId: event.target.value,
-        obIds: data.nodes.map((ob) => ob.id)
-      };
-      await getUserAssignedCategories(params);
     }
   };
 

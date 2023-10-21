@@ -17,10 +17,9 @@ import {
 import { usePagination } from '@table-library/react-table-library/pagination';
 import { useSelector, useDispatch } from 'react-redux';
 import {
-  apiSlice,
   useLazyGetObservationsQuery,
-  useGetUserAssignedCategoriesQuery,
-  useAssignFinalCategoryMutation
+  useAssignFinalCategoryMutation,
+  useGetObservationsQuery
 } from '../slices/apiSlice';
 import { selectGetObsParams, setGetObsParams } from '../slices/paramsSlice';
 import {
@@ -38,7 +37,7 @@ const CompareDatasets = ({ taxonomyId }) => {
   const obsParams = useSelector(selectGetObsParams);
   const [getObs] = useLazyGetObservationsQuery();
   const [assignFinalCategory] = useAssignFinalCategoryMutation();
-  let tableData = {};
+  let data = {};
 
   const onPaginationChange = async (action, state) => {
     await getObs({
@@ -51,7 +50,7 @@ const CompareDatasets = ({ taxonomyId }) => {
   };
 
   const pagination = usePagination(
-    tableData,
+    data,
     {
       state: {
         page: 0,
@@ -64,44 +63,14 @@ const CompareDatasets = ({ taxonomyId }) => {
     }
   );
 
-  const { data } = apiSlice.endpoints.getObservations.useQueryState({
+  data = useGetObservationsQuery({
     dataId: selectedDataId,
+    userIds: [comparedUsers.user1, comparedUsers.user2],
     page: pagination.state.page + 1,
     query: obsParams.query,
     sort: obsParams.sort,
     filter: obsParams.filter
-  });
-
-  const { data: user1Data } = useGetUserAssignedCategoriesQuery({
-    userId: comparedUsers.user1,
-    dataId: selectedDataId,
-    obIds: data?.nodes.map((ob) => ob.id) || []
-  });
-
-  const { data: user2Data } = useGetUserAssignedCategoriesQuery({
-    userId: comparedUsers.user2,
-    dataId: selectedDataId,
-    obIds: data?.nodes.map((ob) => ob.id) || []
-  });
-
-  const nodes = data?.nodes.map((ob) => {
-    let match1 = null;
-    let match2 = null;
-
-    match1 = user1Data?.find(
-      (userDataOb) => userDataOb.observation_id === ob.id
-    );
-    match2 = user2Data?.find(
-      (userDataOb) => userDataOb.observation_id === ob.id
-    );
-    return {
-      ...ob,
-      user1Category: match1 ? match1.category_name : null,
-      user2Category: match2 ? match2.category_name : null
-    };
-  });
-
-  tableData = { ...data, nodes };
+  }).data;
 
   const handleUpdate = async (observationId, event) => {
     const queryParams = {
@@ -119,7 +88,7 @@ const CompareDatasets = ({ taxonomyId }) => {
     return (
       <Container>
         <Table
-          data={tableData}
+          data={data}
           theme={theme}
           layout={{ fixedHeader: true }}
           pagination={pagination}
@@ -139,8 +108,8 @@ const CompareDatasets = ({ taxonomyId }) => {
                 {tableList.map((item) => (
                   <Row key={item.id} item={item}>
                     <Cell>{item.text}</Cell>
-                    <Cell>{item.user1Category}</Cell>
-                    <Cell>{item.user2Category}</Cell>
+                    <Cell>{item.user1_category_name}</Cell>
+                    <Cell>{item.user2_category_name}</Cell>
                     <Cell>
                       <select
                         style={{
