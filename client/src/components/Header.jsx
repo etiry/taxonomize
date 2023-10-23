@@ -112,11 +112,12 @@ const HeaderContainer = styled.header`
   display: flex;
   justify-content: space-between;
   align-content: center;
+  padding: 2rem;
 `;
 
-const Logo = styled.h2`
-  padding-left: 1rem;
-  padding-bottom: 1rem;
+const Logo = styled.h1`
+  font-family: 'Staatliches', sans-serif;
+  font-weight: 500;
 `;
 
 const LinkList = styled.ul`

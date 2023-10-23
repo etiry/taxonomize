@@ -27,7 +27,11 @@ import { selectGetObsParams, setGetObsParams } from '../slices/paramsSlice';
 import CategoryOptions from './CategoryOptions';
 
 const Observations = ({ selectedDataId, taxonomyId, datasetAssignmentId }) => {
-  const materialTheme = getTheme(DEFAULT_OPTIONS);
+  const materialTheme = getTheme({
+    horizontalSpacing: 5,
+    verticalSpacing: 10,
+    highlightOnHover: true
+  });
   const theme = useTheme(materialTheme);
   const dispatch = useDispatch();
   const userId = useSelector(selectCurrentUser);
@@ -197,7 +201,7 @@ Observations.propTypes = {
 export default Observations;
 
 const Container = styled.div`
-  // max-height: 425px;
+  // max-height: 80%;
   // overflow-y: scroll;
   width: 100%;
   grid-row: 2 / end;

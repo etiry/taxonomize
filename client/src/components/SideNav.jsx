@@ -33,6 +33,7 @@ const SideNav = ({ setContentType }) => {
   const [getObs] = useLazyGetObservationsQuery();
   const [showData, setShowData] = useState(true);
   const [expandIcon, setExpandIcon] = useState('-');
+  const [active, setActive] = useState(false);
 
   const toggleDatasets = () => {
     setShowData(!showData);
@@ -82,7 +83,15 @@ const SideNav = ({ setContentType }) => {
     <Nav>
       <LinkList>
         <LinkItem>
-          <Link onClick={() => setContentType('dashboard')}>Dashboard</Link>
+          <Link
+            onClick={() => {
+              setContentType('dashboard');
+              setActive(!active);
+            }}
+            $active={active}
+          >
+            Dashboard
+          </Link>
         </LinkItem>
         <LinkItem>
           <Link onClick={() => setContentType('team')}>My Team</Link>
@@ -100,11 +109,9 @@ const SideNav = ({ setContentType }) => {
                 All Datasets
               </Link>
             </IndentLinkItem>
-            <IndentLinkItem>
-              <Wrapper onClick={toggleDatasets}>
-                <Link>My Datasets</Link>
-                <Link>{expandIcon}</Link>
-              </Wrapper>
+            <IndentLinkItem style={{ display: 'flex' }}>
+              <Link onClick={toggleDatasets}>My Datasets</Link>
+              <Link>{expandIcon}</Link>
             </IndentLinkItem>
             {content}
             <IndentLinkItem>
@@ -137,25 +144,26 @@ const Nav = styled.nav`
 
 const LinkList = styled.ul`
   list-style-type: none;
+  margin-left: 1rem;
 `;
 
 const LinkItem = styled.li`
-  padding: 0.25rem;
+  margin: 0.75rem 0;
 `;
 
 const IndentLinkItem = styled.li`
-  padding: 0.25rem 0.25rem 0.25rem 1rem;
+  margin: 0.75rem 0;
+  padding-left: 1rem;
 `;
 
 const ContentLinkItem = styled.li`
-  padding: 0.25rem 0.25rem 0.25rem 2rem;
+  margin: 0.75rem 0;
+  padding-left: 2rem;
 `;
 
 const Link = styled.a`
   cursor: pointer;
-`;
-
-const Wrapper = styled.div`
-  display: flex;
-  justify-content: space-between;
+  padding: 0.5rem 1.5rem;
+  border-radius: 1rem;
+  background: ${(props) => (props.$active ? '#eeeeee' : '#ffffff')};
 `;
