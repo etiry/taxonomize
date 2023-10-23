@@ -83,7 +83,7 @@ const CompareDataDetail = ({ selectedTaxonomyId }) => {
           </Select>
         </FormGroup>
         <FormGroup>
-          <FormLabel>
+          <FormLabel style={{ display: 'flex', alignItems: 'center' }}>
             Show Agreement Statistics:{' '}
             <ToggleSwitch isOn={toggleValue} handleToggle={handleToggle} />
           </FormLabel>
