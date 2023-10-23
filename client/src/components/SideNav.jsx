@@ -104,7 +104,7 @@ const SideNav = ({ setContentType }) => {
               <Link onClick={toggleDatasets}>
                 <Wrapper>
                   <Link>My Datasets</Link>
-                  <Link>{expandIcon}</Link>
+                  {expandIcon}
                 </Wrapper>
               </Link>
             </IndentLinkItem>

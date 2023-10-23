@@ -28,6 +28,7 @@
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.20.2",
+    "cohens-kappa": "github:aaronnorby/cohens-kappa-JS#master",
     "cors": "^2.8.5",
     "crypto": "^1.0.1",
     "eslint-config-wesbos": "^3.2.3",
