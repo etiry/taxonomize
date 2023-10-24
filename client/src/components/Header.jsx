@@ -113,6 +113,12 @@ const HeaderContainer = styled.header`
   justify-content: space-between;
   align-content: center;
   padding: 2rem;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background: #ffffff;
+  z-index: 5;
+  width: 100%;
 `;
 
 const Logo = styled.h1`
@@ -123,7 +129,7 @@ const Logo = styled.h1`
 const LinkList = styled.ul`
   list-style-type: none;
   display: flex;
-  align-content: center;
+  align-items: center;
 `;
 
 const LinkItem = styled.li`

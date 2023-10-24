@@ -12,7 +12,8 @@ import {
   selectSelectedTaxonomyId,
   setSelectedDataId,
   setIsOpen,
-  setFormType
+  setFormType,
+  setComparedUsers
 } from '../slices/selectionsSlice';
 
 const SideNav = ({ setContentType }) => {
@@ -59,14 +60,14 @@ const SideNav = ({ setContentType }) => {
     dispatch(setIsOpen());
   };
 
-  let content;
+  let dataLinks;
 
   if (isLoading) {
-    content = (
+    dataLinks = (
       <div style={{ display: showData ? 'block' : 'none' }}>Loading...</div>
     );
   } else if (isSuccess) {
-    content = data.map((d) => (
+    dataLinks = data.map((d) => (
       <ContentLinkItem
         key={d.dataset_id}
         style={{ display: showData ? 'block' : 'none' }}
@@ -76,7 +77,7 @@ const SideNav = ({ setContentType }) => {
       </ContentLinkItem>
     ));
   } else if (isError) {
-    content = <div>{error.toString()}</div>;
+    dataLinks = <div>{error.toString()}</div>;
   }
 
   return (
@@ -84,17 +85,22 @@ const SideNav = ({ setContentType }) => {
       <LinkList>
         <LinkItem>
           <Link
+            className={active ? 'active' : null}
             onClick={() => {
               setContentType('dashboard');
               setActive(!active);
             }}
-            $active={active}
           >
             Dashboard
           </Link>
         </LinkItem>
         <LinkItem>
-          <Link onClick={() => setContentType('team')}>My Team</Link>
+          <Link
+            className={active ? 'active' : null}
+            onClick={() => setContentType('team')}
+          >
+            My Team
+          </Link>
         </LinkItem>
         {selectedTaxonomy ? (
           <>
@@ -109,16 +115,16 @@ const SideNav = ({ setContentType }) => {
                 All Datasets
               </Link>
             </IndentLinkItem>
-            <IndentLinkItem style={{ display: 'flex' }}>
+            <IndentLinkItem>
               <Link onClick={toggleDatasets}>My Datasets</Link>
-              <Link>{expandIcon}</Link>
             </IndentLinkItem>
-            {content}
+            {dataLinks}
             <IndentLinkItem>
               <Link
                 onClick={() => {
                   setContentType('compareDatasets');
                   dispatch(setSelectedDataId(null));
+                  dispatch(setComparedUsers({ user1: null, user2: null }));
                 }}
               >
                 Compare Datasets
@@ -140,6 +146,9 @@ export default SideNav;
 const Nav = styled.nav`
   min-height: 100vh;
   grid-column: 1;
+  position: fixed;
+  top: 140px;
+  left: 0;
 `;
 
 const LinkList = styled.ul`
@@ -165,5 +174,4 @@ const Link = styled.a`
   cursor: pointer;
   padding: 0.5rem 1.5rem;
   border-radius: 1rem;
-  background: ${(props) => (props.$active ? '#eeeeee' : '#ffffff')};
 `;

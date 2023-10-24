@@ -31,6 +31,8 @@ export default Main;
 const ContentContainer = styled.main`
   display: grid;
   grid-template-columns: 1fr 5fr;
+  margin-top: 140px;
+  z-index: 1;
 `;
 
 const SigninContainer = styled.main`

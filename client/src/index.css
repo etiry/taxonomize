@@ -27,7 +27,9 @@ a:hover {
   color: #535bf2;
 }
 
-
+.active {
+  background: #eeeeee;
+}
 
 * {
   /* border: 1px solid black; */
@@ -118,4 +120,8 @@ button:focus-visible {
 
 .react-switch-label:active .react-switch-button {
   width: 60px;
+}
+
+select {
+  font-family: 'Roboto', sans-serif
 }
