@@ -17,9 +17,6 @@ const SignupForm = () => {
   const onSubmit = async (data) => {
     try {
       await signup(data).unwrap();
-      // Being that the result is handled in extraReducers in authSlice,
-      // we know that we're authenticated after this, so the user
-      // and token will be present in the store
       navigate('/');
     } catch (error) {
       console.log(`request error: ${error}`);
@@ -66,7 +63,16 @@ const Container = styled.main`
 
 const Form = styled.form``;
 const Heading = styled.h2``;
-const FormGroup = styled.div``;
-const FormLabel = styled.label``;
-const FormInput = styled.input``;
+const FormGroup = styled.div`
+  padding: 0.2rem;
+`;
+const FormLabel = styled.label`
+  font-weight: 500;
+  margin-right: 0.5rem;
+`;
+const FormInput = styled.input`
+  padding: 0.2rem 0.5rem;
+  border-radius: 1rem;
+  border: solid 1px gray;
+`;
 const Button = styled.button``;

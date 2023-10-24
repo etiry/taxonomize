@@ -57,7 +57,16 @@ export default SigninForm;
 
 const Form = styled.form``;
 const Heading = styled.h2``;
-const FormGroup = styled.div``;
-const FormLabel = styled.label``;
-const FormInput = styled.input``;
+const FormGroup = styled.div`
+  padding: 0.2rem;
+`;
+const FormLabel = styled.label`
+  font-weight: 500;
+  margin-right: 0.5rem;
+`;
+const FormInput = styled.input`
+  padding: 0.2rem 0.5rem;
+  border-radius: 1rem;
+  border: solid 1px gray;
+`;
 const Button = styled.button``;
