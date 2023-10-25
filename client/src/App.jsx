@@ -1,14 +1,69 @@
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { selectCurrentUser } from './slices/authSlice';
+import Header from './components/Header';
+import SideNav from './components/SideNav';
+import Main from './components/Main';
+import Dashboard from './components/Dashboard';
+import SignupForm from './components/SignupForm.jsx';
+import ModalComponent from './components/ModalComponent';
+import Datasets from './components/Datasets';
+import CompareDatasets from './components/CompareDatasets';
+import TableOptions from './components/TableOptions';
+import SigninForm from './components/SigninForm';
+import Team from './components/Team';
+import Dataset from './components/Dataset';
+import Compare from './components/Compare';
 
-const App = ({ children }) => <AppContainer>{children}</AppContainer>;
+const App = () => {
+  const authenticated = useSelector(selectCurrentUser);
 
-App.propTypes = {
-  children: PropTypes.any
+  if (!authenticated) {
+    return (
+      <Router>
+        <SigninContainer>
+          <Header />
+          <Routes>
+            <Route exact path="/" element={<SigninForm />} />
+            <Route exact path="/signup" element={<SignupForm />} />
+          </Routes>
+        </SigninContainer>
+      </Router>
+    );
+  }
+
+  return (
+    <Router>
+      <AppContainer>
+        <Header />
+        <SideNav />
+        <Routes>
+          <Route exact path="/" element={<Dashboard />} />
+          <Route exact path="/team" element={<Team />} />
+          <Route exact path="/datasets" element={<Datasets />} />
+          <Route exact path="/dataset/:id" element={<Dataset />} />
+          <Route exact path="/compare" element={<Compare />} />
+        </Routes>
+        <ModalComponent />
+      </AppContainer>
+    </Router>
+  );
 };
 
 export default App;
 
 const AppContainer = styled.div`
   height: 100vh;
+  display: grid;
+  grid-template-rows: 1fr 5fr;
+  grid-template-columns: 1fr 5fr;
+`;
+
+const SigninContainer = styled.div`
+  height: 100vh;
+  display: grid;
+  grid-template-rows: 1fr 5fr;
+  place-items: center;
 `;

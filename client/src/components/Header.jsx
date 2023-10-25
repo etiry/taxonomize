@@ -108,6 +108,7 @@ const Header = () => {
 export default Header;
 
 const HeaderContainer = styled.header`
+  grid-row: 1;
   grid-column: 1 / end;
   display: flex;
   justify-content: space-between;

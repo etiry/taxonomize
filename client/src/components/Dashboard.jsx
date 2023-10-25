@@ -1,7 +1,18 @@
 import styled from 'styled-components';
 
-const Dashboard = () => <Heading>Dashboard</Heading>;
+const Dashboard = () => (
+  <ContentContainer>
+    <Heading>Dashboard</Heading>
+  </ContentContainer>
+);
 
 export default Dashboard;
+
+const ContentContainer = styled.main`
+  grid-column: 2 / end;
+  grid-row: 2 / end;
+  padding: 1rem;
+  z-index: 1;
+`;
 
 const Heading = styled.h3``;

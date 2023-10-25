@@ -42,53 +42,62 @@ const Team = () => {
 
   if (!team.id) {
     return (
-      <Container>
+      <ContentContainer>
         <Button onClick={() => toggleModal(true)}>Create a Team</Button>
-      </Container>
+      </ContentContainer>
     );
   }
 
   if (isSuccess) {
     return (
-      <Container>
-        <Heading>My Team</Heading>
-        <Button onClick={() => toggleModal(false)}>Add Team Members</Button>
-        <Table data={data} theme={theme} layout={{ fixedHeader: true }}>
-          {(tableList) => (
-            <>
-              <Header>
-                <HeaderRow>
-                  <HeaderCell>Name</HeaderCell>
-                  <HeaderCell>Email</HeaderCell>
-                  <HeaderCell />
-                </HeaderRow>
-              </Header>
+      <ContentContainer>
+        <TableContainer>
+          <Heading>My Team</Heading>
+          <Button onClick={() => toggleModal(false)}>Add Team Members</Button>
+          <Table data={data} theme={theme} layout={{ fixedHeader: true }}>
+            {(tableList) => (
+              <>
+                <Header>
+                  <HeaderRow>
+                    <HeaderCell>Name</HeaderCell>
+                    <HeaderCell>Email</HeaderCell>
+                    <HeaderCell />
+                  </HeaderRow>
+                </Header>
 
-              <Body>
-                {tableList.map((item) => (
-                  <Row key={item.id} item={item}>
-                    <Cell>{item.name}</Cell>
-                    <Cell>{item.email}</Cell>
-                    <Cell>
-                      <Button onClick={() => handleRemoveTeam(item.id)}>
-                        Remove
-                      </Button>
-                    </Cell>
-                  </Row>
-                ))}
-              </Body>
-            </>
-          )}
-        </Table>
-      </Container>
+                <Body>
+                  {tableList.map((item) => (
+                    <Row key={item.id} item={item}>
+                      <Cell>{item.name}</Cell>
+                      <Cell>{item.email}</Cell>
+                      <Cell>
+                        <Button onClick={() => handleRemoveTeam(item.id)}>
+                          Remove
+                        </Button>
+                      </Cell>
+                    </Row>
+                  ))}
+                </Body>
+              </>
+            )}
+          </Table>
+        </TableContainer>
+      </ContentContainer>
     );
   }
 };
 
 export default Team;
 
-const Container = styled.div``;
+const ContentContainer = styled.main`
+  grid-column: 2 / end;
+  grid-row: 2 / end;
+  padding: 1rem;
+  z-index: 1;
+`;
 
 const Button = styled.button``;
 
 const Heading = styled.h3``;
+
+const TableContainer = styled.div``;

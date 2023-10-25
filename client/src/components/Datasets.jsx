@@ -61,49 +61,50 @@ const Datasets = () => {
 
   if (isSuccess) {
     return (
-      <Container>
+      <ContentContainer>
         <Heading>All Datasets</Heading>
         <Button onClick={() => toggleModal(true)}>Add Dataset</Button>
-        <Table
-          data={data}
-          theme={theme}
-          layout={{ fixedHeader: true }}
-          // pagination={pagination}
-        >
-          {(tableList) => (
-            <>
-              <Header>
-                <HeaderRow>
-                  <HeaderCell>Name</HeaderCell>
-                  <HeaderCell />
-                </HeaderRow>
-              </Header>
+        <TableContainer>
+          <Table
+            data={data}
+            theme={theme}
+            layout={{ fixedHeader: true }}
+            // pagination={pagination}
+          >
+            {(tableList) => (
+              <>
+                <Header>
+                  <HeaderRow>
+                    <HeaderCell>Name</HeaderCell>
+                    <HeaderCell />
+                  </HeaderRow>
+                </Header>
 
-              <Body>
-                {tableList.map((item) => (
-                  <Row key={item.id} item={item}>
-                    <Cell>{item.name}</Cell>
-                    <Cell>
-                      <Button
-                        onClick={async () => {
-                          await dispatch(setSelectedDataId(item.id));
-                          toggleModal(false);
-                        }}
-                      >
-                        Edit
-                      </Button>
-                      <Button onClick={() => deleteData(item.id)}>
-                        Delete
-                      </Button>
-                    </Cell>
-                  </Row>
-                ))}
-              </Body>
-            </>
-          )}
-        </Table>
+                <Body>
+                  {tableList.map((item) => (
+                    <Row key={item.id} item={item}>
+                      <Cell>{item.name}</Cell>
+                      <Cell>
+                        <Button
+                          onClick={async () => {
+                            await dispatch(setSelectedDataId(item.id));
+                            toggleModal(false);
+                          }}
+                        >
+                          Edit
+                        </Button>
+                        <Button onClick={() => deleteData(item.id)}>
+                          Delete
+                        </Button>
+                      </Cell>
+                    </Row>
+                  ))}
+                </Body>
+              </>
+            )}
+          </Table>
 
-        {/* {data.pageInfo && (
+          {/* {data.pageInfo && (
         <div
           style={{
             display: 'flex',
@@ -152,19 +153,19 @@ const Datasets = () => {
           </span>
         </div>
       )} */}
-      </Container>
+        </TableContainer>
+      </ContentContainer>
     );
   }
 };
 
 export default Datasets;
 
-const Container = styled.div`
-  // max-height: 425px;
-  // overflow-y: scroll;
-  width: 100%;
-  // grid-row: 2 / end;
-  // grid-column: 1 / 3;
+const ContentContainer = styled.main`
+  grid-column: 2 / end;
+  grid-row: 2 / end;
+  padding: 1rem;
+  z-index: 1;
 `;
 
 const Button = styled.button`
@@ -172,3 +173,5 @@ const Button = styled.button`
 `;
 
 const Heading = styled.h3``;
+
+const TableContainer = styled.div``;

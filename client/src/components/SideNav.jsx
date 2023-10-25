@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { NavLink } from 'react-router-dom';
 import {
   apiSlice,
   useGetDataQuery,
@@ -16,7 +17,7 @@ import {
   setComparedUsers
 } from '../slices/selectionsSlice';
 
-const SideNav = ({ setContentType }) => {
+const SideNav = () => {
   const dispatch = useDispatch();
   const user = useSelector(selectCurrentUser);
   const selectedTaxonomyId = useSelector(selectSelectedTaxonomyId);
@@ -34,7 +35,6 @@ const SideNav = ({ setContentType }) => {
   const [getObs] = useLazyGetObservationsQuery();
   const [showData, setShowData] = useState(true);
   const [expandIcon, setExpandIcon] = useState('-');
-  const [active, setActive] = useState(false);
 
   const toggleDatasets = () => {
     setShowData(!showData);
@@ -52,7 +52,6 @@ const SideNav = ({ setContentType }) => {
     };
     await getObs(params);
     dispatch(setSelectedDataId(dataId));
-    setContentType('dataDetail');
   };
 
   const toggleModal = () => {
@@ -73,7 +72,14 @@ const SideNav = ({ setContentType }) => {
         style={{ display: showData ? 'block' : 'none' }}
         onClick={() => handleSelectData(d.dataset_id)}
       >
-        <Link>{d.dataset_name}</Link>
+        <NavLink
+          to={`/dataset/${d.dataset_id}`}
+          className={({ isActive }) =>
+            isActive ? 'nav-link active' : 'nav-link'
+          }
+        >
+          {d.dataset_name}
+        </NavLink>
       </ContentLinkItem>
     ));
   } else if (isError) {
@@ -84,23 +90,24 @@ const SideNav = ({ setContentType }) => {
     <Nav>
       <LinkList>
         <LinkItem>
-          <Link
-            className={active ? 'active' : null}
-            onClick={() => {
-              setContentType('dashboard');
-              setActive(!active);
-            }}
+          <NavLink
+            to="/"
+            className={({ isActive }) =>
+              isActive ? 'nav-link active' : 'nav-link'
+            }
           >
             Dashboard
-          </Link>
+          </NavLink>
         </LinkItem>
         <LinkItem>
-          <Link
-            className={active ? 'active' : null}
-            onClick={() => setContentType('team')}
+          <NavLink
+            to="/team"
+            className={({ isActive }) =>
+              isActive ? 'nav-link active' : 'nav-link'
+            }
           >
             My Team
-          </Link>
+          </NavLink>
         </LinkItem>
         {selectedTaxonomy ? (
           <>
@@ -111,24 +118,32 @@ const SideNav = ({ setContentType }) => {
               <Link onClick={toggleModal}>Edit Taxonomy</Link>
             </IndentLinkItem>
             <IndentLinkItem>
-              <Link onClick={() => setContentType('allDatasets')}>
+              <NavLink
+                to="/datasets"
+                className={({ isActive }) =>
+                  isActive ? 'nav-link active' : 'nav-link'
+                }
+              >
                 All Datasets
-              </Link>
+              </NavLink>
             </IndentLinkItem>
             <IndentLinkItem>
               <Link onClick={toggleDatasets}>My Datasets</Link>
             </IndentLinkItem>
             {dataLinks}
             <IndentLinkItem>
-              <Link
+              <NavLink
+                to="/compare"
+                className={({ isActive }) =>
+                  isActive ? 'nav-link active' : 'nav-link'
+                }
                 onClick={() => {
-                  setContentType('compareDatasets');
                   dispatch(setSelectedDataId(null));
                   dispatch(setComparedUsers({ user1: null, user2: null }));
                 }}
               >
                 Compare Datasets
-              </Link>
+              </NavLink>
             </IndentLinkItem>
           </>
         ) : null}
@@ -137,15 +152,12 @@ const SideNav = ({ setContentType }) => {
   );
 };
 
-SideNav.propTypes = {
-  setContentType: PropTypes.func
-};
-
 export default SideNav;
 
 const Nav = styled.nav`
   min-height: 100vh;
   grid-column: 1;
+  grid-row: 2;
   position: fixed;
   top: 140px;
   left: 0;

@@ -13,7 +13,7 @@ const Main = () => {
   if (authenticated) {
     return (
       <ContentContainer>
-        <SideNav setContentType={setContentType} />
+        {/* <SideNav setContentType={setContentType} /> */}
         <Content contentType={contentType} />
       </ContentContainer>
     );

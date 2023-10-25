@@ -28,7 +28,14 @@ a:hover {
 }
 
 .active {
-  background: #eeeeee;
+  color: #fff !important;
+  background: #7600dc;
+}
+
+.nav-link {
+  padding: 0.5em 1.5em;
+  border-radius: 1em;
+  color: #646cff;
 }
 
 * {

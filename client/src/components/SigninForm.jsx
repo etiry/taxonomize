@@ -55,7 +55,9 @@ const SigninForm = () => {
 
 export default SigninForm;
 
-const Form = styled.form``;
+const Form = styled.form`
+  grid-row: 2;
+`;
 const Heading = styled.h2``;
 const FormGroup = styled.div`
   padding: 0.2rem;
