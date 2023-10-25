@@ -28,7 +28,7 @@ const Dataset = () => {
       }
     );
 
-  if (isSuccess) {
+  if (isSuccess && selectedData) {
     return (
       <ContentContainer>
         <DataDetail data={selectedData} />
@@ -51,7 +51,7 @@ const Dataset = () => {
       </ContentContainer>
     );
   }
-  if (isError) {
+  if (isError || !selectedData) {
     return (
       <ContentContainer>There was an error loading this page</ContentContainer>
     );

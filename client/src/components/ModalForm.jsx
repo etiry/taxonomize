@@ -201,7 +201,7 @@ const ModalForm = ({ toggleModal, formType }) => {
         <FormGroup>
           <FormLabel>Assign team members:</FormLabel>
           {users.map((user) => (
-            <FormGroup>
+            <FormGroup key={user.id}>
               <FormInput
                 type="checkbox"
                 {...register('users')}
@@ -210,9 +210,7 @@ const ModalForm = ({ toggleModal, formType }) => {
                   (assignedUser) => assignedUser.id === user.id
                 )}
               />
-              <FormLabel key={user.id} $inline>
-                {user.name}
-              </FormLabel>
+              <FormLabel $inline>{user.name}</FormLabel>
             </FormGroup>
           ))}
         </FormGroup>
