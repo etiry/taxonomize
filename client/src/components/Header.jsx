@@ -94,6 +94,11 @@ const Header = () => {
     links = (
       <>
         <LinkItem>
+          <Button>
+            <Link to="/demo">See Demo</Link>
+          </Button>
+        </LinkItem>
+        <LinkItem>
           <Link to="/signup">Sign Up</Link>
         </LinkItem>
         <LinkItem>

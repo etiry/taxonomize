@@ -1,21 +1,18 @@
-import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { selectCurrentUser } from './slices/authSlice';
 import Header from './components/Header';
 import SideNav from './components/SideNav';
-import Main from './components/Main';
 import Dashboard from './components/Dashboard';
 import SignupForm from './components/SignupForm.jsx';
 import ModalComponent from './components/ModalComponent';
 import Datasets from './components/Datasets';
-import CompareDatasets from './components/CompareDatasets';
-import TableOptions from './components/TableOptions';
 import SigninForm from './components/SigninForm';
 import Team from './components/Team';
 import Dataset from './components/Dataset';
 import Compare from './components/Compare';
+import Demo from './components/Demo';
 
 const App = () => {
   const authenticated = useSelector(selectCurrentUser);
@@ -28,6 +25,7 @@ const App = () => {
           <Routes>
             <Route exact path="/" element={<SigninForm />} />
             <Route exact path="/signup" element={<SignupForm />} />
+            <Route exact path="/demo" element={<Demo />} />
           </Routes>
         </SigninContainer>
       </Router>
