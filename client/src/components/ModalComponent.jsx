@@ -54,8 +54,8 @@ const ModalComponent = () => {
 export default ModalComponent;
 
 const StyledModal = Modal.styled`
-  width: 25%;
-  height: 65%;
+  min-width: 25%;
+  min-height: 50%;
   display: flex;
   align-items: center;
   justify-content: center;

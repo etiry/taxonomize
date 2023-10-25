@@ -93,7 +93,7 @@ const Datasets = () => {
                         >
                           Edit
                         </Button>
-                        <Button onClick={() => deleteData(item.id)}>
+                        <Button onClick={() => deleteData(item.id)} $delete>
                           Delete
                         </Button>
                       </Cell>
@@ -169,7 +169,9 @@ const ContentContainer = styled.main`
 `;
 
 const Button = styled.button`
-  margin: 1rem;
+  margin: 1em;
+  background: ${(props) => (props.$delete ? '#d11a2a' : null)};
+  color: ${(props) => (props.$delete ? '#fff' : null)};
 `;
 
 const Heading = styled.h3``;

@@ -115,15 +115,31 @@ export default TeamUserForm;
 const Form = styled.form`
   display: flex;
   flex-direction: column;
+  padding: 2em;
 `;
-const FormGroup = styled.div``;
+const FormGroup = styled.div`
+  padding: 0.5em;
+`;
 const FormLabel = styled.label`
   display: block;
+  font-weight: 500;
+  margin-right: 0.5rem;
 `;
-const FormInput = styled.input``;
-const Button = styled.button``;
+const FormInput = styled.input`
+  padding: 0.2rem 0.5rem;
+  border-radius: 1rem;
+  border: ${(props) => (props.$noBorder ? null : 'solid 1px gray')};
+  margin-right: 0.5rem;
+`;
+const Button = styled.button`
+  margin: 0.5em;
+  background: ${(props) => (props.$delete ? '#d11a2a' : null)};
+  color: ${(props) => (props.$delete ? '#fff' : null)};
+`;
 const IconWrapper = styled.div`
   align-self: end;
 `;
 
-const Heading = styled.h3``;
+const Heading = styled.h3`
+  margin-bottom: 1em;
+`;

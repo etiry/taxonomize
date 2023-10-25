@@ -178,11 +178,7 @@ const ModalForm = ({ toggleModal, formType }) => {
         <Heading>
           {formType.new ? 'Add a ' : 'Edit '} {formType.entity}
         </Heading>
-        {!formType.new && formType.entity === 'Taxonomy' ? (
-          <Button onClick={handleDeleteTaxonomy}>
-            Delete {formType.entity}
-          </Button>
-        ) : null}
+
         <FormGroup>
           <FormLabel>{formType.entity} name:</FormLabel>
           <FormInput
@@ -198,14 +194,14 @@ const ModalForm = ({ toggleModal, formType }) => {
           <FormInput
             type="file"
             {...register('file', { required: formType.new })}
+            $noBorder
           />
           {errors.file && <span>File must be of type CSV</span>}
         </FormGroup>
-        <FormLabel>Assign team members:</FormLabel>
         <FormGroup>
+          <FormLabel>Assign team members:</FormLabel>
           {users.map((user) => (
-            <FormLabel key={user.id}>
-              {' '}
+            <FormGroup>
               <FormInput
                 type="checkbox"
                 {...register('users')}
@@ -214,11 +210,18 @@ const ModalForm = ({ toggleModal, formType }) => {
                   (assignedUser) => assignedUser.id === user.id
                 )}
               />
-              {user.name}
-            </FormLabel>
+              <FormLabel key={user.id} $inline>
+                {user.name}
+              </FormLabel>
+            </FormGroup>
           ))}
         </FormGroup>
         <Button>Submit</Button>
+        {!formType.new && formType.entity === 'Taxonomy' ? (
+          <Button onClick={handleDeleteTaxonomy} $delete>
+            Delete {formType.entity}
+          </Button>
+        ) : null}
       </Form>
     );
   }
@@ -237,16 +240,31 @@ export default ModalForm;
 const Form = styled.form`
   display: flex;
   flex-direction: column;
+  padding: 2em;
 `;
-const FormGroup = styled.div``;
+const FormGroup = styled.div`
+  padding: 0.5em;
+`;
 const FormLabel = styled.label`
-  display: block;
+  display: ${(props) => (props.$inline ? 'inline' : 'block')};
   font-weight: 500;
+  margin-right: 0.5rem;
 `;
-const FormInput = styled.input``;
-const Button = styled.button``;
+const FormInput = styled.input`
+  padding: 0.2rem 0.5rem;
+  border-radius: 1rem;
+  border: ${(props) => (props.$noBorder ? null : 'solid 1px gray')};
+  margin-right: 0.5rem;
+`;
+const Button = styled.button`
+  margin: 0.5em;
+  background: ${(props) => (props.$delete ? '#d11a2a' : null)};
+  color: ${(props) => (props.$delete ? '#fff' : null)};
+`;
 const IconWrapper = styled.div`
   align-self: end;
 `;
 
-const Heading = styled.h3``;
+const Heading = styled.h3`
+  margin-bottom: 1em;
+`;

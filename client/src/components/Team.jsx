@@ -71,7 +71,10 @@ const Team = () => {
                       <Cell>{item.name}</Cell>
                       <Cell>{item.email}</Cell>
                       <Cell>
-                        <Button onClick={() => handleRemoveTeam(item.id)}>
+                        <Button
+                          onClick={() => handleRemoveTeam(item.id)}
+                          $delete
+                        >
                           Remove
                         </Button>
                       </Cell>
@@ -96,7 +99,11 @@ const ContentContainer = styled.main`
   z-index: 1;
 `;
 
-const Button = styled.button``;
+const Button = styled.button`
+  margin: 0.5em;
+  background: ${(props) => (props.$delete ? '#d11a2a' : null)};
+  color: ${(props) => (props.$delete ? '#fff' : null)};
+`;
 
 const Heading = styled.h3``;
 
