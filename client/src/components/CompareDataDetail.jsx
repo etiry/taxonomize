@@ -97,7 +97,7 @@ const CompareDataDetail = ({ selectedTaxonomyId }) => {
 };
 
 CompareDataDetail.propTypes = {
-  selectedTaxonomyId: PropTypes.string
+  selectedTaxonomyId: PropTypes.number
 };
 
 export default CompareDataDetail;

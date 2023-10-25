@@ -20,13 +20,19 @@ import {
   useRemoveTeamMutation
 } from '../slices/apiSlice';
 import { setIsOpen, setFormType } from '../slices/selectionsSlice';
+import Spinner from './Spinner';
 
 const Team = () => {
   const dispatch = useDispatch();
   const materialTheme = getTheme(DEFAULT_OPTIONS);
   const theme = useTheme(materialTheme);
   const team = useSelector(selectCurrentUserTeam);
-  const { data: teamUsers, isSuccess } = useGetTeamUsersQuery(team.id);
+  const {
+    data: teamUsers,
+    isSuccess,
+    isLoading,
+    isError
+  } = useGetTeamUsersQuery(team.id);
   const data = { nodes: teamUsers };
   const [removeTeam] = useRemoveTeamMutation();
 
@@ -51,9 +57,12 @@ const Team = () => {
   if (isSuccess) {
     return (
       <ContentContainer>
-        <TableContainer>
+        <Wrapper>
           <Heading>My Team</Heading>
           <Button onClick={() => toggleModal(false)}>Add Team Members</Button>
+        </Wrapper>
+
+        <TableContainer>
           <Table data={data} theme={theme} layout={{ fixedHeader: true }}>
             {(tableList) => (
               <>
@@ -88,6 +97,14 @@ const Team = () => {
       </ContentContainer>
     );
   }
+  if (isLoading) {
+    return <Spinner />;
+  }
+  if (isError) {
+    return (
+      <ContentContainer>There was an error loading this page</ContentContainer>
+    );
+  }
 };
 
 export default Team;
@@ -108,3 +125,9 @@ const Button = styled.button`
 const Heading = styled.h3``;
 
 const TableContainer = styled.div``;
+
+const Wrapper = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;

@@ -28,6 +28,7 @@ import {
   setIsOpen,
   setFormType
 } from '../slices/selectionsSlice';
+import Spinner from './Spinner';
 
 const Datasets = () => {
   const dispatch = useDispatch();
@@ -62,8 +63,11 @@ const Datasets = () => {
   if (isSuccess) {
     return (
       <ContentContainer>
-        <Heading>All Datasets</Heading>
-        <Button onClick={() => toggleModal(true)}>Add Dataset</Button>
+        <Wrapper>
+          <Heading>All Datasets</Heading>
+          <Button onClick={() => toggleModal(true)}>Add Dataset</Button>
+        </Wrapper>
+
         <TableContainer>
           <Table
             data={data}
@@ -157,6 +161,14 @@ const Datasets = () => {
       </ContentContainer>
     );
   }
+  if (isLoading) {
+    return <Spinner />;
+  }
+  if (isError) {
+    return (
+      <ContentContainer>There was an error loading this page</ContentContainer>
+    );
+  }
 };
 
 export default Datasets;
@@ -177,3 +189,9 @@ const Button = styled.button`
 const Heading = styled.h3``;
 
 const TableContainer = styled.div``;
+
+const Wrapper = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;

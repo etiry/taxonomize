@@ -9,33 +9,53 @@ import {
 import DataDetail from './DataDetail';
 import TableOptions from './TableOptions';
 import Observations from './Observations';
+import Spinner from './Spinner';
 
 const Dataset = () => {
   const user = useSelector(selectCurrentUser);
   const selectedTaxonomyId = useSelector(selectSelectedTaxonomyId);
   const selectedDataId = useSelector(selectSelectedDataId);
-  const selectedData = apiSlice.endpoints.getData.useQueryState(
-    { userId: user, taxonomyId: selectedTaxonomyId },
-    {
-      selectFromResult: ({ data }) =>
-        data?.find((d) => d.dataset_id === selectedDataId)
-    }
-  );
+  const [selectedData, isSuccess, isLoading, isError] =
+    apiSlice.endpoints.getData.useQueryState(
+      { userId: user, taxonomyId: selectedTaxonomyId },
+      {
+        selectFromResult: ({ data, isSuccess, isLoading, isError }) => {
+          const datasetToReturn = data?.find(
+            (d) => d.dataset_id === parseInt(selectedDataId)
+          );
+          return [datasetToReturn, isSuccess, isLoading, isError];
+        }
+      }
+    );
 
-  return (
-    <ContentContainer>
-      <DataDetail data={selectedData} />
-      <TableOptions
-        selectedDataId={selectedDataId}
-        taxonomyId={selectedData.taxonomy_id}
-      />
-      <Observations
-        selectedDataId={selectedDataId}
-        taxonomyId={selectedData.taxonomy_id}
-        datasetAssignmentId={selectedData.id}
-      />
-    </ContentContainer>
-  );
+  if (isSuccess) {
+    return (
+      <ContentContainer>
+        <DataDetail data={selectedData} />
+        <TableOptions
+          selectedDataId={selectedDataId}
+          taxonomyId={selectedData.taxonomy_id}
+        />
+        <Observations
+          selectedDataId={selectedDataId}
+          taxonomyId={selectedData.taxonomy_id}
+          datasetAssignmentId={selectedData.id}
+        />
+      </ContentContainer>
+    );
+  }
+  if (isLoading) {
+    return (
+      <ContentContainer>
+        <Spinner />
+      </ContentContainer>
+    );
+  }
+  if (isError) {
+    return (
+      <ContentContainer>There was an error loading this page</ContentContainer>
+    );
+  }
 };
 
 export default Dataset;

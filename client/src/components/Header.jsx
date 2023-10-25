@@ -14,9 +14,11 @@ import {
 } from '../slices/apiSlice';
 import {
   setIsOpen,
+  selectSelectedTaxonomyId,
   setSelectedTaxonomyId,
   setFormType
 } from '../slices/selectionsSlice';
+import Spinner from './Spinner';
 
 const Header = () => {
   const dispatch = useDispatch();
@@ -24,6 +26,7 @@ const Header = () => {
   const authenticated = useSelector(selectCurrentUser);
   const email = useSelector(selectCurrentUserEmail);
   const team = useSelector(selectCurrentUserTeam);
+  const selectedTaxonomyId = useSelector(selectSelectedTaxonomyId);
 
   const {
     data: taxonomies,
@@ -42,7 +45,7 @@ const Header = () => {
   };
 
   const handleChangeTaxonomy = (event) => {
-    dispatch(setSelectedTaxonomyId(event.target.value));
+    dispatch(setSelectedTaxonomyId(parseInt(event.target.value)));
     getTaxonomyUsers(event.target.value);
   };
 
@@ -61,7 +64,10 @@ const Header = () => {
         </LinkItem>
         <LinkItem>
           <Label>Current Taxonomy: </Label>
-          <Select onChange={handleChangeTaxonomy}>
+          <Select
+            onChange={handleChangeTaxonomy}
+            defaultValue={selectedTaxonomyId}
+          >
             <Option value="">Select a taxonomy</Option>
             {taxonomies.map((taxonomy) => (
               <Option key={taxonomy.id} value={taxonomy.id}>
@@ -83,7 +89,7 @@ const Header = () => {
       </>
     );
   } else if (authenticated && isLoading) {
-    links = 'Loading...';
+    links = <Spinner />;
   } else {
     links = (
       <>

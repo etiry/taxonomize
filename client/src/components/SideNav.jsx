@@ -16,6 +16,7 @@ import {
   setFormType,
   setComparedUsers
 } from '../slices/selectionsSlice';
+import Spinner from './Spinner';
 
 const SideNav = () => {
   const dispatch = useDispatch();
@@ -42,6 +43,7 @@ const SideNav = () => {
   };
 
   const handleSelectData = async (dataId) => {
+    await dispatch(setSelectedDataId(dataId));
     const params = {
       page: 1,
       dataId,
@@ -51,7 +53,6 @@ const SideNav = () => {
       filter: ''
     };
     await getObs(params);
-    dispatch(setSelectedDataId(dataId));
   };
 
   const toggleModal = () => {
@@ -62,9 +63,7 @@ const SideNav = () => {
   let dataLinks;
 
   if (isLoading) {
-    dataLinks = (
-      <div style={{ display: showData ? 'block' : 'none' }}>Loading...</div>
-    );
+    dataLinks = <Spinner />;
   } else if (isSuccess) {
     dataLinks = data.map((d) => (
       <ContentLinkItem
