@@ -68,180 +68,184 @@ exports.getObservations = async (req, res, next) => {
   const query = req.query.query || '';
   const sort = req.query.sort || '';
   const filter = req.query.filter || '';
-  const { dataId } = req.params;
+  const { dataId } = req.params || null;
   const userIds = req.query.userIds.split(',');
+
+  userIds.map((id) => (id === 'null' ? null : id));
 
   if (userIds.length === 1) {
     userIds.push(null);
   }
 
-  let queryStringTotals = `WITH user1category AS (
-      SELECT observation_id, category_id as user1_category_id, name as user1_category_name 
-      FROM dataset_assignments AS da 
-      JOIN category_assignments AS ca
-      ON da.id = ca.dataset_assignment_id
-      JOIN categories as c
-      ON ca.category_id = c.id 
-      WHERE da.dataset_id = $1 AND user_id = $2
-    ), user2category AS (
-      SELECT observation_id, category_id as user2_category_id, name as user2_category_name 
-      FROM dataset_assignments AS da 
-      JOIN category_assignments AS ca
-      ON da.id = ca.dataset_assignment_id
-      JOIN categories as c
-      ON ca.category_id = c.id 
-      WHERE da.dataset_id = $1 AND user_id = $3
-    )
-    SELECT  COUNT(*) as total_records, CEIL(COUNT(*) / $4) AS total_pages 
-    FROM observations AS o
-    LEFT JOIN user1category AS uc1
-    ON o.id = uc1.observation_id
-    LEFT JOIN user2category AS uc2
-    USING (observation_id)
-    WHERE LOWER(text) LIKE LOWER($5)`;
-  const stringInterpolationsTotals = [
-    dataId,
-    userIds[0],
-    userIds[1],
-    perPage,
-    `%${query}%`
-  ];
+  if (dataId && userIds[0]) {
+    let queryStringTotals = `WITH user1category AS (
+        SELECT observation_id, category_id as user1_category_id, name as user1_category_name 
+        FROM dataset_assignments AS da 
+        JOIN category_assignments AS ca
+        ON da.id = ca.dataset_assignment_id
+        JOIN categories as c
+        ON ca.category_id = c.id 
+        WHERE da.dataset_id = $1 AND user_id = $2
+      ), user2category AS (
+        SELECT observation_id, category_id as user2_category_id, name as user2_category_name 
+        FROM dataset_assignments AS da 
+        JOIN category_assignments AS ca
+        ON da.id = ca.dataset_assignment_id
+        JOIN categories as c
+        ON ca.category_id = c.id 
+        WHERE da.dataset_id = $1 AND user_id = $3
+      )
+      SELECT  COUNT(*) as total_records, CEIL(COUNT(*) / $4) AS total_pages 
+      FROM observations AS o
+      LEFT JOIN user1category AS uc1
+      ON o.id = uc1.observation_id
+      LEFT JOIN user2category AS uc2
+      USING (observation_id)
+      WHERE LOWER(text) LIKE LOWER($5)`;
+    const stringInterpolationsTotals = [
+      dataId,
+      userIds[0],
+      userIds[1],
+      perPage,
+      `%${query}%`
+    ];
 
-  let queryStringNodes = `WITH user1category AS (
-      SELECT observation_id, category_id as user1_category_id, name as user1_category_name 
-      FROM dataset_assignments AS da 
-      JOIN category_assignments AS ca
-      ON da.id = ca.dataset_assignment_id
-      JOIN categories as c
-      ON ca.category_id = c.id 
-      WHERE da.dataset_id = $1 AND user_id = $2
-    ), user2category AS (
-      SELECT observation_id, category_id as user2_category_id, name as user2_category_name 
-      FROM dataset_assignments AS da 
-      JOIN category_assignments AS ca
-      ON da.id = ca.dataset_assignment_id
-      JOIN categories as c
-      ON ca.category_id = c.id 
-      WHERE da.dataset_id = $1 AND user_id = $3
-    )
-    SELECT id, text, category_id, dataset_id, user1_category_id, user1_category_name, user2_category_id, user2_category_name 
-    FROM observations AS o
-    LEFT JOIN user1category AS uc1
-    ON o.id = uc1.observation_id
-    LEFT JOIN user2category AS uc2
-    USING (observation_id)
-    WHERE LOWER(text) LIKE LOWER($4)`;
-  const stringInterpolationsNodes = [
-    dataId,
-    userIds[0],
-    userIds[1],
-    `%${query}%`,
-    perPage,
-    perPage * page - perPage
-  ];
+    let queryStringNodes = `WITH user1category AS (
+        SELECT observation_id, category_id as user1_category_id, name as user1_category_name 
+        FROM dataset_assignments AS da 
+        JOIN category_assignments AS ca
+        ON da.id = ca.dataset_assignment_id
+        JOIN categories as c
+        ON ca.category_id = c.id 
+        WHERE da.dataset_id = $1 AND user_id = $2
+      ), user2category AS (
+        SELECT observation_id, category_id as user2_category_id, name as user2_category_name 
+        FROM dataset_assignments AS da 
+        JOIN category_assignments AS ca
+        ON da.id = ca.dataset_assignment_id
+        JOIN categories as c
+        ON ca.category_id = c.id 
+        WHERE da.dataset_id = $1 AND user_id = $3
+      )
+      SELECT id, text, category_id, dataset_id, user1_category_id, user1_category_name, user2_category_id, user2_category_name 
+      FROM observations AS o
+      LEFT JOIN user1category AS uc1
+      ON o.id = uc1.observation_id
+      LEFT JOIN user2category AS uc2
+      USING (observation_id)
+      WHERE LOWER(text) LIKE LOWER($4)`;
+    const stringInterpolationsNodes = [
+      dataId,
+      userIds[0],
+      userIds[1],
+      `%${query}%`,
+      perPage,
+      perPage * page - perPage
+    ];
 
-  let queryStringLimitOffset = ' LIMIT $5 OFFSET $6';
+    let queryStringLimitOffset = ' LIMIT $5 OFFSET $6';
 
-  if (filter) {
-    queryStringTotals += ' AND user1_category_id = $6';
-    stringInterpolationsTotals.push(filter);
+    if (filter) {
+      queryStringTotals += ' AND user1_category_id = $6';
+      stringInterpolationsTotals.push(filter);
 
-    queryStringNodes += ' AND user1_category_id = $5';
-    stringInterpolationsNodes.splice(4, 0, filter);
-    queryStringLimitOffset = ' LIMIT $6 OFFSET $7';
-  }
-
-  if (sort) {
-    const sortParams = sort.split('_');
-    if (sortParams[1] === 'Asc') {
-      sortParams[0] === 'text'
-        ? (queryStringNodes += ' ORDER BY text')
-        : (queryStringNodes += ' ORDER BY user1_category_name');
-    } else {
-      sortParams[0] === 'text'
-        ? (queryStringNodes += ' ORDER BY text DESC')
-        : (queryStringNodes += ' ORDER BY user1_category_name DESC');
+      queryStringNodes += ' AND user1_category_id = $5';
+      stringInterpolationsNodes.splice(4, 0, filter);
+      queryStringLimitOffset = ' LIMIT $6 OFFSET $7';
     }
-  }
 
-  try {
-    const totals = await pool.query(
-      queryStringTotals,
-      stringInterpolationsTotals
-    );
-    const { rows: nodes } = await pool.query(
-      queryStringNodes + queryStringLimitOffset,
-      stringInterpolationsNodes
-    );
-    const { rows: agreementObs } = await pool.query(
-      queryStringNodes,
-      stringInterpolationsNodes.slice(0, -2)
-    );
+    if (sort) {
+      const sortParams = sort.split('_');
+      if (sortParams[1] === 'Asc') {
+        sortParams[0] === 'text'
+          ? (queryStringNodes += ' ORDER BY text')
+          : (queryStringNodes += ' ORDER BY user1_category_name');
+      } else {
+        sortParams[0] === 'text'
+          ? (queryStringNodes += ' ORDER BY text DESC')
+          : (queryStringNodes += ' ORDER BY user1_category_name DESC');
+      }
+    }
 
-    const reformatAgreementData = (data, user) =>
-      data.reduce((acc, ob) => {
-        const { id } = ob;
-        const userCategory = ob[`user${user}_category_id`];
+    try {
+      const totals = await pool.query(
+        queryStringTotals,
+        stringInterpolationsTotals
+      );
+      const { rows: nodes } = await pool.query(
+        queryStringNodes + queryStringLimitOffset,
+        stringInterpolationsNodes
+      );
+      const { rows: agreementObs } = await pool.query(
+        queryStringNodes,
+        stringInterpolationsNodes.slice(0, -2)
+      );
 
-        if (!userCategory) {
-          return { ...acc };
+      const reformatAgreementData = (data, user) =>
+        data.reduce((acc, ob) => {
+          const { id } = ob;
+          const userCategory = ob[`user${user}_category_id`];
+
+          if (!userCategory) {
+            return { ...acc };
+          }
+
+          return { ...acc, [id]: userCategory };
+        }, {});
+
+      const user1Data = reformatAgreementData(agreementObs, 1);
+      const user2Data = reformatAgreementData(agreementObs, 2);
+
+      const calculatePercentAgreement = (data1, data2) => {
+        let numAgreements;
+        let total;
+
+        const getNumOfAgreements = (ref, comp) => {
+          const agreements = Object.keys(ref).reduce((acc, key) => {
+            if (ref[key] === comp[key]) {
+              acc += 1;
+            }
+            return acc;
+          }, 0);
+
+          return [agreements, Object.keys(ref).length];
+        };
+
+        if (Object.keys(data1).length <= Object.keys(data2).length) {
+          [numAgreements, total] = getNumOfAgreements(data1, data2);
+        } else {
+          [numAgreements, total] = getNumOfAgreements(data2, data1);
         }
 
-        return { ...acc, [id]: userCategory };
-      }, {});
-
-    const user1Data = reformatAgreementData(agreementObs, 1);
-    const user2Data = reformatAgreementData(agreementObs, 2);
-
-    const calculatePercentAgreement = (data1, data2) => {
-      let numAgreements;
-      let total;
-
-      const getNumOfAgreements = (ref, comp) => {
-        const agreements = Object.keys(ref).reduce((acc, key) => {
-          if (ref[key] === comp[key]) {
-            acc += 1;
-          }
-          return acc;
-        }, 0);
-
-        return [agreements, Object.keys(ref).length];
+        return Math.round((numAgreements / total) * 100) / 100;
       };
 
-      if (Object.keys(data1).length <= Object.keys(data2).length) {
-        [numAgreements, total] = getNumOfAgreements(data1, data2);
-      } else {
-        [numAgreements, total] = getNumOfAgreements(data2, data1);
-      }
+      const cohensKappa = Cohen.kappa(user1Data, user2Data, 81, 'none');
 
-      return Math.round((numAgreements / total) * 100) / 100;
-    };
+      const percentAgreement = calculatePercentAgreement(user1Data, user2Data);
 
-    const cohensKappa = Cohen.kappa(user1Data, user2Data, 81, 'none');
-
-    const percentAgreement = calculatePercentAgreement(user1Data, user2Data);
-
-    return res.status(200).end(
-      JSON.stringify({
-        pageInfo: {
-          total: totals.rows[0].total_records,
-          totalPages: totals.rows[0].total,
-          startSize: perPage * page - perPage + 1,
-          endSize:
-            totals.rows[0].total_records >= perPage
-              ? perPage * page
-              : totals.rows[0].total_records
-        },
-        agreement: {
-          percentAgreement,
-          cohensKappa
-        },
-        nodes
-      })
-    );
-  } catch (error) {
-    console.log(error);
-    return res.end(`${error}`);
+      return res.status(200).end(
+        JSON.stringify({
+          pageInfo: {
+            total: totals.rows[0].total_records,
+            totalPages: totals.rows[0].total,
+            startSize: perPage * page - perPage + 1,
+            endSize:
+              totals.rows[0].total_records >= perPage
+                ? perPage * page
+                : totals.rows[0].total_records
+          },
+          agreement: {
+            percentAgreement,
+            cohensKappa
+          },
+          nodes
+        })
+      );
+    } catch (error) {
+      console.log(error);
+      return res.end(`${error}`);
+    }
   }
 };
 

@@ -25,6 +25,8 @@ import {
 import { selectCurrentUser } from '../slices/authSlice';
 import { selectGetObsParams, setGetObsParams } from '../slices/paramsSlice';
 import CategoryOptions from './CategoryOptions';
+import { useGetPredictionsMutation } from '../slices/rotaSlice';
+import Spinner from './Spinner';
 
 const Observations = ({ selectedDataId, taxonomyId, datasetAssignmentId }) => {
   const materialTheme = getTheme({
@@ -38,6 +40,7 @@ const Observations = ({ selectedDataId, taxonomyId, datasetAssignmentId }) => {
   const obsParams = useSelector(selectGetObsParams);
   const [getObs] = useLazyGetObservationsQuery();
   const [assignUserCategory] = useAssignUserCategoryMutation();
+  const [getPredictions] = useGetPredictionsMutation();
   let data = {};
 
   const onPaginationChange = async (action, state) => {
@@ -82,6 +85,7 @@ const Observations = ({ selectedDataId, taxonomyId, datasetAssignmentId }) => {
     };
     try {
       await assignUserCategory(queryParams);
+      await getPredictions({ inputs: data.nodes[1].text });
     } catch (error) {
       console.log(`${error}`);
     }
@@ -190,6 +194,7 @@ const Observations = ({ selectedDataId, taxonomyId, datasetAssignmentId }) => {
       </Container>
     );
   }
+  return <Spinner />;
 };
 
 Observations.propTypes = {
