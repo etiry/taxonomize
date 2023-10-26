@@ -108,6 +108,7 @@ export default TableOptions;
 const Form = styled.form`
   grid-row: 1;
   grid-column: 2;
+  margin-bottom: 2em;
 `;
 const FormGroup = styled.div`
   padding: 0.2rem;

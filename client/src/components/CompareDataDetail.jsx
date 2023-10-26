@@ -105,6 +105,7 @@ export default CompareDataDetail;
 const Container = styled.div`
   grid-row: 1;
   grid-column: 1;
+  margin-bottom: 2em;
 `;
 
 const Form = styled.form``;

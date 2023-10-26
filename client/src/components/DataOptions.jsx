@@ -20,7 +20,7 @@ const DataOptions = ({ selectedTaxonomyId }) => {
 };
 
 DataOptions.propTypes = {
-  selectedTaxonomyId: PropTypes.string
+  selectedTaxonomyId: PropTypes.number
 };
 
 export default DataOptions;
