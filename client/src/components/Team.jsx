@@ -163,8 +163,6 @@ Team.propTypes = {
 export default Team;
 
 const ContentContainer = styled.main`
-  grid-column: 2 / end;
-  grid-row: 2 / end;
   padding: 1rem;
   z-index: 1;
 `;

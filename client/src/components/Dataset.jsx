@@ -82,8 +82,6 @@ Dataset.propTypes = {
 export default Dataset;
 
 const ContentContainer = styled.div`
-  grid-column: 2 / end;
-  grid-row: 2 / end;
   padding: 1rem;
   z-index: 1;
   display: grid;
