@@ -19,7 +19,8 @@ const CompareDataDetail = ({
   selectedTaxonomyId,
   isDemo,
   dataInfo,
-  demoData
+  demoData,
+  setDemoData
 }) => {
   const dispatch = useDispatch();
   const [getObs] = useLazyGetObservationsQuery();
@@ -111,6 +112,7 @@ const CompareDataDetail = ({
           isDemo={isDemo}
           dataInfo={dataInfo}
           demoData={demoData}
+          setDemoData={setDemoData}
         />
       </InfoBox>
     </Container>
@@ -121,7 +123,8 @@ CompareDataDetail.propTypes = {
   dataInfo: PropTypes.object,
   isDemo: PropTypes.bool,
   selectedTaxonomyId: PropTypes.number,
-  demoData: PropTypes.object
+  demoData: PropTypes.object,
+  setDemoData: PropTypes.func
 };
 
 export default CompareDataDetail;

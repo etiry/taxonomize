@@ -87,6 +87,7 @@ const Observations = ({
     if (demoData) {
       setDemoData((prevState) => ({
         pageInfo: prevState.pageInfo,
+        agreement: prevState.agreement,
         nodes: prevState.nodes.map((ob) => {
           if (ob.id !== observationId) {
             return ob;
@@ -94,6 +95,7 @@ const Observations = ({
 
           return {
             ...ob,
+            user1_category_id: parseInt(event.target.selectedOptions[0].value),
             user1_category_name: event.target.selectedOptions[0].label
           };
         })

@@ -21,13 +21,21 @@ const Main = ({ contentType }) => {
         startSize: 1,
         endSize: 10
       },
-      nodes: data.map((ob, index) => ({
+      nodes: data?.map((ob, index) => ({
         ...ob,
+        user2_category_id:
+          dataInfo.nodes[0].users[1].categories[index].user2_category_id,
         user2_category_name:
           dataInfo.nodes[0].users[1].categories[index].user2_category_name
-      }))
+      })),
+      agreement: {
+        percentAgreement: null,
+        cohensKappa: null
+      }
     });
   }, [data]);
+
+  console.log(demoData);
 
   if (contentType === 'dashboard') {
     return <Dashboard />;

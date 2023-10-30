@@ -30,33 +30,43 @@
             "name": "Jane Doe",
             "categories": [
               {
+                "user2_category_id": 5,
                 "user2_category_name": "DRUG TRAFFICKING - OTHER"
               },
               {
+                "user2_category_id": 5,
                 "user2_category_name": "DRUG TRAFFICKING - OTHER"
               },
               {
+                "user2_category_id": 5,
                 "user2_category_name": "DRUG TRAFFICKING - OTHER"
               },
               {
+                "user2_category_id": 76,
                 "user2_category_name": "MURDER"
               },
               {
+                "user2_category_id": 76,
                 "user2_category_name": "MURDER"
               },
               {
+                "user2_category_id": 76,
                 "user2_category_name": "MURDER"
               },
               {
+                "user2_category_id": 47,
                 "user2_category_name": "HABITUAL OFFENDER"
               },
               {
+                "user2_category_id": 5,
                 "user2_category_name": "DRUG TRAFFICKING - OTHER"
               },
               {
+                "user2_category_id": 5,
                 "user2_category_name": "DRUG TRAFFICKING - OTHER"
               },
               {
+                "user2_category_id": 5,
                 "user2_category_name": "DRUG TRAFFICKING - OTHER"
               }
             ]

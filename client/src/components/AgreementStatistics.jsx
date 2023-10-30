@@ -1,7 +1,12 @@
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
+import Cohen from 'cohens-kappa';
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
+import {
+  reformatAgreementData,
+  calculatePercentAgreement
+} from '../util/agreementStatistics';
 import { apiSlice } from '../slices/apiSlice';
 import { selectGetObsParams } from '../slices/paramsSlice';
 import {
@@ -9,7 +14,7 @@ import {
   selectComparedUsers
 } from '../slices/selectionsSlice';
 
-const AgreementStatistics = ({ isDemo, dataInfo, demoData }) => {
+const AgreementStatistics = ({ isDemo, dataInfo, demoData, setDemoData }) => {
   const obsParams = useSelector(selectGetObsParams);
   const selectedDataId = useSelector(selectSelectedDataId);
   const comparedUsers = useSelector(selectComparedUsers);
@@ -24,15 +29,39 @@ const AgreementStatistics = ({ isDemo, dataInfo, demoData }) => {
 
   useEffect(() => {
     if (isDemo) {
-      demoData.nodes.map((ob, index) => ({
-        ...ob,
-        user2_category_name:
-          dataInfo.nodes[0].users[1].categories[index].user2_category_name
+      const user1Data = reformatAgreementData(demoData.nodes, 1);
+      const user2Data = reformatAgreementData(demoData.nodes, 2);
+
+      setDemoData((prevState) => ({
+        pageInfo: prevState.pageInfo,
+        nodes: prevState.nodes,
+        agreement: {
+          ...prevState.agreement,
+          percentAgreement: calculatePercentAgreement(user1Data, user2Data),
+          cohensKappa: Cohen.kappa(user1Data, user2Data, 81, 'none')
+        }
       }));
     }
-  }, [isDemo, dataInfo, demoData]);
+  }, [isDemo, dataInfo, setDemoData]);
 
-  console.log(demoData);
+  if (isDemo) {
+    return (
+      <>
+        <Item>
+          <Label>Percent agreement: </Label>
+          {demoData.agreement.percentAgreement
+            ? demoData.agreement.percentAgreement
+            : 'N/A'}
+        </Item>
+        <Item>
+          <Label>Cohen's kappa: </Label>
+          {demoData.agreement.cohensKappa
+            ? demoData.agreement.cohensKappa
+            : 'N/A'}
+        </Item>
+      </>
+    );
+  }
 
   return (
     <>
@@ -53,7 +82,8 @@ const AgreementStatistics = ({ isDemo, dataInfo, demoData }) => {
 AgreementStatistics.propTypes = {
   dataInfo: PropTypes.object,
   demoData: PropTypes.object,
-  isDemo: PropTypes.bool
+  isDemo: PropTypes.bool,
+  setDemoData: PropTypes.func
 };
 
 export default AgreementStatistics;

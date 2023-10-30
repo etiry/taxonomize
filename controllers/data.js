@@ -1,5 +1,9 @@
 const Cohen = require('cohens-kappa');
 const { pool } = require('../dbHandler');
+const {
+  reformatAgreementData,
+  calculatePercentAgreement
+} = require('../util/agreementStatistics.js');
 
 // POST /data
 // create new dataset via csv upload and save to db
@@ -181,44 +185,8 @@ exports.getObservations = async (req, res, next) => {
         stringInterpolationsNodes.slice(0, -2)
       );
 
-      const reformatAgreementData = (data, user) =>
-        data.reduce((acc, ob) => {
-          const { id } = ob;
-          const userCategory = ob[`user${user}_category_id`];
-
-          if (!userCategory) {
-            return { ...acc };
-          }
-
-          return { ...acc, [id]: userCategory };
-        }, {});
-
       const user1Data = reformatAgreementData(agreementObs, 1);
       const user2Data = reformatAgreementData(agreementObs, 2);
-
-      const calculatePercentAgreement = (data1, data2) => {
-        let numAgreements;
-        let total;
-
-        const getNumOfAgreements = (ref, comp) => {
-          const agreements = Object.keys(ref).reduce((acc, key) => {
-            if (ref[key] === comp[key]) {
-              acc += 1;
-            }
-            return acc;
-          }, 0);
-
-          return [agreements, Object.keys(ref).length];
-        };
-
-        if (Object.keys(data1).length <= Object.keys(data2).length) {
-          [numAgreements, total] = getNumOfAgreements(data1, data2);
-        } else {
-          [numAgreements, total] = getNumOfAgreements(data2, data1);
-        }
-
-        return Math.round((numAgreements / total) * 100) / 100;
-      };
 
       const cohensKappa = Cohen.kappa(user1Data, user2Data, 81, 'none');
 

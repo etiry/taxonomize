@@ -21,6 +21,7 @@ const Compare = ({ isDemo, dataInfo, demoData, setDemoData }) => {
           isDemo={isDemo}
           dataInfo={dataInfo}
           demoData={demoData}
+          setDemoData={setDemoData}
         />
         <TableOptions selectedDataId={1} taxonomyId={1} />
         <CompareDatasets taxonomyId={1} isDemo={isDemo} demoData={demoData} />
