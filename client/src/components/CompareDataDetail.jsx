@@ -9,20 +9,20 @@ import {
   setComparedUsers,
   selectComparedUsers
 } from '../slices/selectionsSlice';
-import {
-  apiSlice,
-  useLazyGetObservationsQuery,
-  useLazyGetUserAssignedCategoriesQuery
-} from '../slices/apiSlice';
+import { apiSlice, useLazyGetObservationsQuery } from '../slices/apiSlice';
 import UserOptions from './UserOptions';
 import DataOptions from './DataOptions';
 import ToggleSwitch from './ToggleSwitch';
 import AgreementStatistics from './AgreementStatistics';
 
-const CompareDataDetail = ({ selectedTaxonomyId }) => {
+const CompareDataDetail = ({
+  selectedTaxonomyId,
+  isDemo,
+  dataInfo,
+  demoData
+}) => {
   const dispatch = useDispatch();
   const [getObs] = useLazyGetObservationsQuery();
-  const [getUserAssignedCategories] = useLazyGetUserAssignedCategoriesQuery();
   const {
     register,
     setError,
@@ -37,15 +37,17 @@ const CompareDataDetail = ({ selectedTaxonomyId }) => {
   };
 
   const handleInputChange = async (event, type) => {
-    if (type === 'data') {
-      await dispatch(setSelectedDataId(parseInt(event.target.value)));
-    } else {
-      dispatch(
-        setComparedUsers({
-          user1: event.target.form[1].value,
-          user2: event.target.form[2].value
-        })
-      );
+    if (!isDemo) {
+      if (type === 'data') {
+        await dispatch(setSelectedDataId(parseInt(event.target.value)));
+      } else {
+        dispatch(
+          setComparedUsers({
+            user1: event.target.form[1].value,
+            user2: event.target.form[2].value
+          })
+        );
+      }
     }
   };
 
@@ -57,9 +59,14 @@ const CompareDataDetail = ({ selectedTaxonomyId }) => {
           <Select
             {...register('data')}
             onChange={(event) => handleInputChange(event, 'data')}
+            defaultValue={isDemo ? '1' : null}
           >
             <Option value="">None</Option>
-            <DataOptions selectedTaxonomyId={selectedTaxonomyId} />
+            <DataOptions
+              selectedTaxonomyId={selectedTaxonomyId}
+              isDemo={isDemo}
+              dataInfo={dataInfo}
+            />
           </Select>
         </FormGroup>
         <FormGroup>
@@ -67,9 +74,14 @@ const CompareDataDetail = ({ selectedTaxonomyId }) => {
           <Select
             {...register('user1')}
             onChange={(event) => handleInputChange(event, 'user')}
+            defaultValue={isDemo ? '1' : null}
           >
             <Option value="">None</Option>
-            <UserOptions dataId={selectedDataId} />
+            <UserOptions
+              dataId={selectedDataId}
+              isDemo={isDemo}
+              dataInfo={dataInfo}
+            />
           </Select>
         </FormGroup>
         <FormGroup>
@@ -77,9 +89,14 @@ const CompareDataDetail = ({ selectedTaxonomyId }) => {
           <Select
             {...register('user2')}
             onChange={(event) => handleInputChange(event, 'user')}
+            defaultValue={isDemo ? '2' : null}
           >
             <Option value="">None</Option>
-            <UserOptions dataId={selectedDataId} />
+            <UserOptions
+              dataId={selectedDataId}
+              isDemo={isDemo}
+              dataInfo={dataInfo}
+            />
           </Select>
         </FormGroup>
         <FormGroup>
@@ -90,14 +107,21 @@ const CompareDataDetail = ({ selectedTaxonomyId }) => {
         </FormGroup>
       </Form>
       <InfoBox style={{ display: toggleValue ? 'block' : 'none' }}>
-        <AgreementStatistics />
+        <AgreementStatistics
+          isDemo={isDemo}
+          dataInfo={dataInfo}
+          demoData={demoData}
+        />
       </InfoBox>
     </Container>
   );
 };
 
 CompareDataDetail.propTypes = {
-  selectedTaxonomyId: PropTypes.number
+  dataInfo: PropTypes.object,
+  isDemo: PropTypes.bool,
+  selectedTaxonomyId: PropTypes.number,
+  demoData: PropTypes.object
 };
 
 export default CompareDataDetail;

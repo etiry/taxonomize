@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { useSelector } from 'react-redux';
 import {
@@ -8,9 +9,24 @@ import CompareDataDetail from './CompareDataDetail';
 import TableOptions from './TableOptions';
 import CompareDatasets from './CompareDatasets';
 
-const Compare = () => {
+const Compare = ({ isDemo, dataInfo, demoData, setDemoData }) => {
   const selectedTaxonomyId = useSelector(selectSelectedTaxonomyId);
   const selectedDataId = useSelector(selectSelectedDataId);
+
+  if (isDemo) {
+    return (
+      <ContentContainer>
+        <CompareDataDetail
+          selectedTaxonomyId={1}
+          isDemo={isDemo}
+          dataInfo={dataInfo}
+          demoData={demoData}
+        />
+        <TableOptions selectedDataId={1} taxonomyId={1} />
+        <CompareDatasets taxonomyId={1} isDemo={isDemo} demoData={demoData} />
+      </ContentContainer>
+    );
+  }
 
   return (
     <ContentContainer>
@@ -22,6 +38,13 @@ const Compare = () => {
       <CompareDatasets taxonomyId={parseInt(selectedTaxonomyId)} />
     </ContentContainer>
   );
+};
+
+Compare.propTypes = {
+  dataInfo: PropTypes.object,
+  demoData: PropTypes.object,
+  isDemo: PropTypes.bool,
+  setDemoData: PropTypes.func
 };
 
 export default Compare;

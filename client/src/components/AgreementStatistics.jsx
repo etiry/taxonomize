@@ -1,4 +1,6 @@
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
+import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { apiSlice } from '../slices/apiSlice';
 import { selectGetObsParams } from '../slices/paramsSlice';
@@ -7,7 +9,7 @@ import {
   selectComparedUsers
 } from '../slices/selectionsSlice';
 
-const AgreementStatistics = () => {
+const AgreementStatistics = ({ isDemo, dataInfo, demoData }) => {
   const obsParams = useSelector(selectGetObsParams);
   const selectedDataId = useSelector(selectSelectedDataId);
   const comparedUsers = useSelector(selectComparedUsers);
@@ -19,6 +21,18 @@ const AgreementStatistics = () => {
     sort: obsParams.sort,
     filter: obsParams.filter
   });
+
+  useEffect(() => {
+    if (isDemo) {
+      demoData.nodes.map((ob, index) => ({
+        ...ob,
+        user2_category_name:
+          dataInfo.nodes[0].users[1].categories[index].user2_category_name
+      }));
+    }
+  }, [isDemo, dataInfo, demoData]);
+
+  console.log(demoData);
 
   return (
     <>
@@ -34,6 +48,12 @@ const AgreementStatistics = () => {
       </Item>
     </>
   );
+};
+
+AgreementStatistics.propTypes = {
+  dataInfo: PropTypes.object,
+  demoData: PropTypes.object,
+  isDemo: PropTypes.bool
 };
 
 export default AgreementStatistics;

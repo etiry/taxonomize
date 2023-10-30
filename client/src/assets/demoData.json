@@ -1,0 +1,68 @@
+{
+  "team": {
+    "nodes": [
+      {
+        "id": 1,
+        "name": "John Smith",
+        "email": "john@smith.com"
+      },
+      {
+        "id": 2,
+        "name": "Jane Doe",
+        "email": "jane@doe.com"
+      }
+    ]
+  },
+  "dataInfo": {
+    "nodes": [
+      {
+        "id": 1,
+        "dataset_name": "Cook County Demo Data",
+        "taxonomy_name": "Demo Taxonomy",
+        "completed": false,
+        "users": [
+          {
+            "id": 1,
+            "name": "John Smith"
+          },
+          {
+            "id": 2,
+            "name": "Jane Doe",
+            "categories": [
+              {
+                "user2_category_name": "DRUG TRAFFICKING - OTHER"
+              },
+              {
+                "user2_category_name": "DRUG TRAFFICKING - OTHER"
+              },
+              {
+                "user2_category_name": "DRUG TRAFFICKING - OTHER"
+              },
+              {
+                "user2_category_name": "MURDER"
+              },
+              {
+                "user2_category_name": "MURDER"
+              },
+              {
+                "user2_category_name": "MURDER"
+              },
+              {
+                "user2_category_name": "HABITUAL OFFENDER"
+              },
+              {
+                "user2_category_name": "DRUG TRAFFICKING - OTHER"
+              },
+              {
+                "user2_category_name": "DRUG TRAFFICKING - OTHER"
+              },
+              {
+                "user2_category_name": "DRUG TRAFFICKING - OTHER"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

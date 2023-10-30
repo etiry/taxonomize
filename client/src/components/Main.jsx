@@ -1,42 +1,71 @@
-import styled from 'styled-components';
-import { useState } from 'react';
-import { useSelector } from 'react-redux';
-import SideNav from './SideNav';
-import Content from './Content';
-import SigninForm from './SigninForm';
-import { selectCurrentUser } from '../slices/authSlice';
+import PropTypes from 'prop-types';
+import { useEffect, useState } from 'react';
+import { useGetDemoDataQuery } from '../slices/demoSlice';
+import Dashboard from './Dashboard';
+import Team from './Team';
+import Dataset from './Dataset';
+import { team, dataInfo } from '../assets/demoData.json';
+import Datasets from './Datasets';
+import Compare from './Compare';
 
-const Main = () => {
-  const authenticated = useSelector(selectCurrentUser);
-  const [contentType, setContentType] = useState('dashboard');
+const Main = ({ contentType }) => {
+  const [isDemo, setIsDemo] = useState(true);
+  const [demoData, setDemoData] = useState(null);
+  const { data } = useGetDemoDataQuery();
 
-  if (authenticated) {
+  useEffect(() => {
+    setDemoData({
+      pageInfo: {
+        total: 10,
+        totalPages: 1,
+        startSize: 1,
+        endSize: 10
+      },
+      nodes: data.map((ob, index) => ({
+        ...ob,
+        user2_category_name:
+          dataInfo.nodes[0].users[1].categories[index].user2_category_name
+      }))
+    });
+  }, [data]);
+
+  if (contentType === 'dashboard') {
+    return <Dashboard />;
+  }
+
+  if (contentType === 'team') {
+    return <Team isDemo={isDemo} demoTeamData={team} />;
+  }
+
+  if (contentType === 'datasets') {
+    return <Datasets dataInfo={dataInfo} />;
+  }
+
+  if (contentType === 'demoDataset') {
     return (
-      <ContentContainer>
-        {/* <SideNav setContentType={setContentType} /> */}
-        <Content contentType={contentType} />
-      </ContentContainer>
+      <Dataset
+        isDemo={isDemo}
+        dataInfo={dataInfo}
+        demoData={demoData}
+        setDemoData={setDemoData}
+      />
     );
   }
 
-  return (
-    <SigninContainer>
-      <SigninForm />
-    </SigninContainer>
-  );
+  if (contentType === 'compare') {
+    return (
+      <Compare
+        isDemo={isDemo}
+        dataInfo={dataInfo}
+        demoData={demoData}
+        setDemoData={setDemoData}
+      />
+    );
+  }
+};
+
+Main.propTypes = {
+  contentType: PropTypes.string
 };
 
 export default Main;
-
-const ContentContainer = styled.main`
-  display: grid;
-  grid-template-columns: 1fr 5fr;
-  margin-top: 140px;
-  z-index: 1;
-`;
-
-const SigninContainer = styled.main`
-  min-height: 100vh;
-  display: grid;
-  place-items: center;
-`;

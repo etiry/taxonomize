@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import {
   Table,
@@ -30,7 +31,7 @@ import {
 } from '../slices/selectionsSlice';
 import Spinner from './Spinner';
 
-const Datasets = () => {
+const Datasets = ({ dataInfo }) => {
   const dispatch = useDispatch();
   const materialTheme = getTheme(DEFAULT_OPTIONS);
   const theme = useTheme(materialTheme);
@@ -60,7 +61,7 @@ const Datasets = () => {
     }
   );
 
-  if (isSuccess) {
+  if (dataInfo || isSuccess) {
     return (
       <ContentContainer>
         <Wrapper>
@@ -70,7 +71,7 @@ const Datasets = () => {
 
         <TableContainer>
           <Table
-            data={data}
+            data={dataInfo || data}
             theme={theme}
             layout={{ fixedHeader: true }}
             // pagination={pagination}
@@ -87,17 +88,26 @@ const Datasets = () => {
                 <Body>
                   {tableList.map((item) => (
                     <Row key={item.id} item={item}>
-                      <Cell>{item.name}</Cell>
+                      <Cell>{item.name || item.dataset_name}</Cell>
                       <Cell>
                         <Button
                           onClick={async () => {
-                            await dispatch(setSelectedDataId(item.id));
-                            toggleModal(false);
+                            if (!dataInfo) {
+                              await dispatch(setSelectedDataId(item.id));
+                              toggleModal(false);
+                            }
                           }}
                         >
                           Edit
                         </Button>
-                        <Button onClick={() => deleteData(item.id)} $delete>
+                        <Button
+                          onClick={() => {
+                            if (!dataInfo) {
+                              deleteData(item.id);
+                            }
+                          }}
+                          $delete
+                        >
                           Delete
                         </Button>
                       </Cell>
@@ -169,6 +179,10 @@ const Datasets = () => {
       <ContentContainer>There was an error loading this page</ContentContainer>
     );
   }
+};
+
+Datasets.propTypes = {
+  dataInfo: PropTypes.object
 };
 
 export default Datasets;

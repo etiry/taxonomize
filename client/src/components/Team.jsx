@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import {
   Table,
@@ -22,7 +23,7 @@ import {
 import { setIsOpen, setFormType } from '../slices/selectionsSlice';
 import Spinner from './Spinner';
 
-const Team = () => {
+const Team = ({ isDemo, demoTeamData }) => {
   const dispatch = useDispatch();
   const materialTheme = getTheme(DEFAULT_OPTIONS);
   const theme = useTheme(materialTheme);
@@ -45,6 +46,49 @@ const Team = () => {
     removeTeam(userId);
     localStorage.setItem('taxonomizeTeam', { id: null, name: null });
   };
+
+  if (isDemo) {
+    return (
+      <ContentContainer>
+        <Wrapper>
+          <Heading>My Team</Heading>
+          <Button>Add Team Members</Button>
+        </Wrapper>
+
+        <TableContainer>
+          <Table
+            data={demoTeamData}
+            theme={theme}
+            layout={{ fixedHeader: true }}
+          >
+            {(tableList) => (
+              <>
+                <Header>
+                  <HeaderRow>
+                    <HeaderCell>Name</HeaderCell>
+                    <HeaderCell>Email</HeaderCell>
+                    <HeaderCell />
+                  </HeaderRow>
+                </Header>
+
+                <Body>
+                  {tableList.map((item) => (
+                    <Row key={item.id} item={item}>
+                      <Cell>{item.name}</Cell>
+                      <Cell>{item.email}</Cell>
+                      <Cell>
+                        <Button $delete>Remove</Button>
+                      </Cell>
+                    </Row>
+                  ))}
+                </Body>
+              </>
+            )}
+          </Table>
+        </TableContainer>
+      </ContentContainer>
+    );
+  }
 
   if (!team.id) {
     return (
@@ -105,6 +149,15 @@ const Team = () => {
       <ContentContainer>There was an error loading this page</ContentContainer>
     );
   }
+};
+
+Team.propTypes = {
+  demoTeamData: PropTypes.shape({
+    id: PropTypes.number,
+    name: PropTypes.string,
+    email: PropTypes.string
+  }),
+  isDemo: PropTypes.bool
 };
 
 export default Team;

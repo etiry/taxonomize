@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { useSelector } from 'react-redux';
 import { apiSlice } from '../slices/apiSlice';
@@ -11,7 +12,7 @@ import TableOptions from './TableOptions';
 import Observations from './Observations';
 import Spinner from './Spinner';
 
-const Dataset = () => {
+const Dataset = ({ isDemo, dataInfo, demoData, setDemoData }) => {
   const user = useSelector(selectCurrentUser);
   const selectedTaxonomyId = useSelector(selectSelectedTaxonomyId);
   const selectedDataId = useSelector(selectSelectedDataId);
@@ -27,6 +28,19 @@ const Dataset = () => {
         }
       }
     );
+
+  if (isDemo) {
+    return (
+      <ContentContainer>
+        <DataDetail data={dataInfo.nodes[0]} />
+        <Observations
+          taxonomyId={1}
+          demoData={demoData}
+          setDemoData={setDemoData}
+        />
+      </ContentContainer>
+    );
+  }
 
   if (isSuccess && selectedData) {
     return (
@@ -51,11 +65,18 @@ const Dataset = () => {
       </ContentContainer>
     );
   }
-  if (isError || !selectedData) {
+  if ((isError || !selectedData) && !isDemo) {
     return (
       <ContentContainer>There was an error loading this page</ContentContainer>
     );
   }
+};
+
+Dataset.propTypes = {
+  demoData: PropTypes.object,
+  isDemo: PropTypes.bool,
+  dataInfo: PropTypes.object,
+  setDemoData: PropTypes.func
 };
 
 export default Dataset;

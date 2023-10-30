@@ -13,6 +13,7 @@ const ContentContainer = styled.main`
   grid-row: 2 / end;
   padding: 1rem;
   z-index: 1;
+  width: 100%;
 `;
 
 const Heading = styled.h3``;

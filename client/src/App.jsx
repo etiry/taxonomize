@@ -27,6 +27,7 @@ const App = () => {
             <Route exact path="/signup" element={<SignupForm />} />
             <Route exact path="/demo" element={<Demo />} />
           </Routes>
+          <ModalComponent />
         </SigninContainer>
       </Router>
     );
@@ -37,13 +38,15 @@ const App = () => {
       <AppContainer>
         <Header />
         <SideNav />
-        <Routes>
-          <Route exact path="/" element={<Dashboard />} />
-          <Route exact path="/team" element={<Team />} />
-          <Route exact path="/datasets" element={<Datasets />} />
-          <Route exact path="/dataset/:id" element={<Dataset />} />
-          <Route exact path="/compare" element={<Compare />} />
-        </Routes>
+        <ContentContainer>
+          <Routes>
+            <Route exact path="/" element={<Dashboard />} />
+            <Route exact path="/team" element={<Team />} />
+            <Route exact path="/datasets" element={<Datasets />} />
+            <Route exact path="/dataset/:id" element={<Dataset />} />
+            <Route exact path="/compare" element={<Compare />} />
+          </Routes>
+        </ContentContainer>
         <ModalComponent />
       </AppContainer>
     </Router>
@@ -59,9 +62,14 @@ const AppContainer = styled.div`
   grid-template-columns: 1fr 5fr;
 `;
 
+const ContentContainer = styled.div`
+  grid-row: 2;
+  grid-column: 2;
+`;
+
 const SigninContainer = styled.div`
   height: 100vh;
   display: grid;
   grid-template-rows: 1fr 5fr;
-  place-items: center;
+  // place-items: center;
 `;

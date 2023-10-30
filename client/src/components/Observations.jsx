@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
+import { useState } from 'react';
 import {
   Table,
   Header,
@@ -15,12 +16,11 @@ import {
   getTheme
 } from '@table-library/react-table-library/material-ui';
 import { usePagination } from '@table-library/react-table-library/pagination';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import {
   apiSlice,
   useAssignUserCategoryMutation,
-  useLazyGetObservationsQuery,
-  useGetUserAssignedCategoriesQuery
+  useLazyGetObservationsQuery
 } from '../slices/apiSlice';
 import { selectCurrentUser } from '../slices/authSlice';
 import { selectGetObsParams, setGetObsParams } from '../slices/paramsSlice';
@@ -28,20 +28,26 @@ import CategoryOptions from './CategoryOptions';
 import { useGetPredictionsMutation } from '../slices/rotaSlice';
 import Spinner from './Spinner';
 
-const Observations = ({ selectedDataId, taxonomyId, datasetAssignmentId }) => {
+const Observations = ({
+  selectedDataId,
+  taxonomyId,
+  datasetAssignmentId,
+  demoData,
+  setDemoData
+}) => {
   const materialTheme = getTheme({
     horizontalSpacing: 5,
     verticalSpacing: 10,
     highlightOnHover: true
   });
   const theme = useTheme(materialTheme);
-  const dispatch = useDispatch();
   const userId = useSelector(selectCurrentUser);
   const obsParams = useSelector(selectGetObsParams);
   const [getObs] = useLazyGetObservationsQuery();
   const [assignUserCategory] = useAssignUserCategoryMutation();
   const [getPredictions] = useGetPredictionsMutation();
-  let data = {};
+
+  let userData = {};
 
   const onPaginationChange = async (action, state) => {
     await getObs({
@@ -55,7 +61,7 @@ const Observations = ({ selectedDataId, taxonomyId, datasetAssignmentId }) => {
   };
 
   const pagination = usePagination(
-    data,
+    userData,
     {
       state: {
         page: 0,
@@ -68,7 +74,7 @@ const Observations = ({ selectedDataId, taxonomyId, datasetAssignmentId }) => {
     }
   );
 
-  data = apiSlice.endpoints.getObservations.useQueryState({
+  userData = apiSlice.endpoints.getObservations.useQueryState({
     dataId: selectedDataId,
     userIds: userId,
     page: pagination.state.page + 1,
@@ -78,24 +84,40 @@ const Observations = ({ selectedDataId, taxonomyId, datasetAssignmentId }) => {
   }).data;
 
   const handleUpdate = async (observationId, event) => {
-    const queryParams = {
-      observationId,
-      categoryId: event.target.value,
-      datasetAssignmentId
-    };
-    try {
-      await assignUserCategory(queryParams);
-      await getPredictions({ inputs: data.nodes[1].text });
-    } catch (error) {
-      console.log(`${error}`);
+    if (demoData) {
+      setDemoData((prevState) => ({
+        pageInfo: prevState.pageInfo,
+        nodes: prevState.nodes.map((ob) => {
+          if (ob.id !== observationId) {
+            return ob;
+          }
+
+          return {
+            ...ob,
+            user1_category_name: event.target.selectedOptions[0].label
+          };
+        })
+      }));
+    } else {
+      const queryParams = {
+        observationId,
+        categoryId: event.target.value,
+        datasetAssignmentId
+      };
+      try {
+        await assignUserCategory(queryParams);
+        await getPredictions({ inputs: userData.nodes[1].text });
+      } catch (error) {
+        console.log(`${error}`);
+      }
     }
   };
 
-  if (data) {
+  if (demoData || userData) {
     return (
       <Container>
         <Table
-          data={data}
+          data={demoData || userData}
           theme={theme}
           layout={{ fixedHeader: true }}
           pagination={pagination}
@@ -138,18 +160,22 @@ const Observations = ({ selectedDataId, taxonomyId, datasetAssignmentId }) => {
           )}
         </Table>
 
-        {data.pageInfo && (
+        {(demoData?.pageInfo || userData.pageInfo) && (
           <div
             style={{
               display: 'flex',
               justifyContent: 'space-between'
             }}
           >
-            <span>Total Rows: {data.pageInfo.total}</span>
             <span>
-              Rows per page: {data.pageInfo.startSize}-{data.pageInfo.endSize}
+              Total Rows: {demoData?.pageInfo.total || userData.pageInfo.total}
+            </span>
+            <span>
+              Rows per page:{' '}
+              {demoData?.pageInfo.startSize || userData.pageInfo.startSize}-
+              {demoData?.pageInfo.endSize || userData.pageInfo.endSize}
               {' of '}
-              {data.pageInfo.total}{' '}
+              {demoData?.pageInfo.total || userData.pageInfo.total}{' '}
               <button
                 type="button"
                 disabled={pagination.state.page === 0}
@@ -169,7 +195,9 @@ const Observations = ({ selectedDataId, taxonomyId, datasetAssignmentId }) => {
               <button
                 type="button"
                 disabled={
-                  pagination.state.page + 1 === data.pageInfo.totalPages
+                  pagination.state.page + 1 ===
+                  (demoData?.pageInfo.totalPages ||
+                    userData.pageInfo.totalPages)
                 }
                 onClick={() =>
                   pagination.fns.onSetPage(pagination.state.page + 1)
@@ -180,10 +208,15 @@ const Observations = ({ selectedDataId, taxonomyId, datasetAssignmentId }) => {
               <button
                 type="button"
                 disabled={
-                  pagination.state.page + 1 === data.pageInfo.totalPages
+                  pagination.state.page + 1 ===
+                  (demoData?.pageInfo.totalPages ||
+                    userData.pageInfo.totalPages)
                 }
                 onClick={() =>
-                  pagination.fns.onSetPage(data.pageInfo.totalPages - 1)
+                  pagination.fns.onSetPage(
+                    (demoData?.pageInfo.totalPages ||
+                      userData.pageInfo.totalPages) - 1
+                  )
                 }
               >
                 {'>|'}
@@ -194,21 +227,21 @@ const Observations = ({ selectedDataId, taxonomyId, datasetAssignmentId }) => {
       </Container>
     );
   }
+
   return <Spinner />;
 };
 
 Observations.propTypes = {
   selectedDataId: PropTypes.number,
   taxonomyId: PropTypes.number,
-  datasetAssignmentId: PropTypes.number
+  datasetAssignmentId: PropTypes.number,
+  demoData: PropTypes.object,
+  setDemoData: PropTypes.func
 };
 
 export default Observations;
 
 const Container = styled.div`
-  // max-height: 80%;
-  // overflow-y: scroll;
-  width: 100%;
   grid-row: 2 / end;
   grid-column: 1 / 3;
 `;

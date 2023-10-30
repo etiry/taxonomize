@@ -18,7 +18,7 @@ import {
 } from '../slices/selectionsSlice';
 import Spinner from './Spinner';
 
-const SideNav = () => {
+const SideNav = ({ setContentType }) => {
   const dispatch = useDispatch();
   const user = useSelector(selectCurrentUser);
   const selectedTaxonomyId = useSelector(selectSelectedTaxonomyId);
@@ -85,70 +85,110 @@ const SideNav = () => {
     dataLinks = <div>{error.toString()}</div>;
   }
 
+  if (user) {
+    return (
+      <Nav>
+        <LinkList>
+          <LinkItem>
+            <NavLink
+              to="/"
+              className={({ isActive }) =>
+                isActive ? 'nav-link active' : 'nav-link'
+              }
+            >
+              Dashboard
+            </NavLink>
+          </LinkItem>
+          <LinkItem>
+            <NavLink
+              to="/team"
+              className={({ isActive }) =>
+                isActive ? 'nav-link active' : 'nav-link'
+              }
+            >
+              My Team
+            </NavLink>
+          </LinkItem>
+          {selectedTaxonomy ? (
+            <>
+              <LinkItem>
+                <Link>{selectedTaxonomy.name}</Link>
+              </LinkItem>
+              <IndentLinkItem>
+                <Link onClick={toggleModal}>Edit Taxonomy</Link>
+              </IndentLinkItem>
+              <IndentLinkItem>
+                <NavLink
+                  to="/datasets"
+                  className={({ isActive }) =>
+                    isActive ? 'nav-link active' : 'nav-link'
+                  }
+                >
+                  All Datasets
+                </NavLink>
+              </IndentLinkItem>
+              <IndentLinkItem>
+                <Link onClick={toggleDatasets}>My Datasets</Link>
+              </IndentLinkItem>
+              {dataLinks}
+              <IndentLinkItem>
+                <NavLink
+                  to="/compare"
+                  className={({ isActive }) =>
+                    isActive ? 'nav-link active' : 'nav-link'
+                  }
+                  onClick={() => {
+                    dispatch(setSelectedDataId(null));
+                    dispatch(setComparedUsers({ user1: null, user2: null }));
+                  }}
+                >
+                  Compare Datasets
+                </NavLink>
+              </IndentLinkItem>
+            </>
+          ) : null}
+        </LinkList>
+      </Nav>
+    );
+  }
   return (
     <Nav>
       <LinkList>
         <LinkItem>
-          <NavLink
-            to="/"
-            className={({ isActive }) =>
-              isActive ? 'nav-link active' : 'nav-link'
-            }
-          >
-            Dashboard
-          </NavLink>
+          <Link onClick={() => setContentType('dashboard')}>Dashboard</Link>
         </LinkItem>
         <LinkItem>
-          <NavLink
-            to="/team"
-            className={({ isActive }) =>
-              isActive ? 'nav-link active' : 'nav-link'
-            }
-          >
-            My Team
-          </NavLink>
+          <Link onClick={() => setContentType('team')}>My Team</Link>
         </LinkItem>
-        {selectedTaxonomy ? (
-          <>
-            <LinkItem>
-              <Link>{selectedTaxonomy.name}</Link>
-            </LinkItem>
-            <IndentLinkItem>
-              <Link onClick={toggleModal}>Edit Taxonomy</Link>
-            </IndentLinkItem>
-            <IndentLinkItem>
-              <NavLink
-                to="/datasets"
-                className={({ isActive }) =>
-                  isActive ? 'nav-link active' : 'nav-link'
-                }
-              >
-                All Datasets
-              </NavLink>
-            </IndentLinkItem>
-            <IndentLinkItem>
-              <Link onClick={toggleDatasets}>My Datasets</Link>
-            </IndentLinkItem>
-            {dataLinks}
-            <IndentLinkItem>
-              <NavLink
-                to="/compare"
-                className={({ isActive }) =>
-                  isActive ? 'nav-link active' : 'nav-link'
-                }
-                onClick={() => {
-                  dispatch(setSelectedDataId(null));
-                  dispatch(setComparedUsers({ user1: null, user2: null }));
-                }}
-              >
-                Compare Datasets
-              </NavLink>
-            </IndentLinkItem>
-          </>
-        ) : null}
+        <LinkItem>
+          <Link>Demo Taxonomy</Link>
+        </LinkItem>
+        <IndentLinkItem>
+          <Link>Edit Taxonomy</Link>
+        </IndentLinkItem>
+        <IndentLinkItem>
+          <Link onClick={() => setContentType('datasets')}>All Datasets</Link>
+        </IndentLinkItem>
+        <IndentLinkItem>
+          <Link onClick={toggleDatasets}>My Datasets</Link>
+        </IndentLinkItem>
+        <ContentLinkItem style={{ display: showData ? 'block' : 'none' }}>
+          <Link onClick={() => setContentType('demoDataset')}>
+            Demo Dataset
+          </Link>
+        </ContentLinkItem>
+        <IndentLinkItem>
+          <Link onClick={() => setContentType('compare')}>
+            Compare Datasets
+          </Link>
+        </IndentLinkItem>
       </LinkList>
     </Nav>
   );
+};
+
+SideNav.propTypes = {
+  setContentType: PropTypes.func
 };
 
 export default SideNav;

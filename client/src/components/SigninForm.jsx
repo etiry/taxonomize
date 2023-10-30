@@ -57,6 +57,7 @@ export default SigninForm;
 
 const Form = styled.form`
   grid-row: 2;
+  place-self: center;
 `;
 const Heading = styled.h2``;
 const FormGroup = styled.div`

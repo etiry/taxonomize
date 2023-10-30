@@ -28,7 +28,7 @@ import {
 } from '../slices/selectionsSlice';
 import CategoryOptions from './CategoryOptions';
 
-const CompareDatasets = ({ taxonomyId }) => {
+const CompareDatasets = ({ taxonomyId, isDemo, demoData }) => {
   const materialTheme = getTheme(DEFAULT_OPTIONS);
   const theme = useTheme(materialTheme);
   const dispatch = useDispatch();
@@ -37,7 +37,7 @@ const CompareDatasets = ({ taxonomyId }) => {
   const obsParams = useSelector(selectGetObsParams);
   const [getObs] = useLazyGetObservationsQuery();
   const [assignFinalCategory] = useAssignFinalCategoryMutation();
-  let data = {};
+  let userData = {};
 
   const onPaginationChange = async (action, state) => {
     await getObs({
@@ -50,7 +50,7 @@ const CompareDatasets = ({ taxonomyId }) => {
   };
 
   const pagination = usePagination(
-    data,
+    userData,
     {
       state: {
         page: 0,
@@ -63,7 +63,7 @@ const CompareDatasets = ({ taxonomyId }) => {
     }
   );
 
-  data = useGetObservationsQuery({
+  userData = useGetObservationsQuery({
     dataId: selectedDataId,
     userIds: [comparedUsers.user1, comparedUsers.user2],
     page: pagination.state.page + 1,
@@ -84,11 +84,11 @@ const CompareDatasets = ({ taxonomyId }) => {
     }
   };
 
-  if (data) {
+  if (demoData || userData) {
     return (
       <Container>
         <Table
-          data={data}
+          data={demoData || userData}
           theme={theme}
           layout={{ fixedHeader: true }}
           pagination={pagination}
@@ -133,18 +133,22 @@ const CompareDatasets = ({ taxonomyId }) => {
           )}
         </Table>
 
-        {data.pageInfo && (
+        {(demoData?.pageInfo || userData.pageInfo) && (
           <div
             style={{
               display: 'flex',
               justifyContent: 'space-between'
             }}
           >
-            <span>Total Rows: {data.pageInfo.total}</span>
             <span>
-              Rows per page: {data.pageInfo.startSize}-{data.pageInfo.endSize}
+              Total Rows: {demoData?.pageInfo.total || userData.pageInfo.total}
+            </span>
+            <span>
+              Rows per page:{' '}
+              {demoData?.pageInfo.startSize || userData.pageInfo.startSize}-
+              {demoData?.pageInfo.endSize || userData.pageInfo.endSize}
               {' of '}
-              {data.pageInfo.total}{' '}
+              {demoData?.pageInfo.total || userData.pageInfo.total}{' '}
               <button
                 type="button"
                 disabled={pagination.state.page === 0}
@@ -164,7 +168,8 @@ const CompareDatasets = ({ taxonomyId }) => {
               <button
                 type="button"
                 disabled={
-                  pagination.state.page + 1 === data.pageInfo.totalPages
+                  pagination.state.page + 1 === demoData?.pageInfo.totalPages ||
+                  userData.pageInfo.totalPages
                 }
                 onClick={() =>
                   pagination.fns.onSetPage(pagination.state.page + 1)
@@ -175,10 +180,14 @@ const CompareDatasets = ({ taxonomyId }) => {
               <button
                 type="button"
                 disabled={
-                  pagination.state.page + 1 === data.pageInfo.totalPages
+                  pagination.state.page + 1 === demoData?.pageInfo.totalPages ||
+                  userData.pageInfo.totalPages
                 }
                 onClick={() =>
-                  pagination.fns.onSetPage(data.pageInfo.totalPages - 1)
+                  pagination.fns.onSetPage(
+                    demoData?.pageInfo.totalPages ||
+                      userData.pageInfo.totalPages - 1
+                  )
                 }
               >
                 {'>|'}
@@ -192,6 +201,8 @@ const CompareDatasets = ({ taxonomyId }) => {
 };
 
 CompareDatasets.propTypes = {
+  demoData: PropTypes.object,
+  isDemo: PropTypes.bool,
   taxonomyId: PropTypes.number
 };
 
