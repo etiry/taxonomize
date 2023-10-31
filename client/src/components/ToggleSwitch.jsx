@@ -10,7 +10,7 @@ const Switch = ({ isOn, handleToggle }) => (
       type="checkbox"
     />
     <label
-      style={{ background: isOn && '#06D6A0' }}
+      style={{ background: isOn && '#223843' }}
       className="react-switch-label"
       htmlFor="react-switch-new"
     >

@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate, Link } from 'react-router-dom';
 import {
@@ -81,7 +80,7 @@ const Header = () => {
           {team.name || 'None'}
         </LinkItem>
         <LinkItem>
-          <LinkText>{email}</LinkText>
+          <Label>{email}</Label>
         </LinkItem>
         <LinkItem>
           <LinkText onClick={handleSignout}>Sign Out</LinkText>
@@ -123,14 +122,16 @@ const HeaderContainer = styled.header`
   grid-column: 1 / end;
   display: flex;
   justify-content: space-between;
-  align-content: center;
-  padding: 2rem;
+  align-items: center;
+  padding: 1rem;
   position: fixed;
   top: 0;
   left: 0;
-  background: #ffffff;
+  background: #708b99;
   z-index: 5;
   width: 100%;
+  color: #f5f5f5;
+  border-radius: 0 0 1em 1em;
 `;
 
 const Logo = styled.h1`
@@ -156,7 +157,9 @@ const Label = styled.span`
   font-weight: 500;
 `;
 
-const Button = styled.button``;
+const Button = styled.button`
+  background: #ffbd54;
+`;
 
 const Select = styled.select`
   padding: 0.2rem 0.5rem;

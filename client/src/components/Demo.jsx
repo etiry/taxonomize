@@ -19,6 +19,9 @@ export default Demo;
 const ContentContainer = styled.main`
   display: grid;
   grid-template-columns: 1fr 5fr;
-  margin-top: 140px;
+  margin-top: 110px;
   z-index: 1;
+  background-color: #f5f5f5;
+  height: 100%;
+  padding-top: 1em;
 `;

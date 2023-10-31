@@ -30,7 +30,15 @@ import CategoryOptions from './CategoryOptions';
 
 const CompareDatasets = ({ taxonomyId, isDemo, demoData }) => {
   const materialTheme = getTheme(DEFAULT_OPTIONS);
-  const theme = useTheme(materialTheme);
+  const customTheme = {
+    BaseRow: `
+      background-color: #f5f5f5;
+    `,
+    BaseCell: `
+    background-color: #f5f5f5;
+    `
+  };
+  const theme = useTheme([materialTheme, customTheme]);
   const dispatch = useDispatch();
   const selectedDataId = useSelector(selectSelectedDataId);
   const comparedUsers = useSelector(selectComparedUsers);
@@ -115,14 +123,13 @@ const CompareDatasets = ({ taxonomyId, isDemo, demoData }) => {
                         style={{
                           width: '100%',
                           border: 'none',
-                          fontSize: '1rem',
                           padding: 0,
                           margin: 0
                         }}
                         value={item.type}
                         onChange={(event) => handleUpdate(item.id, event)}
                       >
-                        <option value="">-- Select a category</option>
+                        <option value="">SELECT A CATEGORY</option>
                         <CategoryOptions taxonomyId={taxonomyId} />
                       </select>
                     </Cell>
@@ -198,6 +205,8 @@ const CompareDatasets = ({ taxonomyId, isDemo, demoData }) => {
       </Container>
     );
   }
+
+  return <Container />;
 };
 
 CompareDatasets.propTypes = {
@@ -209,11 +218,7 @@ CompareDatasets.propTypes = {
 export default CompareDatasets;
 
 const Container = styled.div`
-  // max-height: 425px;
-  // overflow-y: scroll;
   width: 100%;
   grid-row: 2 / end;
   grid-column: 1 / 3;
 `;
-
-const Button = styled.button``;

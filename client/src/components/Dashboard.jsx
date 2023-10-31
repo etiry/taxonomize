@@ -9,6 +9,7 @@ const Dashboard = () => (
 export default Dashboard;
 
 const ContentContainer = styled.main`
+  grid-column: 2 / end;
   padding: 1rem;
   z-index: 1;
   width: 100%;

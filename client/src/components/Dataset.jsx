@@ -32,7 +32,8 @@ const Dataset = ({ isDemo, dataInfo, demoData, setDemoData }) => {
   if (isDemo) {
     return (
       <ContentContainer>
-        <DataDetail data={dataInfo.nodes[0]} />
+        <DataDetail isDemo={isDemo} data={dataInfo.nodes[0]} />
+        <TableOptions selectedDataId={1} taxonomyId={1} />
         <Observations
           taxonomyId={1}
           demoData={demoData}
@@ -82,6 +83,7 @@ Dataset.propTypes = {
 export default Dataset;
 
 const ContentContainer = styled.div`
+  grid-column: 2 / end;
   padding: 1rem;
   z-index: 1;
   display: grid;

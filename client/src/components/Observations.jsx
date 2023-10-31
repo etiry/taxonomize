@@ -35,12 +35,16 @@ const Observations = ({
   demoData,
   setDemoData
 }) => {
-  const materialTheme = getTheme({
-    horizontalSpacing: 5,
-    verticalSpacing: 10,
-    highlightOnHover: true
-  });
-  const theme = useTheme(materialTheme);
+  const materialTheme = getTheme(DEFAULT_OPTIONS);
+  const customTheme = {
+    BaseRow: `
+      background-color: #f5f5f5;
+    `,
+    BaseCell: `
+    background-color: #f5f5f5;
+    `
+  };
+  const theme = useTheme([materialTheme, customTheme]);
   const userId = useSelector(selectCurrentUser);
   const obsParams = useSelector(selectGetObsParams);
   const [getObs] = useLazyGetObservationsQuery();
@@ -144,14 +148,13 @@ const Observations = ({
                         style={{
                           width: '100%',
                           border: 'none',
-                          fontSize: '1rem',
                           padding: 0,
                           margin: 0
                         }}
                         value={item.type}
                         onChange={(event) => handleUpdate(item.id, event)}
                       >
-                        <option value="NULL">-- Select a category</option>
+                        <option value="NULL">SELECT A CATEGORY</option>
                         <CategoryOptions taxonomyId={taxonomyId} />
                       </select>
                     </Cell>
@@ -230,7 +233,7 @@ const Observations = ({
     );
   }
 
-  return <Spinner />;
+  return <Container>There was an error loading this page</Container>;
 };
 
 Observations.propTypes = {

@@ -26,7 +26,15 @@ import Spinner from './Spinner';
 const Team = ({ isDemo, demoTeamData }) => {
   const dispatch = useDispatch();
   const materialTheme = getTheme(DEFAULT_OPTIONS);
-  const theme = useTheme(materialTheme);
+  const customTheme = {
+    BaseRow: `
+      background-color: #f5f5f5;
+    `,
+    BaseCell: `
+    background-color: #f5f5f5;
+  `
+  };
+  const theme = useTheme([materialTheme, customTheme]);
   const team = useSelector(selectCurrentUserTeam);
   const {
     data: teamUsers,
@@ -163,14 +171,15 @@ Team.propTypes = {
 export default Team;
 
 const ContentContainer = styled.main`
+  grid-column: 2 / end;
   padding: 1rem;
   z-index: 1;
 `;
 
 const Button = styled.button`
   margin: 0.5em;
-  background: ${(props) => (props.$delete ? '#d11a2a' : null)};
-  color: ${(props) => (props.$delete ? '#fff' : null)};
+  background: ${(props) => (props.$delete ? '#d11a2a' : '#223843')};
+  color: #f5f5f5;
 `;
 
 const Heading = styled.h3``;

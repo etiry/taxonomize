@@ -32,13 +32,15 @@ const AgreementStatistics = ({ isDemo, dataInfo, demoData, setDemoData }) => {
       const user1Data = reformatAgreementData(demoData.nodes, 1);
       const user2Data = reformatAgreementData(demoData.nodes, 2);
 
+      const cohensKappa = Cohen.kappa(user1Data, user2Data, 81, 'none');
+
       setDemoData((prevState) => ({
         pageInfo: prevState.pageInfo,
         nodes: prevState.nodes,
         agreement: {
           ...prevState.agreement,
           percentAgreement: calculatePercentAgreement(user1Data, user2Data),
-          cohensKappa: Cohen.kappa(user1Data, user2Data, 81, 'none')
+          cohensKappa: cohensKappa.message ? null : cohensKappa
         }
       }));
     }
@@ -49,15 +51,11 @@ const AgreementStatistics = ({ isDemo, dataInfo, demoData, setDemoData }) => {
       <>
         <Item>
           <Label>Percent agreement: </Label>
-          {demoData.agreement.percentAgreement
-            ? demoData.agreement.percentAgreement
-            : 'N/A'}
+          {demoData.agreement.percentAgreement || 'N/A'}
         </Item>
         <Item>
           <Label>Cohen's kappa: </Label>
-          {demoData.agreement.cohensKappa
-            ? demoData.agreement.cohensKappa
-            : 'N/A'}
+          {demoData.agreement.cohensKappa || 'N/A'}
         </Item>
       </>
     );

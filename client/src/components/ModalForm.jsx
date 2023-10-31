@@ -249,14 +249,14 @@ const FormLabel = styled.label`
   margin-right: 0.5rem;
 `;
 const FormInput = styled.input`
-  padding: 0.2rem 0.5rem;
+  padding: 0.5rem 0.5rem;
   border-radius: 1rem;
   border: ${(props) => (props.$noBorder ? null : 'solid 1px gray')};
   margin-right: 0.5rem;
 `;
 const Button = styled.button`
   margin: 0.5em;
-  background: ${(props) => (props.$delete ? '#d11a2a' : null)};
+  background: ${(props) => (props.$delete ? '#d11a2a' : '#ffbd54')};
   color: ${(props) => (props.$delete ? '#fff' : null)};
 `;
 const IconWrapper = styled.div`

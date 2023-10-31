@@ -59,9 +59,11 @@ const Form = styled.form`
   grid-row: 2;
   place-self: center;
 `;
-const Heading = styled.h2``;
+const Heading = styled.h2`
+  padding-bottom: 1em;
+`;
 const FormGroup = styled.div`
-  padding: 0.2rem;
+  padding: 0.5rem 0;
 `;
 const FormLabel = styled.label`
   font-weight: 500;
@@ -72,4 +74,7 @@ const FormInput = styled.input`
   border-radius: 1rem;
   border: solid 1px gray;
 `;
-const Button = styled.button``;
+const Button = styled.button`
+  background: #ffbd54;
+  margin-top: 1em;
+`;

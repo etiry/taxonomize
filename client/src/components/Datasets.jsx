@@ -34,7 +34,15 @@ import Spinner from './Spinner';
 const Datasets = ({ dataInfo }) => {
   const dispatch = useDispatch();
   const materialTheme = getTheme(DEFAULT_OPTIONS);
-  const theme = useTheme(materialTheme);
+  const customTheme = {
+    BaseRow: `
+      background-color: #f5f5f5;
+    `,
+    BaseCell: `
+    background-color: #f5f5f5;
+  `
+  };
+  const theme = useTheme([materialTheme, customTheme]);
   const selectedTaxonomyId = useSelector(selectSelectedTaxonomyId);
   const { data, isLoading, isSuccess, isError, error } =
     useGetDataByTaxonomyQuery(selectedTaxonomyId);
@@ -66,7 +74,9 @@ const Datasets = ({ dataInfo }) => {
       <ContentContainer>
         <Wrapper>
           <Heading>All Datasets</Heading>
-          <Button onClick={() => toggleModal(true)}>Add Dataset</Button>
+          <Button onClick={() => (dataInfo ? null : toggleModal(true))}>
+            Add Dataset
+          </Button>
         </Wrapper>
 
         <TableContainer>
@@ -195,9 +205,9 @@ const ContentContainer = styled.main`
 `;
 
 const Button = styled.button`
-  margin: 1em;
-  background: ${(props) => (props.$delete ? '#d11a2a' : null)};
-  color: ${(props) => (props.$delete ? '#fff' : null)};
+  margin: 0.5em;
+  background: ${(props) => (props.$delete ? '#d11a2a' : '#223843')};
+  color: #f5f5f5;
 `;
 
 const Heading = styled.h3``;

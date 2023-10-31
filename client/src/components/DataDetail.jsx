@@ -4,15 +4,18 @@ import { useState } from 'react';
 import { useMarkDataCompleteMutation } from '../slices/apiSlice';
 import ToggleSwitch from './ToggleSwitch';
 
-const DataDetail = ({ data }) => {
+const DataDetail = ({ isDemo, data }) => {
   const [markDataComplete] = useMarkDataCompleteMutation();
   const [toggleValue, setToggleValue] = useState(data.completed);
 
   const handleToggle = async () => {
-    await markDataComplete({
-      datasetAssignmentId: data.id,
-      value: !toggleValue
-    });
+    if (!isDemo) {
+      await markDataComplete({
+        datasetAssignmentId: data.id,
+        value: !toggleValue
+      });
+    }
+
     setToggleValue(!toggleValue);
   };
 
@@ -43,7 +46,8 @@ DataDetail.propTypes = {
     completed: PropTypes.bool,
     dataset_name: PropTypes.string,
     taxonomy_name: PropTypes.string
-  })
+  }),
+  isDemo: PropTypes.bool
 };
 
 export default DataDetail;

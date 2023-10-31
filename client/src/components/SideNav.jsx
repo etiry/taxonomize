@@ -198,8 +198,10 @@ const Nav = styled.nav`
   grid-column: 1;
   grid-row: 2;
   position: fixed;
-  top: 140px;
+  top: 110px;
   left: 0;
+  background: #f5f5f5;
+  padding-top: 2em;
 `;
 
 const LinkList = styled.ul`

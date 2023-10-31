@@ -60,9 +60,11 @@ const AppContainer = styled.div`
   display: grid;
   grid-template-rows: 140px 1fr;
   grid-template-columns: 1fr 5fr;
+  background: #f5f5f5;
 `;
 
 const ContentContainer = styled.div`
+  background: #f5f5f5;
   grid-row: 2;
   grid-column: 2;
 `;
@@ -71,5 +73,5 @@ const SigninContainer = styled.div`
   height: 100vh;
   display: grid;
   grid-template-rows: 1fr 5fr;
-  // place-items: center;
+  background: #f5f5f5;
 `;

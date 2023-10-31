@@ -59,7 +59,7 @@ const StyledModal = Modal.styled`
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: white;
+  background-color: #f5f5f5;
   opacity: ${(props) => props.opacity};
   transition : all 0.3s ease-in-out;
   border-radius: 1rem;

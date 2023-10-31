@@ -11,6 +11,7 @@ import Compare from './Compare';
 const Main = ({ contentType }) => {
   const [isDemo, setIsDemo] = useState(true);
   const [demoData, setDemoData] = useState(null);
+  const [demoTeamData, setDemoTeamData] = useState(team);
   const { data } = useGetDemoDataQuery();
 
   useEffect(() => {
@@ -35,14 +36,12 @@ const Main = ({ contentType }) => {
     });
   }, [data]);
 
-  console.log(demoData);
-
   if (contentType === 'dashboard') {
     return <Dashboard />;
   }
 
   if (contentType === 'team') {
-    return <Team isDemo={isDemo} demoTeamData={team} />;
+    return <Team isDemo={isDemo} demoTeamData={demoTeamData} />;
   }
 
   if (contentType === 'datasets') {

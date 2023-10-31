@@ -102,7 +102,7 @@ const CompareDataDetail = ({
         </FormGroup>
         <FormGroup>
           <FormLabel style={{ display: 'flex', alignItems: 'center' }}>
-            Show Agreement Statistics:{' '}
+            Calculate Agreement Statistics:{' '}
             <ToggleSwitch isOn={toggleValue} handleToggle={handleToggle} />
           </FormLabel>
         </FormGroup>

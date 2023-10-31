@@ -108,7 +108,6 @@ export default TableOptions;
 const Form = styled.form`
   grid-row: 1;
   grid-column: 2;
-  margin-bottom: 2em;
 `;
 const FormGroup = styled.div`
   padding: 0.2rem;
@@ -126,4 +125,8 @@ const Select = styled.select`
   border-radius: 1rem;
 `;
 const Option = styled.option``;
-const Button = styled.button``;
+const Button = styled.button`
+  margin: 0.5em;
+  background: #223843;
+  color: #f5f5f5;
+`;

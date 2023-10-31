@@ -34,9 +34,9 @@ const Compare = ({ isDemo, dataInfo, demoData, setDemoData }) => {
       <CompareDataDetail selectedTaxonomyId={selectedTaxonomyId} />
       <TableOptions
         selectedDataId={selectedDataId}
-        taxonomyId={parseInt(selectedTaxonomyId)}
+        taxonomyId={selectedTaxonomyId}
       />
-      <CompareDatasets taxonomyId={parseInt(selectedTaxonomyId)} />
+      <CompareDatasets taxonomyId={selectedTaxonomyId} />
     </ContentContainer>
   );
 };
@@ -52,7 +52,6 @@ export default Compare;
 
 const ContentContainer = styled.div`
   grid-column: 2 / end;
-  grid-row: 2 / end;
   padding: 1rem;
   z-index: 1;
   display: grid;
