@@ -12,6 +12,7 @@ exports.addData = async (req, res, next) => {
   if (req.file) {
     const { buffer } = req.file;
     rows = [...new Set(buffer.toString().split('\n'))].slice(1);
+    rows = rows.map((row) => row.replaceAll('"', ''));
   }
 
   if (req.body.new === 'true') {

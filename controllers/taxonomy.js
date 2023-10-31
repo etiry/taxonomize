@@ -7,6 +7,7 @@ exports.addTaxonomy = async (req, res, next) => {
   if (req.file) {
     const { buffer } = req.file;
     rows = buffer.toString().split('\r\n');
+    rows = rows.map((row) => row.replaceAll('"', ''));
   }
 
   if (req.body.new === 'true') {
