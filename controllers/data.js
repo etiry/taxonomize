@@ -206,7 +206,7 @@ exports.getObservations = async (req, res, next) => {
           },
           agreement: {
             percentAgreement,
-            cohensKappa
+            cohensKappa: cohensKappa.message ? null : cohensKappa
           },
           nodes
         })
