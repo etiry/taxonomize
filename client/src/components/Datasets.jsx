@@ -200,14 +200,14 @@ export default Datasets;
 const ContentContainer = styled.main`
   grid-column: 2 / end;
   grid-row: 2 / end;
-  padding: 1rem;
+  padding: 2rem 2rem 1rem 1rem;
   z-index: 1;
 `;
 
 const Button = styled.button`
   margin: 0.5em;
-  background: ${(props) => (props.$delete ? '#d11a2a' : '#223843')};
-  color: #f5f5f5;
+  background: ${(props) => (props.$delete ? '#d11a2a' : '#fca311')};
+  color: ${(props) => (props.$delete ? '#fff' : '#2d3142')};
 `;
 
 const Heading = styled.h3``;

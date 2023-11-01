@@ -111,10 +111,8 @@ const SideNav = ({ setContentType }) => {
           </LinkItem>
           {selectedTaxonomy ? (
             <>
-              <LinkItem>
-                <Link>{selectedTaxonomy.name}</Link>
-              </LinkItem>
-              <IndentLinkItem>
+              <LinkItem $indent>{selectedTaxonomy.name}</LinkItem>
+              <IndentLinkItem $indent>
                 <Link onClick={toggleModal}>Edit Taxonomy</Link>
               </IndentLinkItem>
               <IndentLinkItem>
@@ -127,7 +125,7 @@ const SideNav = ({ setContentType }) => {
                   All Datasets
                 </NavLink>
               </IndentLinkItem>
-              <IndentLinkItem>
+              <IndentLinkItem $indent>
                 <Link onClick={toggleDatasets}>My Datasets</Link>
               </IndentLinkItem>
               {dataLinks}
@@ -160,9 +158,7 @@ const SideNav = ({ setContentType }) => {
         <LinkItem>
           <Link onClick={() => setContentType('team')}>My Team</Link>
         </LinkItem>
-        <LinkItem>
-          <Link>Demo Taxonomy</Link>
-        </LinkItem>
+        <LinkItem>Demo Taxonomy</LinkItem>
         <IndentLinkItem>
           <Link>Edit Taxonomy</Link>
         </IndentLinkItem>
@@ -198,33 +194,36 @@ const Nav = styled.nav`
   grid-column: 1;
   grid-row: 2;
   position: fixed;
-  top: 110px;
+  top: 100px;
   left: 0;
-  background: #f5f5f5;
+  background: #dcdcdc;
   padding-top: 2em;
+  padding-right: 2em;
+  border-right: 3px solid #14213d;
 `;
 
 const LinkList = styled.ul`
   list-style-type: none;
-  margin-left: 1rem;
 `;
 
 const LinkItem = styled.li`
   margin: 0.75rem 0;
+  margin-left: ${(props) => (props.$indent ? '2rem' : '1rem')};
+  font-weight: 500;
 `;
 
 const IndentLinkItem = styled.li`
   margin: 0.75rem 0;
-  padding-left: 1rem;
+  padding-left: ${(props) => (props.$indent ? '3rem' : '2rem')};
 `;
 
 const ContentLinkItem = styled.li`
   margin: 0.75rem 0;
-  padding-left: 2rem;
+  padding-left: 3rem;
 `;
 
 const Link = styled.a`
-  cursor: pointer;
-  padding: 0.5rem 1.5rem;
-  border-radius: 1rem;
+  // cursor: pointer;
+  // padding: 0.5rem 1.5rem;
+  // border-radius: 1rem;
 `;

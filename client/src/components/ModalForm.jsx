@@ -239,6 +239,7 @@ const Form = styled.form`
   display: flex;
   flex-direction: column;
   padding: 2em;
+  width: 90%;
 `;
 const FormGroup = styled.div`
   padding: 0.5em;

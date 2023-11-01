@@ -33,7 +33,8 @@ const Observations = ({
   taxonomyId,
   datasetAssignmentId,
   demoData,
-  setDemoData
+  setDemoData,
+  isLoading
 }) => {
   const materialTheme = getTheme(DEFAULT_OPTIONS);
   const customTheme = {
@@ -233,6 +234,14 @@ const Observations = ({
     );
   }
 
+  if (isLoading) {
+    return (
+      <Container>
+        <Spinner />
+      </Container>
+    );
+  }
+
   return <Container>There was an error loading this page</Container>;
 };
 
@@ -241,7 +250,8 @@ Observations.propTypes = {
   taxonomyId: PropTypes.number,
   datasetAssignmentId: PropTypes.number,
   demoData: PropTypes.object,
-  setDemoData: PropTypes.func
+  setDemoData: PropTypes.func,
+  isLoading: PropTypes.bool
 };
 
 export default Observations;

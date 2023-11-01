@@ -127,6 +127,6 @@ const Select = styled.select`
 const Option = styled.option``;
 const Button = styled.button`
   margin: 0.5em;
-  background: #223843;
-  color: #f5f5f5;
+  background: #fca311;
+  color: #2d3142;
 `;

@@ -5,7 +5,7 @@
   font-family: 'Roboto', sans-serif;
   line-height: 1.5;
   font-weight: 400;
-  color: #333333;
+  color: #2d3142;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -25,12 +25,13 @@ a {
 }
 
 a:hover {
-  color: #607C8B;
+  color: #fca311;
 }
 
 .active {
-  color: #fff;
-  background: #FFBD54;
+  text-decoration: underline;
+  text-decoration-thickness: 3px;
+  text-decoration-color: #fca311;
 }
 
 .nav-link {
@@ -72,6 +73,14 @@ button:hover {
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
+}
+
+.header-link {
+  color: #f5f5f5;
+}
+
+button > a:hover {
+  color: #2d3142;
 }
 
 .react-switch-checkbox {

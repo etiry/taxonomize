@@ -23,7 +23,6 @@ const Compare = ({ isDemo, dataInfo, demoData, setDemoData }) => {
           demoData={demoData}
           setDemoData={setDemoData}
         />
-        <TableOptions selectedDataId={1} taxonomyId={1} />
         <CompareDatasets taxonomyId={1} isDemo={isDemo} demoData={demoData} />
       </ContentContainer>
     );
@@ -52,7 +51,7 @@ export default Compare;
 
 const ContentContainer = styled.div`
   grid-column: 2 / end;
-  padding: 1rem;
+  padding: 2rem 1rem;
   z-index: 1;
   display: grid;
   grid-template-row: 1fr 5fr;

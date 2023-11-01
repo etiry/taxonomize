@@ -81,14 +81,16 @@ const CompareDatasets = ({ taxonomyId, isDemo, demoData }) => {
   }).data;
 
   const handleUpdate = async (observationId, event) => {
-    const queryParams = {
-      observationId,
-      categoryId: event.target.value
-    };
-    try {
-      await assignFinalCategory(queryParams);
-    } catch (error) {
-      console.log(`${error}`);
+    if (!isDemo) {
+      const queryParams = {
+        observationId,
+        categoryId: event.target.value
+      };
+      try {
+        await assignFinalCategory(queryParams);
+      } catch (error) {
+        console.log(`${error}`);
+      }
     }
   };
 

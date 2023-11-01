@@ -33,7 +33,6 @@ const Dataset = ({ isDemo, dataInfo, demoData, setDemoData }) => {
     return (
       <ContentContainer>
         <DataDetail isDemo={isDemo} data={dataInfo.nodes[0]} />
-        <TableOptions selectedDataId={1} taxonomyId={1} />
         <Observations
           taxonomyId={1}
           demoData={demoData}
@@ -55,6 +54,7 @@ const Dataset = ({ isDemo, dataInfo, demoData, setDemoData }) => {
           selectedDataId={selectedDataId}
           taxonomyId={selectedData.taxonomy_id}
           datasetAssignmentId={selectedData.id}
+          isLoading={isLoading}
         />
       </ContentContainer>
     );
@@ -84,7 +84,7 @@ export default Dataset;
 
 const ContentContainer = styled.div`
   grid-column: 2 / end;
-  padding: 1rem;
+  padding: 2rem 1rem;
   z-index: 1;
   display: grid;
   grid-template-row: 1fr 5fr;

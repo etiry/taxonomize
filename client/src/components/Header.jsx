@@ -80,6 +80,7 @@ const Header = () => {
           {team.name || 'None'}
         </LinkItem>
         <LinkItem>
+          <Label>User: </Label>
           <Label>{email}</Label>
         </LinkItem>
         <LinkItem>
@@ -98,10 +99,14 @@ const Header = () => {
           </Button>
         </LinkItem>
         <LinkItem>
-          <Link to="/signup">Sign Up</Link>
+          <Link to="/signup" className="header-link">
+            Sign Up
+          </Link>
         </LinkItem>
         <LinkItem>
-          <Link to="/">Sign In</Link>
+          <Link to="/" className="header-link">
+            Sign In
+          </Link>
         </LinkItem>
       </>
     );
@@ -127,7 +132,7 @@ const HeaderContainer = styled.header`
   position: fixed;
   top: 0;
   left: 0;
-  background: #708b99;
+  background: #14213d;
   z-index: 5;
   width: 100%;
   color: #f5f5f5;
@@ -151,6 +156,7 @@ const LinkItem = styled.li`
 
 const LinkText = styled.a`
   cursor: pointer;
+  color: #f5f5f5;
 `;
 
 const Label = styled.span`
@@ -158,7 +164,7 @@ const Label = styled.span`
 `;
 
 const Button = styled.button`
-  background: #ffbd54;
+  background: #fca311;
 `;
 
 const Select = styled.select`
