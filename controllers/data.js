@@ -72,7 +72,8 @@ exports.getObservations = async (req, res, next) => {
   const page = req.query.page || 1;
   const query = req.query.query || '';
   const sort = req.query.sort || '';
-  const filter = req.query.filter || '';
+  const filter = req.query.filter.split(',');
+  const different = req.query.different || '';
   const { dataId } = req.params || null;
   const userIds = req.query.userIds.split(',');
 
@@ -150,25 +151,60 @@ exports.getObservations = async (req, res, next) => {
 
     let queryStringLimitOffset = ' LIMIT $5 OFFSET $6';
 
-    if (filter) {
+    if (filter[0] && filter[1]) {
+      queryStringTotals +=
+        ' AND user1_category_id = $6 AND user2_category_id = $7';
+      stringInterpolationsTotals.push(filter[0], filter[1]);
+
+      queryStringNodes +=
+        ' AND user1_category_id = $5 AND user2_category_id = $6';
+      stringInterpolationsNodes.splice(4, 0, filter);
+      queryStringLimitOffset = ' LIMIT $7 OFFSET $8';
+    }
+
+    if (filter[0]) {
       queryStringTotals += ' AND user1_category_id = $6';
-      stringInterpolationsTotals.push(filter);
+      stringInterpolationsTotals.push(filter[0]);
 
       queryStringNodes += ' AND user1_category_id = $5';
-      stringInterpolationsNodes.splice(4, 0, filter);
+      stringInterpolationsNodes.splice(4, 0, filter[0]);
       queryStringLimitOffset = ' LIMIT $6 OFFSET $7';
+    }
+
+    if (filter[1]) {
+      queryStringTotals += ' AND user2_category_id = $6';
+      stringInterpolationsTotals.push(filter[1]);
+
+      queryStringNodes += ' AND user2_category_id = $5';
+      stringInterpolationsNodes.splice(4, 0, filter[1]);
+      queryStringLimitOffset = ' LIMIT $6 OFFSET $7';
+    }
+
+    if (different) {
+      queryStringTotals +=
+        ' AND user1_category_id IS DISTINCT FROM user2_category_id';
+      queryStringNodes +=
+        ' AND user1_category_id IS DISTINCT FROM user2_category_id';
     }
 
     if (sort) {
       const sortParams = sort.split('_');
       if (sortParams[1] === 'Asc') {
-        sortParams[0] === 'text'
-          ? (queryStringNodes += ' ORDER BY text')
-          : (queryStringNodes += ' ORDER BY user1_category_name');
-      } else {
-        sortParams[0] === 'text'
-          ? (queryStringNodes += ' ORDER BY text DESC')
-          : (queryStringNodes += ' ORDER BY user1_category_name DESC');
+        if (sortParams[0] === 'text') {
+          queryStringNodes += ' ORDER BY text';
+        } else if (sortParams[0] === 'category1') {
+          queryStringNodes += ' ORDER BY user1_category_name';
+        } else {
+          queryStringNodes += ' ORDER BY user2_category_name';
+        }
+      } else if (sortParams[1] === 'Desc') {
+        if (sortParams[0] === 'text') {
+          queryStringNodes += ' ORDER BY text DESC';
+        } else if (sortParams[0] === 'category1') {
+          queryStringNodes += ' ORDER BY user1_category_name DESC';
+        } else {
+          queryStringNodes += ' ORDER BY user2_category_name DESC';
+        }
       }
     }
 
@@ -181,13 +217,13 @@ exports.getObservations = async (req, res, next) => {
         queryStringNodes + queryStringLimitOffset,
         stringInterpolationsNodes
       );
-      const { rows: agreementObs } = await pool.query(
+      const { rows: allObs } = await pool.query(
         queryStringNodes,
         stringInterpolationsNodes.slice(0, -2)
       );
 
-      const user1Data = reformatAgreementData(agreementObs, 1);
-      const user2Data = reformatAgreementData(agreementObs, 2);
+      const user1Data = reformatAgreementData(allObs, 1);
+      const user2Data = reformatAgreementData(allObs, 2);
 
       const cohensKappa = Cohen.kappa(user1Data, user2Data, 81, 'none');
 
@@ -208,7 +244,8 @@ exports.getObservations = async (req, res, next) => {
             percentAgreement,
             cohensKappa: cohensKappa.message ? null : cohensKappa
           },
-          nodes
+          nodes,
+          allObs
         })
       );
     } catch (error) {

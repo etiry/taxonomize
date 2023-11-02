@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useSelector, useDispatch } from 'react-redux';
 import styled from 'styled-components';
@@ -7,8 +8,9 @@ import { useLazyGetObservationsQuery } from '../slices/apiSlice';
 import { selectGetObsParams, setGetObsParams } from '../slices/paramsSlice';
 import { selectCurrentUser } from '../slices/authSlice';
 import CategoryOptions from './CategoryOptions';
+import Switch from './ToggleSwitch';
 
-const TableOptions = ({ selectedDataId, taxonomyId }) => {
+const TableOptions = ({ selectedDataId, taxonomyId, isCompare }) => {
   const dispatch = useDispatch();
   const {
     register,
@@ -18,6 +20,12 @@ const TableOptions = ({ selectedDataId, taxonomyId }) => {
   } = useForm();
   const [getObs] = useLazyGetObservationsQuery();
   const userId = useSelector(selectCurrentUser);
+  const [toggleValue, setToggleValue] = useState(false);
+
+  const handleToggle = async (event) => {
+    setToggleValue(!toggleValue);
+    handleInputChange(event);
+  };
 
   const handleInputChange = async (event) => {
     dispatch(
@@ -27,7 +35,8 @@ const TableOptions = ({ selectedDataId, taxonomyId }) => {
         userIds: userId,
         query: event.target.form[0].value,
         sort: event.target.form[1].value,
-        filter: event.target.form[2].value
+        filter: [event.target.form[2].value, event.target.form[3].value],
+        differentOnly: event.target.form[4]?.checked || false
       })
     );
     const params = {
@@ -36,7 +45,8 @@ const TableOptions = ({ selectedDataId, taxonomyId }) => {
       userIds: userId,
       query: event.target.form[0].value,
       sort: event.target.form[1].value,
-      filter: event.target.form[2].value
+      filter: [event.target.form[2].value, event.target.form[3].value],
+      differentOnly: event.target.form[4]?.checked || false
     };
     await getObs(params);
   };
@@ -51,7 +61,7 @@ const TableOptions = ({ selectedDataId, taxonomyId }) => {
         userIds: userId,
         query: null,
         sort: null,
-        filter: null
+        filter: []
       })
     );
     const params = {
@@ -60,7 +70,7 @@ const TableOptions = ({ selectedDataId, taxonomyId }) => {
       userIds: userId,
       query: null,
       sort: null,
-      filter: null
+      filter: []
     };
     await getObs(params);
   };
@@ -82,17 +92,50 @@ const TableOptions = ({ selectedDataId, taxonomyId }) => {
           <Option value="">None</Option>
           <Option value="text_Asc">Text: Ascending</Option>
           <Option value="text_Desc">Text: Descending</Option>
-          <Option value="category_Asc">Category: Ascending</Option>
-          <Option value="category_Desc">Category: Descending</Option>
+          <Option value="category1_Asc">
+            {isCompare ? 'User 1 Category: Ascending' : 'Category: Ascending'}
+          </Option>
+          <Option value="category1_Desc">
+            {isCompare ? 'User 1 Category: Descending' : 'Category: Descending'}
+          </Option>
+          {isCompare ? (
+            <Option value="category2_Asc">User 2 Category: Ascending</Option>
+          ) : null}
+          {isCompare ? (
+            <Option value="category2_Desc">User 2 Category: Descending</Option>
+          ) : null}
         </Select>
       </FormGroup>
       <FormGroup>
-        <FormLabel>Filter by category: </FormLabel>
-        <Select {...register('filter')} onChange={handleInputChange}>
+        <FormLabel>
+          {isCompare ? 'Filter by User 1 category:' : 'Filter by category:'}{' '}
+        </FormLabel>
+        <Select {...register('filter1')} onChange={handleInputChange}>
           <Option value="">None</Option>
           <CategoryOptions taxonomyId={taxonomyId} />
         </Select>
       </FormGroup>
+      {isCompare ? (
+        <>
+          <FormGroup>
+            <FormLabel>Filter by User 2 category: </FormLabel>
+            <Select {...register('filter2')} onChange={handleInputChange}>
+              <Option value="">None</Option>
+              <CategoryOptions taxonomyId={taxonomyId} />
+            </Select>
+          </FormGroup>
+          <FormGroup>
+            <FormLabel style={{ display: 'flex', alignItems: 'center' }}>
+              Show different only:{' '}
+              <Switch
+                isOn={toggleValue}
+                handleToggle={handleToggle}
+                id="showDifferent"
+              />
+            </FormLabel>
+          </FormGroup>
+        </>
+      ) : null}
       <Button onClick={handleReset}>Reset</Button>
     </Form>
   );
@@ -100,7 +143,8 @@ const TableOptions = ({ selectedDataId, taxonomyId }) => {
 
 TableOptions.propTypes = {
   selectedDataId: PropTypes.number,
-  taxonomyId: PropTypes.number
+  taxonomyId: PropTypes.number,
+  isCompare: PropTypes.bool
 };
 
 export default TableOptions;

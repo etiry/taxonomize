@@ -1,18 +1,18 @@
 import PropTypes from 'prop-types';
 
-const Switch = ({ isOn, handleToggle }) => (
+const Switch = ({ isOn, handleToggle, id }) => (
   <>
     <input
       checked={isOn}
       onChange={handleToggle}
       className="react-switch-checkbox"
-      id="react-switch-new"
+      id={id}
       type="checkbox"
     />
     <label
       style={{ background: isOn && '#fca311' }}
       className="react-switch-label"
-      htmlFor="react-switch-new"
+      htmlFor={id}
     >
       <span className="react-switch-button" />
     </label>
@@ -21,7 +21,8 @@ const Switch = ({ isOn, handleToggle }) => (
 
 Switch.propTypes = {
   handleToggle: PropTypes.func,
-  isOn: PropTypes.bool
+  isOn: PropTypes.bool,
+  id: PropTypes.string
 };
 
 export default Switch;

@@ -50,7 +50,8 @@ const SideNav = ({ setContentType }) => {
       userIds: user,
       query: '',
       sort: '',
-      filter: ''
+      filter: ['', ''],
+      differentOnly: false
     };
     await getObs(params);
   };

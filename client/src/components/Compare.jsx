@@ -34,6 +34,7 @@ const Compare = ({ isDemo, dataInfo, demoData, setDemoData }) => {
       <TableOptions
         selectedDataId={selectedDataId}
         taxonomyId={selectedTaxonomyId}
+        isCompare
       />
       <CompareDatasets taxonomyId={selectedTaxonomyId} />
     </ContentContainer>

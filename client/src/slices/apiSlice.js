@@ -54,6 +54,10 @@ export const apiSlice = createApi({
           url += `&filter=${params.filter}`;
         }
 
+        if (params.differentOnly) {
+          url += `&different=${params.differentOnly}`;
+        }
+
         return url;
       },
       providesTags: ['Observations']
@@ -186,7 +190,8 @@ export const apiSlice = createApi({
         body: {
           value: params.value
         }
-      })
+      }),
+      invalidatesTags: ['Data']
     })
   })
 });

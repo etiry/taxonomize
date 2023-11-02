@@ -133,8 +133,8 @@ const FormInput = styled.input`
 `;
 const Button = styled.button`
   margin: 0.5em;
-  background: ${(props) => (props.$delete ? '#d11a2a' : null)};
-  color: ${(props) => (props.$delete ? '#fff' : null)};
+  background: ${(props) => (props.$delete ? '#d11a2a' : '#fca311')};
+  color: ${(props) => (props.$delete ? '#fff' : '#2d3142')};
 `;
 const IconWrapper = styled.div`
   align-self: end;

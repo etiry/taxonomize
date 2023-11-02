@@ -31,7 +31,11 @@ const DataDetail = ({ isDemo, data }) => {
       </DataDetailItem>
       <DataDetailItem>
         <Label>Completed: </Label>
-        <ToggleSwitch isOn={toggleValue} handleToggle={handleToggle} />
+        <ToggleSwitch
+          isOn={toggleValue}
+          handleToggle={handleToggle}
+          id="markComplete"
+        />
       </DataDetailItem>
     </Container>
   );

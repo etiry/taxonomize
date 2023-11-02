@@ -6,7 +6,8 @@ const initialState = {
     dataId: null,
     query: '',
     sort: '',
-    filter: ''
+    filter: ['', ''],
+    differentOnly: false
   }
 };
 
@@ -20,6 +21,7 @@ const paramsSlice = createSlice({
       state.getObsParams.query = action.payload.query;
       state.getObsParams.sort = action.payload.sort;
       state.getObsParams.filter = action.payload.filter;
+      state.getObsParams.differentOnly = action.payload.differentOnly;
     }
   }
 });

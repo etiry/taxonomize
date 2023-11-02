@@ -61,7 +61,8 @@ const Observations = ({
       page: pagination.state.page + 1,
       query: obsParams.query,
       sort: obsParams.sort,
-      filter: obsParams.filter
+      filter: obsParams.filter,
+      differentOnly: false
     });
   };
 
@@ -85,7 +86,8 @@ const Observations = ({
     page: pagination.state.page + 1,
     query: obsParams.query,
     sort: obsParams.sort,
-    filter: obsParams.filter
+    filter: obsParams.filter,
+    differentOnly: obsParams.differentOnly
   }).data;
 
   const handleUpdate = async (observationId, event) => {
@@ -113,16 +115,71 @@ const Observations = ({
       };
       try {
         await assignUserCategory(queryParams);
-        await getPredictions({ inputs: userData.nodes[1].text });
       } catch (error) {
         console.log(`${error}`);
       }
     }
   };
 
+  const escapeCsvCell = (cell) => {
+    if (cell == null) {
+      return '';
+    }
+    const sc = cell.toString().trim();
+    if (sc === '' || sc === '""') {
+      return sc;
+    }
+    if (
+      sc.includes('"') ||
+      sc.includes(',') ||
+      sc.includes('\n') ||
+      sc.includes('\r')
+    ) {
+      return `"${sc.replace(/"/g, '""')}"`;
+    }
+    return sc;
+  };
+
+  const makeCsvData = (columns, data) =>
+    data.reduce(
+      (csvString, rowItem) =>
+        `${csvString}${columns
+          .map(({ accessor }) => escapeCsvCell(accessor(rowItem)))
+          .join(',')}\r\n`,
+      `${columns.map(({ name }) => escapeCsvCell(name)).join(',')}\r\n`
+    );
+
+  const downloadAsCsv = (columns, data, filename) => {
+    const csvData = makeCsvData(columns, data);
+    const csvFile = new Blob([csvData], { type: 'text/csv' });
+    const downloadLink = document.createElement('a');
+
+    downloadLink.display = 'none';
+    downloadLink.download = filename;
+    downloadLink.href = window.URL.createObjectURL(csvFile);
+    document.body.appendChild(downloadLink);
+    downloadLink.click();
+    document.body.removeChild(downloadLink);
+  };
+
+  const handleDownloadCsv = () => {
+    const columns = [
+      { accessor: (item) => item.text, name: 'Text' },
+      {
+        accessor: (item) => item.user1_category_name,
+        name: 'User 1 Category Name'
+      }
+    ];
+
+    downloadAsCsv(columns, userData.allObs, 'table');
+  };
+
   if (demoData || userData) {
     return (
       <Container>
+        {demoData ? null : (
+          <Button onClick={handleDownloadCsv}>Download as CSV</Button>
+        )}
         <Table
           data={demoData || userData}
           theme={theme}
@@ -234,15 +291,13 @@ const Observations = ({
     );
   }
 
-  if (isLoading) {
-    return (
-      <Container>
-        <Spinner />
-      </Container>
-    );
-  }
+  return (
+    <Container>
+      <Spinner />
+    </Container>
+  );
 
-  return <Container>There was an error loading this page</Container>;
+  // return <Container>There was an error loading this page</Container>;
 };
 
 Observations.propTypes = {
@@ -259,4 +314,10 @@ export default Observations;
 const Container = styled.div`
   grid-row: 2 / end;
   grid-column: 1 / 3;
+`;
+
+const Button = styled.button`
+  margin: 0.5em;
+  background: #fca311;
+  color: #2d3142;
 `;

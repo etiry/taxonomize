@@ -6,6 +6,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import styled from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
+import debounce from 'debounce';
 import { selectCurrentUser, selectCurrentUserTeam } from '../slices/authSlice';
 import {
   selectSelectedTaxonomyId,
@@ -20,9 +21,9 @@ import {
   useAssignTaxonomyMutation,
   useGetTeamUsersQuery,
   useGetTaxonomyUsersQuery,
-  useGetDataUsersQuery,
   useDeleteTaxonomyMutation
 } from '../slices/apiSlice';
+import { useGetPredictionsMutation } from '../slices/rotaSlice';
 
 const ModalForm = ({ toggleModal, formType }) => {
   const dispatch = useDispatch();
@@ -31,6 +32,7 @@ const ModalForm = ({ toggleModal, formType }) => {
   const [addData] = useAddDataMutation();
   const [assignData] = useAssignDataMutation();
   const [deleteTaxonomy] = useDeleteTaxonomyMutation();
+  const [getPredictions] = useGetPredictionsMutation();
 
   const userId = useSelector(selectCurrentUser);
   const { id: teamId } = useSelector(selectCurrentUserTeam);
@@ -130,6 +132,36 @@ const ModalForm = ({ toggleModal, formType }) => {
         formData.append('dataId', selectedDataId);
       }
     }
+
+    // const testFunc = async (file) => {
+    //   const attachPreds = async () => {
+    //     const rows = [
+    //       ...new Set(fr.result.replace(/\r|"/g, '').split(/\n/).slice(1))
+    //     ];
+    //     const preds = await getPredictions({
+    //       inputs: rows.slice(-2),
+    //       options: { wait_for_model: true }
+    //     });
+    //     rowsWithPreds = rows.slice(-2).map((ob, index) => ({
+    //       text: ob,
+    //       pred_category_name: preds.data[index][0].label,
+    //       pred_category_conf: preds.data[index][0].score
+    //     }));
+    //   };
+
+    //   const fr = new FileReader();
+    //   let rowsWithPreds;
+
+    //   fr.addEventListener('load', attachPreds);
+
+    //   if (file) {
+    //     fr.readAsText(file);
+    //   }
+
+    //   return rowsWithPreds;
+    // };
+
+    // console.log(await testFunc(data.file[0]));
 
     const file = data.file[0];
     if (file && file.type !== 'text/csv') {
@@ -250,7 +282,7 @@ const FormLabel = styled.label`
   margin-right: 0.5rem;
 `;
 const FormInput = styled.input`
-  padding: 0.5rem 0.5rem;
+  padding: 0.25rem;
   border-radius: 1rem;
   border: ${(props) => (props.$noBorder ? null : 'solid 1px gray')};
   margin-right: 0.5rem;

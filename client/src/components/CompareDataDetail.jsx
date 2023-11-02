@@ -9,10 +9,10 @@ import {
   setComparedUsers,
   selectComparedUsers
 } from '../slices/selectionsSlice';
-import { apiSlice, useLazyGetObservationsQuery } from '../slices/apiSlice';
+import { useLazyGetObservationsQuery } from '../slices/apiSlice';
 import UserOptions from './UserOptions';
 import DataOptions from './DataOptions';
-import ToggleSwitch from './ToggleSwitch';
+import Switch from './ToggleSwitch';
 import AgreementStatistics from './AgreementStatistics';
 
 const CompareDataDetail = ({
@@ -33,7 +33,7 @@ const CompareDataDetail = ({
   const selectedDataId = useSelector(selectSelectedDataId);
   const [toggleValue, setToggleValue] = useState(false);
 
-  const handleToggle = async () => {
+  const handleToggle = () => {
     setToggleValue(!toggleValue);
   };
 
@@ -103,7 +103,11 @@ const CompareDataDetail = ({
         <FormGroup>
           <FormLabel style={{ display: 'flex', alignItems: 'center' }}>
             Calculate Agreement Statistics:{' '}
-            <ToggleSwitch isOn={toggleValue} handleToggle={handleToggle} />
+            <Switch
+              isOn={toggleValue}
+              handleToggle={handleToggle}
+              id="agreementStatistics"
+            />
           </FormLabel>
         </FormGroup>
       </Form>

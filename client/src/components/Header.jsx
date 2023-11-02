@@ -43,9 +43,9 @@ const Header = () => {
     navigate('/');
   };
 
-  const handleChangeTaxonomy = (event) => {
+  const handleChangeTaxonomy = async (event) => {
     dispatch(setSelectedTaxonomyId(parseInt(event.target.value)));
-    getTaxonomyUsers(event.target.value);
+    await getTaxonomyUsers(event.target.value);
   };
 
   const toggleModal = () => {
