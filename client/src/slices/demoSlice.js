@@ -2,6 +2,8 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 // import config from '../../config.json';
 
+const REACT_APP_COOK_COUNTY_TOKEN = process.env.REACT_APP_COOK_COUNTY_TOKEN;
+
 // Define our single API slice object
 export const demoDataSlice = createApi({
   // The cache reducer expects to be added at `state.api` (already default - this is optional)
@@ -10,7 +12,7 @@ export const demoDataSlice = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: 'https://datacatalog.cookcountyil.gov/resource/apwk-dzx8.json',
     prepareHeaders: (headers) => {
-      headers.set('X-App-Token', `${process.env.REACT_APP_COOK_COUNTY_TOKEN}`);
+      headers.set('X-App-Token', `${REACT_APP_COOK_COUNTY_TOKEN}`);
       return headers;
     }
   }),
