@@ -61,7 +61,8 @@ const TableOptions = ({ selectedDataId, taxonomyId, isCompare }) => {
         userIds: userId,
         query: null,
         sort: null,
-        filter: []
+        filter: [],
+        differentOnly: false
       })
     );
     const params = {
@@ -70,7 +71,8 @@ const TableOptions = ({ selectedDataId, taxonomyId, isCompare }) => {
       userIds: userId,
       query: null,
       sort: null,
-      filter: []
+      filter: [],
+      differentOnly: false
     };
     await getObs(params);
   };

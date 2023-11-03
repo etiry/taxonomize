@@ -24,7 +24,8 @@ const AgreementStatistics = ({ isDemo, dataInfo, demoData, setDemoData }) => {
     page: 1,
     query: obsParams.query,
     sort: obsParams.sort,
-    filter: obsParams.filter
+    filter: obsParams.filter,
+    differentOnly: obsParams.differentOnly
   });
 
   useEffect(() => {
@@ -61,20 +62,20 @@ const AgreementStatistics = ({ isDemo, dataInfo, demoData, setDemoData }) => {
     );
   }
 
-  return (
-    <>
-      <Item>
-        <Label>Percent agreement: </Label>
-        {data?.agreement.percentAgreement
-          ? data.agreement.percentAgreement
-          : 'N/A'}
-      </Item>
-      <Item>
-        <Label>Cohen's kappa: </Label>
-        {data?.agreement.cohensKappa ? data.agreement.cohensKappa : 'N/A'}
-      </Item>
-    </>
-  );
+  if (data) {
+    return (
+      <>
+        <Item>
+          <Label>Percent agreement: </Label>
+          {data.agreement.percentAgreement || 'N/A'}
+        </Item>
+        <Item>
+          <Label>Cohen's kappa: </Label>
+          {data.agreement.cohensKappa || 'N/A'}
+        </Item>
+      </>
+    );
+  }
 };
 
 AgreementStatistics.propTypes = {
