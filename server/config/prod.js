@@ -4,5 +4,6 @@ module.exports = {
   POSTGRES_HOST: process.env.POSTGRES_HOST,
   POSTGRES_DB: process.env.POSTGRES_DB,
   POSTGRES_PASSWORD: process.env.POSTGRES_PASSWORD,
-  PORT: process.env.PORT
+  PORT: process.env.PORT,
+  DATABASE_URL: process.env.DATABASE_URL
 };
