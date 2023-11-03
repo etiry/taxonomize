@@ -1,6 +1,6 @@
 // Import the RTK Query methods from the React-specific entry point
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import config from '../../config.json';
+// import config from '../../config.json';
 
 // Define our single API slice object
 export const rotaSlice = createApi({
@@ -11,7 +11,7 @@ export const rotaSlice = createApi({
     baseUrl:
       'https://api-inference.huggingface.co/models/rti-international/rota',
     prepareHeaders: (headers) => {
-      headers.set('Authorization', `Bearer ${config.ROTA_TOKEN}`);
+      headers.set('Authorization', `Bearer ${process.env.ROTA_TOKEN}`);
       return headers;
     }
   }),

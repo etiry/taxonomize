@@ -1,6 +1,6 @@
 // Import the RTK Query methods from the React-specific entry point
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import config from '../../config.json';
+// import config from '../../config.json';
 
 // Define our single API slice object
 export const demoDataSlice = createApi({
@@ -10,7 +10,7 @@ export const demoDataSlice = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: 'https://datacatalog.cookcountyil.gov/resource/apwk-dzx8.json',
     prepareHeaders: (headers) => {
-      headers.set('X-App-Token', `${config.COOK_COUNTY_TOKEN}`);
+      headers.set('X-App-Token', `${process.env.COOK_COUNTY_TOKEN}`);
       return headers;
     }
   }),
