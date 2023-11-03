@@ -14,7 +14,7 @@ export const demoDataSlice = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: 'https://datacatalog.cookcountyil.gov/resource/apwk-dzx8.json',
     prepareHeaders: (headers) => {
-      headers.set('X-App-Token', `${process.env.VITE_COOK_COUNTY_TOKEN}`);
+      headers.set('X-App-Token', `${import.meta.env.VITE_COOK_COUNTY_TOKEN}`);
       return headers;
     }
   }),
