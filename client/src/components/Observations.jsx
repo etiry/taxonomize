@@ -174,6 +174,8 @@ const Observations = ({
     downloadAsCsv(columns, userData.allObs, 'table');
   };
 
+  console.log(userData);
+
   if (demoData || userData) {
     return (
       <Container>
