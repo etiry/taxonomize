@@ -1,5 +1,5 @@
 const jwt = require('jwt-simple');
-const keys = require('../config/dev');
+const keys = require('../config/keys');
 const { pool } = require('../dbHandler');
 const { setPassword } = require('../util/auth.js');
 
