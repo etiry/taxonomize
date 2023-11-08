@@ -2,10 +2,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 // import config from '../../config.json';
 
-// const REACT_APP_COOK_COUNTY_TOKEN = process.env.REACT_APP_COOK_COUNTY_TOKEN;
-
-// console.log(REACT_APP_COOK_COUNTY_TOKEN);
-
 // Define our single API slice object
 export const demoDataSlice = createApi({
   // The cache reducer expects to be added at `state.api` (already default - this is optional)
