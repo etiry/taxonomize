@@ -59,7 +59,7 @@ const AppContainer = styled.div`
   height: 100vh;
   display: grid;
   grid-template-rows: 110px 1fr;
-  grid-template-columns: 1fr 6fr;
+  grid-template-columns: 1fr 5fr;
   background: #f5f5f5;
 `;
 
